@@ -67,8 +67,8 @@ class game():
         self.challenger = None
         self.challenged = None
         self.result = None
-        self.time_of_challenge = None
-        self.record = {}
+        self.time_of_challenge = None # set an expiry on challenge
+                                      # (not implemented)
         self.winner = None 
         self.loser = None
 
@@ -81,8 +81,8 @@ class game():
         self.statistics.update_players(winner, loser)
 
     def reset(self):
-        self.players = None
-        self.gun = [1, 2, 3, 4, 5, 6]
+        self.players = []
+        self.gun = [1, 2, 3]
         self.bullet = None
         self.game_ongoing = 0
         self.challenge_made = 0
@@ -128,8 +128,7 @@ class game():
     def coin_toss(self):
         random.shuffle(self.players)
         random.shuffle(self.gun)
-        self.bullet = self.gun[0]
-        random.shuffle(self.gun)
+        self.bullet = random.choice(self.gun)
         self.game_ongoing = 1
 
     def announce(self, phenny):
@@ -197,7 +196,7 @@ def decline(phenny, input):
     elif g.challenge_made == 1 and input.nick != g.challenged:
         phenny.say("%s, let %s speak for himself!" % (input.nick, g.challenged))
     else:
-        insult = insults[random.randint(0, len(insults)-1)]
+        insult = random.choice(insults)
         phenny.say(insult % (g.challenger, input.nick))
 decline.commands = ['decline', 'no']
 
