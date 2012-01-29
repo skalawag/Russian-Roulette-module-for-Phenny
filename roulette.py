@@ -197,7 +197,7 @@ def decline(phenny, input):
     elif g.challenge_made == 1 and input.nick != g.challenged:
         phenny.say("%s, let %s speak for himself!" % (input.nick, g.challenged))
     else:
-        insult = insults[random.randint(0, length(insults)-1)]
+        insult = insults[random.randint(0, len(insults)-1)]
         phenny.say(insult % (g.challenger, input.nick))
 decline.commands = ['decline', 'no']
 
