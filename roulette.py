@@ -219,8 +219,6 @@ def undo_challenge(phenny, input):
             phenny.say("The challenge has not expired, yet. Hold your horses.")
 undo_challenge.commands = ['undo-roulette']
 
-
-# neither of these is working.
 def score(phenny, input):
     try:
         names = input.group(2).split()
