@@ -71,6 +71,7 @@ class game():
                                       # (not implemented)
         self.winner = None 
         self.loser = None
+        self.shot_sounds = ['BANG!', 'KA-POW', 'BOOM!', 'BAM!']
 
     def report_score(self,phenny, winner,loser):
         # how to report this? 
@@ -101,7 +102,7 @@ class game():
     def pull_trigger(self, phenny):
         phenny.say("%s pulls the trigger!" % (self.players[0]))
         if self.bullet == self.gun[0]:
-            self.result = "BANG!"
+            self.result = random.choice(self.shot_sounds)
         else: 
             self.result = "CLICK"
 
@@ -132,14 +133,23 @@ class game():
         self.game_ongoing = 1
 
     def announce(self, phenny):
-        if self.result == 'BANG!':
+        relief = ["%s wipes the sweat from his brow.",
+                  "I think %s peed his pants.",
+                  "%s weeps a tear of relief.",
+                  ]
+        exclamations = ["Holy, cow! %s blew his head off!",
+                        "OH! %s spews brain matter everywhere!",
+                        "%s falls to the floor like a sack of flour!",
+                        "%s does the obituary mambo!",
+                        ]
+        if self.result in self.shot_sounds:
             self.winner = self.players[1]
             self.loser = self.players[0]
             self.update_score(self.winner, self.loser)
-            phenny.say('BANG!')
+            phenny.say(self.result)
             time.sleep(1)
             self.game_ongoing = 0
-            phenny.say("Holy, cow! %s blew his head off!" % (self.players[0]))
+            phenny.say(random.choice(exclamations) % (self.players[0]))
             phenny.say("Congratulations, %s, you are the winner." % (self.players[1]))
             self.report_score(phenny, self.winner, self.loser) 
             time.sleep(3)
@@ -148,7 +158,7 @@ class game():
         elif self.result == "CLICK":
             phenny.say('CLICK')
             time.sleep(1)
-            phenny.say("%s wipes the sweat from his brow." % (self.players[0]))
+            phenny.say(random.choice(relief) % (self.players[0]))
 
 g = game()    
 
@@ -191,6 +201,11 @@ def accept(phenny, input):
 accept.commands = ['accept', 'yes']
 
 def decline(phenny, input):
+    insults = ['%s, %s is yellow and you win.',
+           '%s, %s is a fraidy-cat, and you win.',
+           '%s, %s is a yellow, and you win.',
+           '%s, %s is going to run home and cry --- you win by default.',
+           ]
     if g.challenge_made == 0:
         phenny.say("%s, there has been no challenge to Russian Roulette. Get a life!" %s (input.nick))
     elif g.challenge_made == 1 and input.nick != g.challenged:
@@ -199,12 +214,6 @@ def decline(phenny, input):
         insult = random.choice(insults)
         phenny.say(insult % (g.challenger, input.nick))
 decline.commands = ['decline', 'no']
-
-insults = ['%s, %s is yellow and you win.',
-           '%s, %s is a fraidy-cat, and you win.',
-           '%s, %s is a yellow, and you win.',
-           '%s, %s is going to run home and cry --- you win by default.',
-           ]
 
 def undo_challenge(phenny, input):        
     if input.nick == g.challenger:
