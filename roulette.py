@@ -48,7 +48,7 @@ class stats():
         # phenny.say
         all = self.record.keys()
         res = []
-        # this is damn ugly, but ....
+        # this is ugly because of my choice above.
         for player in all:
             for opponent in self.record[player].keys():
                 if self.get_players_records(opponent, player) not in res:
@@ -56,11 +56,10 @@ class stats():
         return res
 
 class game():
-
     def __init__(self):
         self.statistics = stats()
         self.players = []
-        self.gun = [1, 2, 3]
+        self.loaded_cylindar = None
         self.bullet = None
         self.game_ongoing = 0
         self.challenge_made = 0
@@ -82,7 +81,7 @@ class game():
 
     def reset(self):
         self.players = []
-        self.gun = [1, 2, 3]
+        self.loaded_cylindar = None
         self.bullet = None
         self.game_ongoing = 0
         self.challenge_made = 0
@@ -93,78 +92,62 @@ class game():
         self.winner = None
         self.loser = None
 
-    def spin(self, phenny):
-        random.shuffle(self.gun)
-        phenny.say("%s spins the cylinder..." % (self.players[0]))
-        time.sleep(3)
-
-    def pull_trigger(self, phenny):
-        phenny.say("%s pulls the trigger!" % (self.players[0]))
-        if self.bullet == self.gun[0]:
-            self.result = "BANG!"
-        else: 
-            self.result = "CLICK"
-
-    def query_player(self):
-        return "%s, do you wish to play on?" % self.players[0]
-
-    def toggle_challenge(self):
-        if self.challenge_made == 0:
-            self.challenge_made = 1
-        else:
-            self.challenge_made = 0
-        
-    def toggle_ongoing(self):
-        if self.game_ongoing == 0:
-            self.game_ongoing = 1
-        else:
-            self.game_ongoing = 0
-
-    def next_player(self):
-        p = self.players[0]
-        self.players = [self.players[1], self.players[0]]
-        return p
-    
-    def coin_toss(self):
-        random.shuffle(self.players)
-        random.shuffle(self.gun)
-        self.bullet = random.choice(self.gun)
-        self.game_ongoing = 1
-
-    def announce(self, phenny):
-        if self.result == 'BANG!':
-            self.winner = self.players[1]
-            self.loser = self.players[0]
-            self.update_score(self.winner, self.loser)
-            phenny.say('BANG!')
-            time.sleep(1)
-            self.game_ongoing = 0
-            phenny.say("Holy, cow! %s blew his head off!" % (self.players[0]))
-            phenny.say("Congratulations, %s, you are the winner." % (self.players[1]))
-            self.report_score(phenny, self.winner, self.loser) 
-            time.sleep(3)
-            phenny.say("Now, please, clean up this mess!")
-            self.reset()
-        elif self.result == "CLICK":
-            phenny.say('CLICK')
-            time.sleep(1)
-            phenny.say("%s wipes the sweat from his brow." % (self.players[0]))
-
 g = game()    
 
 def play_game(phenny):
-    g.coin_toss()
+    # setup
+    random.shuffle(self.players)
+    g.loaded_cylindar = random.choice([1, 2, 3])
+    g.game_ongoing = 1
+
+    # Announce first player
     phenny.say("A coin toss will decide the first player....")
     time.sleep(2)
     phenny.say("%s, you win!" % (g.players[0]))
+
     while 1:
-        g.spin(phenny)
-        g.pull_trigger(phenny)
-        g.announce(phenny)
+        # `spin' cylindar
+        spin = random.choice([1, 2, 3])
+        phenny.say("%s spins the cylinder..." % (self.players[0]))
+        time.sleep(3)
+
+        # pull trigger
+        phenny.say("%s pulls the trigger!" % (g.players[0]))
+        if g.loaded_cylindar == spin:
+            g.result = 1
+        else: 
+            g.result = 0
+
+        # announce result
+        if g.result == 1:
+
+            # update winner, loser and score
+            g.winner = g.players[1] # survivor
+            g.loser = g.players[0]
+            g.update_score(g.winner, g.loser)
+
+            # make announcements and cleanup
+            phenny.say('BANG!')
+            time.sleep(1)
+            g.game_ongoing = 0
+            phenny.say("Holy, cow! %s blew his head off!" % (g.players[0]))
+            phenny.say("Congratulations, %s, you are the winner." % (g.players[1]))
+            g.report_score(phenny, g.winner, g.loser) 
+            time.sleep(3)
+            phenny.say("Now, please, clean up this mess!")
+            g.reset()
+
+        elif g.result == 0:
+            phenny.say('CLICK')
+            time.sleep(1)
+            phenny.say("%s wipes the sweat from his brow." % (g.players[0]))
+            
         if g.game_ongoing == 0:
+            # game is over
             break
         else:
-            g.next_player()
+            # prepare a new round
+            g.players = [g.player[1], g.players[0]]
             phenny.say("%s, it's your turn. Good luck!" % (g.players[0]))
             time.sleep(2)
 
