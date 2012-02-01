@@ -36,10 +36,9 @@ class stats():
         res = []
         records = self.record[who]
         for key in records.keys():
-            res.append("%s12 v $s12: %d:%d" % (who, key, records[key], self.records[key][who]))
+            rec = who + ' vs. ' + key
+            res.append("%d:%d  %s" % (records[key], self.record[key][who], rec))
         return res
-
-        
                 
     def update_players(self, winner, loser):
         # each player records only his own wins against each
@@ -50,7 +49,7 @@ class stats():
     def get_players_records(self, player1, player2):
         p1_v_p2 = self.record[player1][player2]
         p2_v_p1 = self.record[player2][player1]
-        return "%s12: %d2 --- %s12: %d" % (player1, p1_v_p2, player2, p2_v_p1)
+        return "%12s: %2d %12s: %2d" % (player1, p1_v_p2, player2, p2_v_p1)
 
     def get_all_stats(self):
         # returns a list of annoucement strings suitable for
@@ -102,35 +101,6 @@ class game():
         self.winner = None
         self.loser = None
 
-    def announce(self, phenny):
-        relief = ["%s wipes the sweat from his brow.",
-                  "I think %s peed his pants.",
-                  "%s weeps a tear of relief.",
-                  ]
-        exclamations = ["Holy, cow! %s blew his head off!",
-                        "OH! %s spews brain matter everywhere!",
-                        "%s falls to the floor like a sack of flour!",
-                        "%s does the obituary mambo!",
-                        ]
-        if self.result in self.shot_sounds:
-            self.winner = self.players[1]
-            self.loser = self.players[0]
-            self.update_score(self.winner, self.loser)
-            phenny.say(self.result)
-            time.sleep(1)
-            self.game_ongoing = 0
-            phenny.say(random.choice(exclamations) % (self.players[0]))
-            phenny.say("Congratulations, %s, you are the winner." % (self.players[1]))
-            self.report_score(phenny, self.winner, self.loser) 
-            time.sleep(3)
-            phenny.say("Now, please, clean up this mess!")
-            g.reset()
-
-        elif g.result == 0:
-            phenny.say('CLICK')
-            time.sleep(1)
-            phenny.say(random.choice(relief) % (self.players[0]))
-
 g = game()    
 
 relief = ["%s wipes the sweat from his brow.",
@@ -144,10 +114,9 @@ exclamations = ["Holy, cow! %s blew his head off!",
                 ]
 change = ["%s, it's your turn.", "%s, wipe that smirk off your face. It's your turn!"]
 
-
 def play_game(phenny):
     # setup
-    random.shuffle(self.players)
+    random.shuffle(g.players)
     g.loaded_cylindar = random.choice([1, 2, 3])
     g.game_ongoing = 1
 
@@ -158,8 +127,9 @@ def play_game(phenny):
 
     while 1:
         # `spin' cylindar
+        print "here", g.players
         spin = random.choice([1, 2, 3])
-        phenny.say("%s spins the cylinder..." % (self.players[0]))
+        phenny.say("%s spins the cylinder..." % (g.players[0]))
         time.sleep(3)
 
         # pull trigger
@@ -184,9 +154,13 @@ def play_game(phenny):
             phenny.say(random.choice(exclamations) % (g.players[0]))
             phenny.say("Congratulations, %s, you are the winner." % (g.players[1]))
             g.report_score(phenny, g.winner, g.loser) 
-        elif g.result == 0:
+            break
+        else:
+            phenny.say('CLICK')
+            time.sleep(1)
             phenny.say(random.choice(relief) % (g.players[0]))
-            phenny.say(random.choice(change) % (g.players[1]))
+            g.players = [g.players[1], g.players[0]]
+
 
 def challenge(phenny, input):
     g.time_of_challenge = time.time()
@@ -241,7 +215,7 @@ def rstat_me(phenny, input):
     res = g.statistics.get_my_stats(input.nick)
     for item in res:
         phenny.say(item)
-rstat_me.commands['rstat-me')                           
+rstat_me.commands = ['rstat-me','rstats-me']                           
 
 def rstat(phenny, input):
     try:
@@ -249,7 +223,7 @@ def rstat(phenny, input):
         phenny.say(g.statistics.get_players_records(names[0], names[1]))
     except:
         phenny.say("%s, try giving me two nicks" % (input.nick))
-score.commands = ['rstat']
+rstat.commands = ['rstat']
         
 def get_stats_for_all(phenny, input):
     stats = g.statistics.get_all_stats()
