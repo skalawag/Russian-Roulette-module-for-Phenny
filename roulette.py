@@ -169,7 +169,7 @@ def challenge(phenny, input):
     g.statistics.check(g.challenger, g.challenged) # ADDED
     phenny.say("%s challenged %s to Russian Roulette!" % (g.challenger, g.challenged))
     phenny.say("%s, do you accept?" % (g.challenged))
-challenge.commands = ['callout']
+challenge.commands = ['callout', 'roulette']
 
 def accept(phenny, input):
     if g.challenge_made == 0:
