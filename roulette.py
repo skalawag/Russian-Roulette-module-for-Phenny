@@ -127,7 +127,6 @@ def play_game(phenny):
 
     while 1:
         # `spin' cylindar
-        print "here", g.players
         spin = random.choice([1, 2, 3])
         phenny.say("%s spins the cylinder..." % (g.players[0]))
         time.sleep(3)
@@ -170,7 +169,7 @@ def challenge(phenny, input):
     g.statistics.check(g.challenger, g.challenged) # ADDED
     phenny.say("%s challenged %s to Russian Roulette!" % (g.challenger, g.challenged))
     phenny.say("%s, do you accept?" % (g.challenged))
-challenge.commands = ['challenge']
+challenge.commands = ['callout']
 
 def accept(phenny, input):
     if g.challenge_made == 0:
