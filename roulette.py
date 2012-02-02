@@ -196,9 +196,9 @@ def decline(phenny, input):
     else:
         insult = random.choice(insults)
         phenny.say(insult % (g.challenger, input.nick))
-decline.commands = ['decline', 'no']
+decline.commands = ['decline', 'no', 'get-lost']
 
-def undo_challenge(phenny, input):        
+def undo(phenny, input):        
     if input.nick == g.challenger:
         g.reset()
         phenny.say("%s has retracted the challenge." % (input.nick))
@@ -208,7 +208,7 @@ def undo_challenge(phenny, input):
             phenny.say("The challenge has been expired.")
         else:
             phenny.say("The challenge has not expired, yet. Hold your horses.")
-undo_challenge.commands = ['undo-roulette']
+undo.commands = ['undo']
 
 def rstat_me(phenny, input):
     res = g.statistics.get_my_stats(input.nick)
