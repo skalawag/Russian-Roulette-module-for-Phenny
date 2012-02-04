@@ -83,6 +83,7 @@ class game():
                                       # (not implemented)
         self.winner = None 
         self.loser = None
+        self.abort = 0
 
 
     def report_score(self,phenny, winner,loser):
@@ -105,6 +106,7 @@ class game():
         self.time_of_challenge = None
         self.winner = None
         self.loser = None
+        self.abort = 0
 
 g = game()    
 
@@ -137,15 +139,31 @@ def play_game(phenny):
         time.sleep(3)
 
         # pull trigger
-        phenny.say("%s pulls the trigger!" % (g.players[0]))
-        if g.loaded_cylindar == spin:
+        if g.abort == 1:
+            g.result = 2
+        elif g.loaded_cylindar == spin:
             g.result = 1
-        else: 
+        else:
+            g.result = 0
+
+        # # check for abort
+        if self.abort == 1:
+
+            g.result = 3            
+        elif g.loaded_cylindar == spin:
+            g.result = 1
+        else:
             g.result = 0
 
         # announce result
-        if g.result == 1:
-            
+        if g.result == 0:
+            phenny.say('CLICK')
+            time.sleep(1)
+            phenny.say(random.choice(relief) % (g.players[0]))
+            g.players = [g.players[1], g.players[0]]
+
+        elif g.result == 1:
+            phenny.say("%s pulls the trigger!" % (g.players[0]))
             # update winner, loser and score
             g.winner = g.players[1] # survivor
             g.loser = g.players[0]
@@ -158,13 +176,31 @@ def play_game(phenny):
             phenny.say(random.choice(exclamations) % (g.players[0]))
             phenny.say("Congratulations, %s, you are the winner." % (g.players[1]))
             g.report_score(phenny, g.winner, g.loser) 
+            
             break
-        else:
-            phenny.say('CLICK')
-            time.sleep(1)
-            phenny.say(random.choice(relief) % (g.players[0]))
-            g.players = [g.players[1], g.players[0]]
 
+        elif g.result == 2:
+            phenny.say("%s cannot pull the trigger!")
+            # update the winner, loser and score
+            g.winner = g.players[1]
+            g.loser = g.players[0]
+            g.update_score(g.winner,g.loser)
+            
+            # make announcement
+            phenny.say("Congratulations, %s, you are the winner." % (g.players[1]))
+            g.report_score(phenny, g.winner, g.loser) 
+            
+            break
+
+        else:
+            # problem
+            print "You shouldn't have gotten here. There is an error in the game loop."
+            break
+
+def abort(phenny,input):
+    # forfeit the game at any time
+    g.abort = 1
+abort.commands['abort']
 
 def challenge(phenny, input):
     g.time_of_challenge = time.time()
