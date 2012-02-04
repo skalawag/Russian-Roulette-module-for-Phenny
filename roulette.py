@@ -35,9 +35,14 @@ class stats():
     def get_my_stats(self, who):
         res = []
         records = self.record[who]
+        wins = 0
+        losses = 0
         for key in records.keys():
             rec = who + ' vs. ' + key
+            wins += records[key]
+            losses += self.record[key][who]
             res.append("%d:%d  %s" % (records[key], self.record[key][who], rec))
+        res.append("%d:%d  Overall")
         return res
                 
     def update_players(self, winner, loser):
