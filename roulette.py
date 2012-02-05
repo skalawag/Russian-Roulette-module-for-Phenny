@@ -9,7 +9,8 @@ http://inamidst.com/phenny/
 """
 
 # TODO: add simple persistence
-# TODO: .rematch! (on a timer?)
+# TODO: .rematch! (on a timer?), double or nothing option (with !)
+# TODO: choice of weapons: double barrel shotgun?
 # TODO: timer on challenges
 
 import random, time
