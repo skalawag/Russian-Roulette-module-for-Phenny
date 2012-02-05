@@ -8,7 +8,10 @@ Licensed under the Eiffel Forum License 2.
 http://inamidst.com/phenny/
 """
 
+# TODO: test .abort function
 # TODO: add simple persistence
+# TODO: format .rstats like rstats-me for a cleaner look
+# TODO: auto-cull 0:0 stats
 # TODO: .rematch! (on a timer?), double or nothing option (with !)
 # TODO: choice of weapons: double barrel shotgun?
 # TODO: timer on challenges
@@ -151,9 +154,8 @@ def play_game(phenny):
             g.result = 0
 
         # # check for abort
-        if self.abort == 1:
-
-            g.result = 3            
+        if g.abort == 1:
+            g.result = 2            
         elif g.loaded_cylindar == spin:
             g.result = 1
         else:
@@ -184,7 +186,7 @@ def play_game(phenny):
             break
 
         elif g.result == 2:
-            phenny.say("%s cannot pull the trigger!")
+            phenny.say("%s cannot brink himself to pull the trigger!" % (g.players[0]))
             # update the winner, loser and score
             g.winner = g.players[1]
             g.loser = g.players[0]
@@ -203,8 +205,11 @@ def play_game(phenny):
 
 def abort(phenny,input):
     # forfeit the game at any time
-    g.abort = 1
-abort.commands['abort']
+    if input.nick != g.players[0]:
+        pass
+    else:
+        g.abort = 1
+abort.commands = ['abort']
 
 def challenge(phenny, input):
     g.time_of_challenge = time.time()
@@ -214,7 +219,7 @@ def challenge(phenny, input):
     g.statistics.check(g.challenger, g.challenged) # ADDED
     phenny.say("%s challenged %s to Russian Roulette!" % (g.challenger, g.challenged))
     phenny.say("%s, do you accept?" % (g.challenged))
-challenge.commands = ['callout', 'roulette']
+challenge.commands = ['roulette']
 
 def accept(phenny, input):
     if g.challenge_made == 0:
