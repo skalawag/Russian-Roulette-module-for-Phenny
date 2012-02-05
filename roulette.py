@@ -8,13 +8,15 @@ Licensed under the Eiffel Forum License 2.
 http://inamidst.com/phenny/
 """
 
-# TODO: test .abort function
+# DONE: test .abort function
+# DONE: grant two points for an abort
 # TODO: add simple persistence
 # TODO: format .rstats like rstats-me for a cleaner look
 # TODO: auto-cull 0:0 stats
 # TODO: .rematch! (on a timer?), double or nothing option (with !)
 # TODO: choice of weapons: double barrel shotgun?
 # TODO: timer on challenges
+
 
 import random, time
 
@@ -56,7 +58,10 @@ class stats():
         # each player records only his own wins against each
         # opponent.  This assumes that an entry exists for each
         # player and each opponent under that player.
-        self.record[winner][loser] += 1
+        if self.abort == 1:
+            self.record[winner][loser] += 2
+        else:
+            self.record[winner][loser] += 1
 
     def get_players_records(self, player1, player2):
         p1_v_p2 = self.record[player1][player2]
@@ -68,6 +73,7 @@ class stats():
         # phenny.say
         all = self.record.keys()
         res = []
+
         # this is ugly because of my choice above.
         for player in all:
             for opponent in self.record[player].keys():
@@ -81,7 +87,6 @@ class game():
         self.players = []
         self.loaded_cylindar = None
         self.bullet = None
-        self.game_ongoing = 0
         self.challenge_made = 0
         self.challenger = None
         self.challenged = None
@@ -91,6 +96,7 @@ class game():
         self.winner = None 
         self.loser = None
         self.abort = 0
+        self.game_ongoing = 0
 
 
     def report_score(self,phenny, winner,loser):
@@ -114,6 +120,7 @@ class game():
         self.winner = None
         self.loser = None
         self.abort = 0
+        self.game_ongoing = 0
 
 g = game()    
 
@@ -186,7 +193,7 @@ def play_game(phenny):
             break
 
         elif g.result == 2:
-            phenny.say("%s cannot brink himself to pull the trigger!" % (g.players[0]))
+            phenny.say("LOL! %s cannot brink himself to pull the trigger!" % (g.players[0]))
             # update the winner, loser and score
             g.winner = g.players[1]
             g.loser = g.players[0]
@@ -195,12 +202,15 @@ def play_game(phenny):
             # make announcement
             phenny.say("Congratulations, %s, you are the winner." % (g.players[1]))
             g.report_score(phenny, g.winner, g.loser) 
-            
+            g.game_ongoing = 0
+            g.reset()
+
             break
 
         else:
             # problem
             print "You shouldn't have gotten here. There is an error in the game loop."
+
             break
 
 def abort(phenny,input):
@@ -212,13 +222,17 @@ def abort(phenny,input):
 abort.commands = ['abort']
 
 def challenge(phenny, input):
-    g.time_of_challenge = time.time()
-    g.challenger = input.nick.strip()
-    g.challenge_made = 1
-    g.challenged = input.group(2).strip()
-    g.statistics.check(g.challenger, g.challenged) # ADDED
-    phenny.say("%s challenged %s to Russian Roulette!" % (g.challenger, g.challenged))
-    phenny.say("%s, do you accept?" % (g.challenged))
+    if g.game_ongoing == 1:
+        pass
+    else:
+        g.game_ongoing = 1
+        g.time_of_challenge = time.time()
+        g.challenger = input.nick.strip()
+        g.challenge_made = 1
+        g.challenged = input.group(2).strip()
+        g.statistics.check(g.challenger, g.challenged) # ADDED
+        phenny.say("%s challenged %s to Russian Roulette!" % (g.challenger, g.challenged))
+        phenny.say("%s, do you accept?" % (g.challenged))
 challenge.commands = ['roulette']
 
 def accept(phenny, input):
