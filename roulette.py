@@ -8,8 +8,11 @@ Licensed under the Eiffel Forum License 2.
 http://inamidst.com/phenny/
 """
 
-import random, time
+# TODO: add simple persistence
+# TODO: .rematch! (on a timer?)
+# TODO: timer on challenges
 
+import random, time
 
 class stats():
     def __init__(self):
