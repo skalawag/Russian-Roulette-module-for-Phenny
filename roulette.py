@@ -16,7 +16,7 @@ http://inamidst.com/phenny/
 # TODO: .rematch! (on a timer?), double or nothing option (with !)
 # TODO: choice of weapons: double barrel shotgun?
 # TODO: timer on challenges
-
+# TODO: change decline messages so they don't say "win"
 
 import random, time
 
@@ -54,11 +54,11 @@ class stats():
         res.append("%d:%d  Overall")
         return res
                 
-    def update_players(self, winner, loser):
+    def update_players(self, winner, loser, abort=0):
         # each player records only his own wins against each
         # opponent.  This assumes that an entry exists for each
         # player and each opponent under that player.
-        if self.abort == 1:
+        if abort == 1:
             self.record[winner][loser] += 2
         else:
             self.record[winner][loser] += 1
@@ -103,9 +103,9 @@ class game():
         # how to report this? 
         phenny.say(self.statistics.get_players_records(winner, loser))
 
-    def update_score(self, winner, loser):
+    def update_score(self, winner, loser, abort=0):
         # Update the records of the winner
-        self.statistics.update_players(winner, loser)
+        self.statistics.update_players(winner, loser, abort)
 
     def reset(self):
         self.players = []
@@ -151,6 +151,8 @@ def play_game(phenny):
         spin = random.choice([1, 2, 3])
         phenny.say("%s spins the cylinder..." % (g.players[0]))
         time.sleep(3)
+        phenny.say("%s pulls the trigger!" % (g.players[0]))
+
 
         # pull trigger
         if g.abort == 1:
@@ -176,7 +178,6 @@ def play_game(phenny):
             g.players = [g.players[1], g.players[0]]
 
         elif g.result == 1:
-            phenny.say("%s pulls the trigger!" % (g.players[0]))
             # update winner, loser and score
             g.winner = g.players[1] # survivor
             g.loser = g.players[0]
@@ -197,7 +198,7 @@ def play_game(phenny):
             # update the winner, loser and score
             g.winner = g.players[1]
             g.loser = g.players[0]
-            g.update_score(g.winner,g.loser)
+            g.update_score(g.winner,g.loser,abort=1)
             
             # make announcement
             phenny.say("Congratulations, %s, you are the winner." % (g.players[1]))
@@ -233,7 +234,7 @@ def challenge(phenny, input):
         g.statistics.check(g.challenger, g.challenged) # ADDED
         phenny.say("%s challenged %s to Russian Roulette!" % (g.challenger, g.challenged))
         phenny.say("%s, do you accept?" % (g.challenged))
-challenge.commands = ['roulette']
+challenge.commands = ['roulette', 'r']
 
 def accept(phenny, input):
     if g.challenge_made == 0:
@@ -260,6 +261,7 @@ def decline(phenny, input):
     else:
         insult = random.choice(insults)
         phenny.say(insult % (g.challenger, input.nick))
+        g.reset()
 decline.commands = ['decline', 'no', 'get-lost']
 
 def undo(phenny, input):        
