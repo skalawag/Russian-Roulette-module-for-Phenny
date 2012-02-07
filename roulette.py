@@ -8,16 +8,17 @@ Licensed under the Eiffel Forum License 2.
 http://inamidst.com/phenny/
 """
 
-# DONE: test .abort function
-# DONE: grant two points for an abort
-# TODO: add simple persistence
-# TODO: format .rstats like rstats-me for a cleaner look
-# TODO: auto-cull 0:0 stats
-# TODO: .rematch! (on a timer?), double or nothing option (with !)
-# TODO: choice of weapons: double barrel shotgun?
-# TODO: timer on challenges
-# TODO: change decline messages so they don't say "win"
-
+"""
+* DONE: test .abort function
+* DONE: grant two points for an abort
+* TODO: add simple persistence
+* DONE: format .rstats like rstats-me for a cleaner look
+* TODO: auto-cull 0:0 stats
+* TODO: .rematch! (on a timer?), double or nothing option (with !)
+* TODO: choice of weapons: double barrel shotgun?
+* TODO: timer on challenges
+* TODO: change decline messages so they don't say "win"
+"""
 import random, time
 
 class stats():
@@ -43,7 +44,10 @@ class stats():
 
     def get_my_stats(self, who):
         res = []
-        records = self.record[who]
+        try:
+            records = self.record[who]
+        except:
+            return None
         wins = 0
         losses = 0
         for key in records.keys():
@@ -66,7 +70,7 @@ class stats():
     def get_players_records(self, player1, player2):
         p1_v_p2 = self.record[player1][player2]
         p2_v_p1 = self.record[player2][player1]
-        return "%12s: %2d %12s: %2d" % (player1, p1_v_p2, player2, p2_v_p1)
+        return "%d:%d  %s vs %s" % (p1_v_p2, p2_v_p1, player1, player2)
 
     def get_all_stats(self):
         # returns a list of annoucement strings suitable for
@@ -151,18 +155,9 @@ def play_game(phenny):
         spin = random.choice([1, 2, 3])
         phenny.say("%s spins the cylinder..." % (g.players[0]))
         time.sleep(3)
-        phenny.say("%s pulls the trigger!" % (g.players[0]))
+        #phenny.say("%s pulls the trigger!" % (g.players[0]))
 
-
-        # pull trigger
-        if g.abort == 1:
-            g.result = 2
-        elif g.loaded_cylindar == spin:
-            g.result = 1
-        else:
-            g.result = 0
-
-        # # check for abort
+        # check for abort
         if g.abort == 1:
             g.result = 2            
         elif g.loaded_cylindar == spin:
@@ -172,12 +167,18 @@ def play_game(phenny):
 
         # announce result
         if g.result == 0:
+            phenny.say("%s pulls the trigger!" % (g.players[0]))
+            time.sleep(random.choice([1, 2, 3]))
             phenny.say('CLICK')
             time.sleep(1)
             phenny.say(random.choice(relief) % (g.players[0]))
+            g.abort = 0
             g.players = [g.players[1], g.players[0]]
 
         elif g.result == 1:
+            g.abort = 0
+            phenny.say("%s pulls the trigger!" % (g.players[0]))
+
             # update winner, loser and score
             g.winner = g.players[1] # survivor
             g.loser = g.players[0]
@@ -194,7 +195,7 @@ def play_game(phenny):
             break
 
         elif g.result == 2:
-            phenny.say("LOL! %s cannot brink himself to pull the trigger!" % (g.players[0]))
+            phenny.say("LOL! %s cannot bring himself to pull the trigger!" % (g.players[0]))
             # update the winner, loser and score
             g.winner = g.players[1]
             g.loser = g.players[0]
@@ -202,6 +203,7 @@ def play_game(phenny):
             
             # make announcement
             phenny.say("Congratulations, %s, you are the winner." % (g.players[1]))
+            phenny.say("Since %s aborted, you awarded 2 points." % (g.players[0]))
             g.report_score(phenny, g.winner, g.loser) 
             g.game_ongoing = 0
             g.reset()
