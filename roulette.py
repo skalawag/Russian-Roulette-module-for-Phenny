@@ -55,7 +55,7 @@ class stats():
             wins += records[key]
             losses += self.record[key][who]
             res.append("%d:%d  %s" % (records[key], self.record[key][who], rec))
-        res.append("%d:%d  Overall")
+        res.append("%d:%d  Overall" % (wins:losses))
         return res
                 
     def update_players(self, winner, loser, abort=0):
