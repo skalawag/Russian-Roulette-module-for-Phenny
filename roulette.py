@@ -11,8 +11,8 @@ http://inamidst.com/phenny/
 """
 * DONE: test .abort function
 * DONE: grant two points for an abort
-* TODO: add simple persistence
 * DONE: format .rstats like rstats-me for a cleaner look
+* TODO: add simple persistence
 * TODO: auto-cull 0:0 stats
 * TODO: .rematch! (on a timer?), double or nothing option (with !)
 * TODO: choice of weapons: double barrel shotgun?
