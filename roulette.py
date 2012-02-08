@@ -203,7 +203,7 @@ def play_game(phenny):
             
             # make announcement
             phenny.say("Congratulations, %s, you are the winner." % (g.players[1]))
-            phenny.say("Since %s aborted, you awarded 2 points." % (g.players[0]))
+            phenny.say("Since %s aborted, you are awarded 2 points." % (g.players[0]))
             g.report_score(phenny, g.winner, g.loser) 
             g.game_ongoing = 0
             g.reset()
@@ -244,6 +244,7 @@ def accept(phenny, input):
     elif g.challenge_made == 1 and input.nick != g.challenged:
         phenny.say("%s, let %s speak for himself!" % (input.nick, g.challenged))
     else:
+        g.abort = 0
         phenny.say("%s accepts the challenge!" % input.nick)
         phenny.say("Let the game begin!")
         g.players = [g.challenged, g.challenger]
