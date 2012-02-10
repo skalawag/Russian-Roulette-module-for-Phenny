@@ -14,10 +14,10 @@ http://inamidst.com/phenny/
 * DONE: format .rstats like rstats-me for a cleaner look
 * DONE: add simple persistence
 * DONE: bug-fix - if no challenge has been made, .accept throws an error
+* TODO: timer on challenges
 * TODO: auto-cull 0:0 stats
 * TODO: .rematch! (on a timer?), double or nothing option (with !)
 * TODO: choice of weapons: double barrel shotgun?
-* TODO: timer on challenges
 * TODO: change decline messages so they don't say "win"
 """
 
@@ -248,15 +248,14 @@ abort.commands = ['abort']
 def challenge(phenny, input):
     if g.game_ongoing == 1:
         pass
+    elif g.time_of_challenge and time.time() - g.time_of_challenge < 60:
+        phenny.say("%s, there is a standing challenge." % (input.nick))
     else:
-        g.game_ongoing = 1
         g.time_of_challenge = time.time()
         g.challenger = input.nick.strip()
         g.challenge_made = 1
         g.challenged = str(input.group(2).strip())
         g.statistics.check(g.challenger, g.challenged) # ADDED
-        print 'challenger:', g.challenger, type(g.challenger)
-        print 'challenged:', g.challenged, type(g.challenged)
         print g.statistics.record
         phenny.say("%s challenged %s to Russian Roulette!" % (g.challenger, g.challenged))
         phenny.say("%s, do you accept?" % (g.challenged))
@@ -268,6 +267,7 @@ def accept(phenny, input):
     elif g.challenge_made == 1 and input.nick != g.challenged:
         phenny.say("%s, let %s speak for himself!" % (input.nick, g.challenged))
     else:
+        g.game_ongoing = 1
         phenny.say("%s accepts the challenge!" % input.nick)
         phenny.say("Let the game begin!")
         g.players = [g.challenged, g.challenger]
