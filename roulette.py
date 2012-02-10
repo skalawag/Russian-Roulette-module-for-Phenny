@@ -153,22 +153,22 @@ def play_game(phenny):
     while 1:
         # `spin' cylindar
         spin = random.choice([1, 2, 3])
+        if spin == g.loaded_cylindar:
+            g.result = 1
         phenny.say("%s spins the cylinder..." % (g.players[0]))
         time.sleep(3)
         #phenny.say("%s pulls the trigger!" % (g.players[0]))
+        phenny.say("%s pulls the trigger!" % (g.players[0]))
 
         # announce result
         if g.result == 0:
-            phenny.say("%s pulls the trigger!" % (g.players[0]))
             time.sleep(random.choice([1, 2, 3]))
             phenny.say('CLICK')
             time.sleep(1)
             phenny.say(random.choice(relief) % (g.players[0]))
-            g.abort = 0
             g.players = [g.players[1], g.players[0]]
 
         elif g.result == 1:
-            g.abort = 0
             phenny.say("%s pulls the trigger!" % (g.players[0]))
 
             # update winner, loser and score
@@ -221,7 +221,7 @@ def abort(phenny,input):
     # forfeit the game at any time
     if input.nick != g.players[0]:
         pass
-    elif random.choice[0,1] == 1
+    elif random.choice([0,1]) == 1:
         g.result = 2
     else:
         g.result = 3
@@ -247,7 +247,6 @@ def accept(phenny, input):
     elif g.challenge_made == 1 and input.nick != g.challenged:
         phenny.say("%s, let %s speak for himself!" % (input.nick, g.challenged))
     else:
-        g.abort = 0
         phenny.say("%s accepts the challenge!" % input.nick)
         phenny.say("Let the game begin!")
         g.players = [g.challenged, g.challenger]
