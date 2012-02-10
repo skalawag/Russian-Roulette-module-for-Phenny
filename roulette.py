@@ -14,11 +14,12 @@ http://inamidst.com/phenny/
 * DONE: format .rstats like rstats-me for a cleaner look
 * DONE: add simple persistence
 * DONE: bug-fix - if no challenge has been made, .accept throws an error
-* TODO: timer on challenges
+* DONE: timer on challenges
+* DONE: change decline messages so they don't say "win"
 * TODO: auto-cull 0:0 stats
 * TODO: .rematch! (on a timer?), double or nothing option (with !)
 * TODO: choice of weapons: double barrel shotgun?
-* TODO: change decline messages so they don't say "win"
+
 """
 
 import random, time, shelve
@@ -275,10 +276,9 @@ def accept(phenny, input):
 accept.commands = ['accept', 'yes', 'acc', 'hell-yeah', 'pff']
 
 def decline(phenny, input):
-    insults = ['%s, %s is yellow and you win.',
-           '%s, %s is a fraidy-cat, and you win.',
-           '%s, %s is a yellow, and you win.',
-           '%s, %s is going to run home and cry --- you win by default.',
+    insults = ['%s, %s is yellow and will not play.',
+           '%s, %s is a fraidy-cat, and will not play.',
+           '%s, %s is going to run home and cry.',
            ]
     if g.challenge_made == 0:
         phenny.say("%s, there has been no challenge to Russian Roulette. Get a life!" %s (input.nick))
