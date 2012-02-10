@@ -157,14 +157,6 @@ def play_game(phenny):
         time.sleep(3)
         #phenny.say("%s pulls the trigger!" % (g.players[0]))
 
-        # check for abort
-        if g.abort == 1:
-            g.result = 2            
-        elif g.loaded_cylindar == spin:
-            g.result = 1
-        else:
-            g.result = 0
-
         # announce result
         if g.result == 0:
             phenny.say("%s pulls the trigger!" % (g.players[0]))
@@ -209,7 +201,16 @@ def play_game(phenny):
             g.reset()
 
             break
+        elif g.result == 3:
+            phenny.say("LOL! %s cannot bring himself to pull the trigger!" % (g.players[0]))
+            phenny.say("But we'll give him a break this time.")
 
+            # make announcement
+            g.report_score(phenny, g.winner, g.loser) 
+            g.game_ongoing = 0
+            g.reset()
+
+            break
         else:
             # problem
             print "You shouldn't have gotten here. There is an error in the game loop."
@@ -220,8 +221,10 @@ def abort(phenny,input):
     # forfeit the game at any time
     if input.nick != g.players[0]:
         pass
+    elif random.choice[0,1] == 1
+        g.result = 2
     else:
-        g.abort = 1
+        g.result = 3
 abort.commands = ['abort']
 
 def challenge(phenny, input):
