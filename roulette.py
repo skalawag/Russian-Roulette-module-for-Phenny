@@ -13,7 +13,7 @@ http://inamidst.com/phenny/
 * DONE: grant two points for an abort
 * DONE: format .rstats like rstats-me for a cleaner look
 * DONE: add simple persistence
-* TODO: test persistence
+* TODO: test persistencea
 * TODO: auto-cull 0:0 stats
 * TODO: .rematch! (on a timer?), double or nothing option (with !)
 * TODO: choice of weapons: double barrel shotgun?
@@ -263,7 +263,7 @@ def accept(phenny, input):
         phenny.say("Let the game begin!")
         g.players = [g.challenged, g.challenger]
         play_game(phenny)
-accept.commands = ['accept', 'yes']
+accept.commands = ['accept', 'yes', 'acc', 'hell-yeah', 'pff']
 
 def decline(phenny, input):
     insults = ['%s, %s is yellow and you win.',
