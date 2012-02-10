@@ -34,6 +34,15 @@ class stats():
             self.record = {}
         self.db.close()
 
+    def cull_zero_stats(self):
+        names = self.record.keys()
+        for name in names:
+            opps = self.record[name].keys()
+            for opp in opps:
+                if self.record[name][opp] == 0 and self.record[opp][name] == 0:
+                    self.record[name].pop(opp)
+                    self.record[opp].pop(name)
+
     def refresh_db(self):
         self.db = shelve.open('roulette.db')
         self.db['roulette'] = self.record
@@ -57,6 +66,7 @@ class stats():
             self.record.setdefault(player2, {player1: 0})
 
     def get_my_stats(self, who):
+        self.cull_zero_stats()
         res = []
         try:
             records = self.record[who]
@@ -90,6 +100,7 @@ class stats():
     def get_all_stats(self):
         # returns a list of annoucement strings suitable for
         # phenny.say
+        self.cull_zero_stats()
         all = self.record.keys()
         res = []
 
@@ -99,7 +110,7 @@ class stats():
                 if self.get_players_records(opponent, player) not in res:
                     res.append(self.get_players_records(player, opponent))
         return res
-
+    
 class game():
     def __init__(self):
         self.statistics = stats()
