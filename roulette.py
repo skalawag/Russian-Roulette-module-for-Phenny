@@ -16,7 +16,7 @@ http://inamidst.com/phenny/
 * DONE: bug-fix - if no challenge has been made, .accept throws an error
 * DONE: timer on challenges
 * DONE: change decline messages so they don't say "win"
-* TODO: auto-cull 0:0 stats
+* DONE: auto-cull 0:0 stats
 * TODO: .rematch! (on a timer?), double or nothing option (with !)
 * TODO: choice of weapons: double barrel shotgun?
 
@@ -249,7 +249,9 @@ def play_game(phenny):
 
 def abort(phenny,input):
     # forfeit the game at any time
-    if input.nick != g.players[0]:
+    if g.game_ongoing != 1:
+        pass
+    elif input.nick != g.players[0]:
         pass
     elif random.choice([0,1]) == 1:
         g.result = 2
