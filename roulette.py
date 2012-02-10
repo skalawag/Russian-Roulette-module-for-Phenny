@@ -13,13 +13,13 @@ http://inamidst.com/phenny/
 * DONE: grant two points for an abort
 * DONE: format .rstats like rstats-me for a cleaner look
 * DONE: add simple persistence
-* TODO: test persistencea
 * TODO: auto-cull 0:0 stats
 * TODO: .rematch! (on a timer?), double or nothing option (with !)
 * TODO: choice of weapons: double barrel shotgun?
 * TODO: timer on challenges
 * TODO: change decline messages so they don't say "win"
 """
+
 import random, time, shelve
 
 class stats():
