@@ -155,10 +155,12 @@ def play_game(phenny):
         spin = random.choice([1, 2, 3])
         if spin == g.loaded_cylindar:
             g.result = 1
+        else:
+            g.result = 0
         phenny.say("%s spins the cylinder..." % (g.players[0]))
         time.sleep(3)
         #phenny.say("%s pulls the trigger!" % (g.players[0]))
-        phenny.say("%s pulls the trigger!" % (g.players[0]))
+
 
         # announce result
         if g.result == 0:
