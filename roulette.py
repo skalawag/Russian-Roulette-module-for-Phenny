@@ -12,18 +12,26 @@ http://inamidst.com/phenny/
 * DONE: test .abort function
 * DONE: grant two points for an abort
 * DONE: format .rstats like rstats-me for a cleaner look
-* TODO: add simple persistence
+* DONE: add simple persistence
+* TODO: test persistence
 * TODO: auto-cull 0:0 stats
 * TODO: .rematch! (on a timer?), double or nothing option (with !)
 * TODO: choice of weapons: double barrel shotgun?
 * TODO: timer on challenges
 * TODO: change decline messages so they don't say "win"
 """
-import random, time
+import random, time, shelve
 
 class stats():
     def __init__(self):
-        self.record = {}
+        self.db = shelve.open('roulette.db')
+        self.record = self.db['roulette']
+        self.db.close()
+
+    def refresh_db(self):
+        self.db = shelve.open('roulette.db')
+        self.db['roulette'] = self.record
+        self.db.close()
 
     def check(self, player1, player2):
         if player1 in self.record.keys():
@@ -57,15 +65,16 @@ class stats():
             res.append("%d:%d  %s" % (records[key], self.record[key][who], rec))
         res.append("%d:%d  Overall" % (wins, losses))
         return res
-                
+
     def update_players(self, winner, loser, abort=0):
         # each player records only his own wins against each
         # opponent.  This assumes that an entry exists for each
         # player and each opponent under that player.
-        if abort == 1:
+        if abort:
             self.record[winner][loser] += 2
         else:
             self.record[winner][loser] += 1
+            self.refresh_db()
 
     def get_players_records(self, player1, player2):
         p1_v_p2 = self.record[player1][player2]
