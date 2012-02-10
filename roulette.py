@@ -25,13 +25,17 @@ import random, time, shelve
 class stats():
     def __init__(self):
         self.db = shelve.open('roulette.db')
-        self.record = self.db['roulette']
+        try:
+            self.record = self.db['roulette']
+        except:
+            self.record = {}
         self.db.close()
 
     def refresh_db(self):
         self.db = shelve.open('roulette.db')
-        self.db['roulette'] = self.record
+        self.record = self.db['roulette'] 
         self.db.close()
+
 
     def check(self, player1, player2):
         if player1 in self.record.keys():
