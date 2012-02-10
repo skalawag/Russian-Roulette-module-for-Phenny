@@ -150,7 +150,6 @@ class game():
         self.winner = None
         self.loser = None
         self.abort = 0
-        self.game_ongoing = 0
 
 g = game()    
 
@@ -212,7 +211,6 @@ def play_game(phenny):
             phenny.say(random.choice(exclamations) % (g.players[0]))
             phenny.say("Congratulations, %s, you are the winner." % (g.players[1]))
             g.report_score(phenny, g.winner, g.loser) 
-            g.reset()
             
             break
 
@@ -228,7 +226,6 @@ def play_game(phenny):
             phenny.say("Since %s aborted, you are awarded 2 points." % (g.players[0]))
             g.report_score(phenny, g.winner, g.loser) 
             g.game_ongoing = 0
-            g.reset()
 
             break
         elif g.result == 3:
@@ -236,9 +233,7 @@ def play_game(phenny):
             phenny.say("But we'll give him a break this time.")
 
             # make announcement
-            g.report_score(phenny, g.winner, g.loser) 
             g.game_ongoing = 0
-            g.reset()
 
             break
         else:
@@ -246,6 +241,8 @@ def play_game(phenny):
             print "You shouldn't have gotten here. There is an error in the game loop."
 
             break
+
+        g.reset()
 
 def abort(phenny,input):
     # forfeit the game at any time
