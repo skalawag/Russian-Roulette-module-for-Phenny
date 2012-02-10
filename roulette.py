@@ -13,6 +13,7 @@ http://inamidst.com/phenny/
 * DONE: grant two points for an abort
 * DONE: format .rstats like rstats-me for a cleaner look
 * DONE: add simple persistence
+* DONE: bug-fix - if no challenge has been made, .accept throws an error
 * TODO: auto-cull 0:0 stats
 * TODO: .rematch! (on a timer?), double or nothing option (with !)
 * TODO: choice of weapons: double barrel shotgun?
@@ -199,6 +200,7 @@ def play_game(phenny):
             phenny.say(random.choice(exclamations) % (g.players[0]))
             phenny.say("Congratulations, %s, you are the winner." % (g.players[1]))
             g.report_score(phenny, g.winner, g.loser) 
+            g.reset()
             
             break
 
