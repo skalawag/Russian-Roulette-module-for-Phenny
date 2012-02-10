@@ -28,14 +28,14 @@ class stats():
         try:
             self.record = self.db['roulette']
         except:
+            self.db.setdefault('roulette',{})
             self.record = {}
         self.db.close()
 
     def refresh_db(self):
         self.db = shelve.open('roulette.db')
-        self.record = self.db['roulette'] 
+        self.db['roulette'] = self.record
         self.db.close()
-
 
     def check(self, player1, player2):
         if player1 in self.record.keys():
@@ -251,8 +251,11 @@ def challenge(phenny, input):
         g.time_of_challenge = time.time()
         g.challenger = input.nick.strip()
         g.challenge_made = 1
-        g.challenged = input.group(2).strip()
+        g.challenged = str(input.group(2).strip())
         g.statistics.check(g.challenger, g.challenged) # ADDED
+        print 'challenger:', g.challenger, type(g.challenger)
+        print 'challenged:', g.challenged, type(g.challenged)
+        print g.statistics.record
         phenny.say("%s challenged %s to Russian Roulette!" % (g.challenger, g.challenged))
         phenny.say("%s, do you accept?" % (g.challenged))
 challenge.commands = ['roulette', 'r']
