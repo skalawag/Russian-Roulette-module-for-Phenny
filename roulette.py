@@ -264,7 +264,7 @@ challenge.commands = ['roulette', 'r']
 
 def accept(phenny, input):
     if g.challenge_made == 0:
-        phenny.say("%s, there has been no challenge to Russian Roulette. Get a life!" % (input.nick))
+        phenny.say("%s, no one has challenged you to Russian Roulette. Get a life!" % (input.nick))
     elif g.challenge_made == 1 and input.nick != g.challenged:
         phenny.say("%s, let %s speak for himself!" % (input.nick, g.challenged))
     else:
