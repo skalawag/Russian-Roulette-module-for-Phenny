@@ -25,7 +25,6 @@ EXCLAMATIONS = ["Holy, cow! %s blew his head off!",
                 ]
 CHANGE = ["%s, it's your turn.", "%s, wipe that smirk off your face. It's your turn!"]
 
-
 class game():
     def __init__(self):
         self.GAME_IN_PROGRESS = 0
