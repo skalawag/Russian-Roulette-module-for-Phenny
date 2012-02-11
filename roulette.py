@@ -8,12 +8,7 @@ Licensed under the Eiffel Forum License 2.
 http://inamidst.com/phenny/
 """
 
-# SIMPLIFICATION: do away with game object --- the only thing that needs 
-# to stick around is the s ats object.  the rest can be run from or called
-# from the play_game func.
-
 """
-* TODO: .rematch! (on a timer?), double or nothing option (with !)
 * TODO: choice of weapons: double barrel shotgun?
 """
 
@@ -30,22 +25,25 @@ EXCLAMATIONS = ["Holy, cow! %s blew his head off!",
                 ]
 CHANGE = ["%s, it's your turn.", "%s, wipe that smirk off your face. It's your turn!"]
 
-GAME_IN_PROGRESS = 0
-PLAYERS = []
-BANG = 0
-TIME = None
-CHALLENGE_MADE = 0
-CHALLENGER = None
-CHALLENGED = None
 
-def reset():
-    GAME_IN_PROGRESS = 0
-    PLAYERS = []
-    BANG = 0
-    TIME = None
-    CHALLENGE_MADE = 0
-    CHALLENGER = None
-    CHALLENGED = None
+class game():
+    def __init__(self):
+        self.GAME_IN_PROGRESS = 0
+        self.PLAYERS = []
+        self.BANG = 0
+        self.R_TIME = None
+        self.CHALLENGE_MADE = 0
+        self.CHALLENGER = None
+        self.CHALLENGED = None
+
+    def reset(self):
+        self.GAME_IN_PROGRESS = 0
+        self.PLAYERS = []
+        self.BANG = 0
+        self.R_TIME = None
+        self.CHALLENGE_MADE = 0
+        self.CHALLENGER = None
+        self.CHALLENGED = None
 
 class stats():
     def __init__(self):
@@ -133,76 +131,77 @@ class stats():
                 if self.get_players_records(opponent, player) not in res:
                     res.append(self.get_players_records(player, opponent))
         return res
-    
+
+game = game()    
 stats = stats()
 
 def play_game(phenny):
     #setup
-    random.shuffle(PLAYERS)
+    random.shuffle(game.PLAYERS)
     bullet = random.choice([1, 2, 3])
-    BANG = 0
-    GAME_IN_PROGRESS = 1
+    game.BANG = 0
+    game.GAME_IN_PROGRESS = 1
 
     # Announce first player
     phenny.say("A coin toss will decide the first player....")
     time.sleep(2)
-    phenny.say("%s, you win!" % (PLAYERS[0]))
+    phenny.say("%s, you win!" % (game.PLAYERS[0]))
 
     while 1:
         # `spin' cylindar
         spin = random.choice([1, 2, 3])
         if spin == bullet:
-            BANG = 1
-        phenny.say("%s spins the cylinder..." % (PLAYERS[0]))
+            game.BANG = 1
+        phenny.say("%s spins the cylinder..." % (game.PLAYERS[0]))
         time.sleep(3)
 
         # announce result
-        if BANG == 0:
-            phenny.say("%s pulls the trigger!" % (PLAYERS[0]))
+        if game.BANG == 0:
+            phenny.say("%s pulls the trigger!" % (game.PLAYERS[0]))
             time.sleep(random.choice([1, 2, 3])) 
             phenny.say('CLICK')
             time.sleep(1)
-            phenny.say(random.choice(RELIEF) % (PLAYERS[0]))
-            PLAYERS = [PLAYERS[1], PLAYERS[0]]
+            phenny.say(random.choice(RELIEF) % (game.PLAYERS[0]))
+            game.PLAYERS = [game.PLAYERS[1], game.PLAYERS[0]]
 
-        elif BANG == 1:
-            phenny.say("%s pulls the trigger!" % (PLAYERS[0]))
+        elif game.BANG == 1:
+            phenny.say("%s pulls the trigger!" % (game.PLAYERS[0]))
             # update winner, loser and score
-            winner = PLAYERS[1] # survivor
-            loser = PLAYERS[0]
-            stats.update_score(winner, loser) 
+            winner = game.PLAYERS[1] # survivor
+            loser = game.PLAYERS[0]
+            stats.update_players(winner, loser) 
 
             # make announcements and cleanup
             phenny.say(random.choice(['BANG!', 'KA-POW', 'BOOM!', 'BAM!']))
             time.sleep(1)
-            phenny.say(random.choice(exclamations) % (PLAYERS[0]))
-            phenny.say("Congratulations, %s, you are the winner." % (PLAYERS[1]))
+            phenny.say(random.choice(EXCLAMATIONS) % (game.PLAYERS[0]))
+            phenny.say("Congratulations, %s, you are the winner." % (game.PLAYERS[1]))
             phenny.say(stats.get_players_records(winner, loser))
 
-            GAME_IN_PROGRESS = 0
+            game.GAME_IN_PROGRESS = 0
             break
 
         elif BANG == 2:
-            phenny.say("LOL! %s cannot bring himself to pull the trigger!" % (PLAYERS[0]))
+            phenny.say("LOL! %s cannot bring himself to pull the trigger!" % (game.PLAYERS[0]))
             # update the winner, loser and score
-            winner = PLAYERS[1]
-            loser = PLAYERS[0]
-            stats.update_score(winner, loser, abort=1)
+            winner = game.PLAYERS[1]
+            loser = game.PLAYERS[0]
+            stats.update_players(winner, loser, abort=1)
             
             # make announcement
-            phenny.say("Congratulations, %s, you are the winner." % (PLAYERS[1]))
-            phenny.say("Since %s aborted, you are awarded 2 points." % (PLAYERS[0]))
+            phenny.say("Congratulations, %s, you are the winner." % (game.PLAYERS[1]))
+            phenny.say("Since %s aborted, you are awarded 2 points." % (game.PLAYERS[0]))
             phenny.say(stats.get_players_records(winner, loser))
 
-            GAME_IN_PROGRESS = 0
+            game.GAME_IN_PROGRESS = 0
             break
 
-        elif BANG == 3:
+        elif game.BANG == 3:
             # make announcement
-            phenny.say("LOL! %s cannot bring himself to pull the trigger!" % (PLAYERS[0]))
+            phenny.say("LOL! %s cannot bring himself to pull the trigger!" % (game.PLAYERS[0]))
             phenny.say("But we'll give him a break this time.")
 
-            GAME_IN_PROGRESS = 0
+            game.GAME_IN_PROGRESS = 0
             break
 
         else:
@@ -211,47 +210,49 @@ def play_game(phenny):
             break
         
         stats.refresh_db()
-        reset()
+
 
 def abort(phenny,input):
     # forfeit the game at any time
-    if GAME_IN_PROGRESS == 0:
+    if game.GAME_IN_PROGRESS == 0:
         pass
-    elif input.nick != PLAYERS[0]:
+    elif input.nick != game.PLAYERS[0]:
         pass
     elif random.choice([0,1]) == 1:
-        BANG = 2
+        game.BANG = 2
     else:
-        BANG = 3
+        game.BANG = 3
 abort.commands = ['abort']
 
 def challenge(phenny, input):
-    if GAME_IN_PROGRESS == 1:
+    if game.GAME_IN_PROGRESS == 1:
         pass
-    elif TIME and (time.time() - TIME < 60):
+    elif game.R_TIME and (time.time() - game.R_TIME < 60):
         phenny.say("%s, there is a standing challenge." % (input.nick))
     else:
-        TIME = time.time()
-        CHALLENGER = input.nick.strip()
-        CHALLENGED = str(input.group(2).strip())
-        stats.check(CHALLENGER, CHALLENGED) 
-        phenny.say("%s challenged %s to Russian Roulette!" % (CHALLENGER, CHALLENGED))
-        phenny.say("%s, do you accept?" % (CHALLENGED))
+        game.CHALLENGE_MADE = 1
+        game.R_TIME = time.time()
+        game.CHALLENGER = input.nick.strip()
+        game.CHALLENGED = str(input.group(2).strip())
+        stats.check(game.CHALLENGER, game.CHALLENGED) 
+        phenny.say("%s challenged %s to Russian Roulette!" % (game.CHALLENGER, game.CHALLENGED))
+        phenny.say("%s, do you accept?" % (game.CHALLENGED))
 challenge.commands = ['roulette', 'r']
 
 def accept(phenny, input):
-    if CHALLENGE_MADE == 0:
+    if game.CHALLENGE_MADE == 0:
         phenny.say("%s, no one has challenged you to Russian Roulette. Get a life!" % (input.nick))
-    elif CHALLENGE_MADE == 1 and input.nick != CHALLENGED:
-        phenny.say("%s, let %s speak for himself!" % (input.nick, CHALLENGED))
+    elif game.CHALLENGE_MADE == 1 and input.nick != game.CHALLENGED:
+        phenny.say("%s, let %s speak for himself!" % (input.nick, game.CHALLENGED))
     else:
-        GAME_ONGOING = 1
+        game.GAME_IN_PROGRESS = 1
         phenny.say("%s accepts the challenge!" % input.nick)
         phenny.say("Let the game begin!")
-        PLAYERS = [CHALLENGED, CHALLENGER]
+        game.PLAYERS = [game.CHALLENGED, game.CHALLENGER]
         
         # GAME STARTS HERE
         play_game(phenny)
+        game.reset()
 accept.commands = ['accept', 'yes', 'acc', 'hell-yeah', 'pff']
 
 
@@ -261,23 +262,22 @@ def decline(phenny, input):
            '%s, %s is a fraidy-cat, and will not play.',
            '%s, %s is going to run home and cry.',
            ]
-    if CHALLENGE_MADE == 0:
+    if game.CHALLENGE_MADE == 0:
         phenny.say("%s, there has been no challenge to Russian Roulette. Get a life!" %s (input.nick))
-    elif CHALLENGE_MADE == 1 and input.nick != CHALLENGED:
-        phenny.say("%s, let %s speak for himself!" % (input.nick, g.challenged))
+    elif game.CHALLENGE_MADE == 1 and input.nick != game.CHALLENGED:
+        phenny.say("%s, let %s speak for himself!" % (input.nick, game.CHALLENGED))
     else:
         insult = random.choice(insults)
-        phenny.say(insult % (CHALLENGER, input.nick))
-        reset()
-
+        phenny.say(insult % (game.CHALLENGER, input.nick))
+        game.reset()
 decline.commands = ['decline', 'no', 'get-lost']
 
 def undo(phenny, input):        
-    if input.nick == CHALLENGER:
+    if input.nick == game.CHALLENGER:
         reset() 
         phenny.say("%s has retracted the challenge." % (input.nick))
     else:
-        if (time.time() - TIME) > 300: 
+        if (time.time() - game.R_TIME) > 300: 
             reset() 
             phenny.say("The challenge has been expired.")
         else:
