@@ -301,7 +301,7 @@ def rstat_me(phenny, input):
     res = stats.get_my_stats(input.nick)
     for item in res:
         phenny.say(item)
-rstat_me.commands = ['rstat-me','rstats-me']                           
+rstat_me.commands = ['rstatme', 'rstat-me','rstats-me']                           
 
 def get_stats_for_all(phenny, input):
     res = stats.get_all_stats()
