@@ -44,6 +44,7 @@ class game():
 
 class stats():
     def __init__(self):
+        self.CHAMPION = None
         self.db = shelve.open('roulette.db')
         try:
             self.record = self.db['roulette']
@@ -61,6 +62,9 @@ class stats():
                 self.record[name].pop(nick)
             except: pass
         self.refresh_db()
+
+    def set_champion(self):
+        self.CHAMPION = self.get_champion()
 
     def get_champion(self):
         """ Find the best record."""
@@ -85,7 +89,7 @@ class stats():
             winner = sorted(candidates, comp, lambda x: x[1])[0]
             res = "The current champion of Russian Roulette is %s, whose record is %d%%!" % (winner[0], winner[1])
             return res
-        except: pass
+        except: None
 
     def cull_zero_stats(self):
         names = self.record.keys()
@@ -276,6 +280,7 @@ def abort(phenny,input):
 # abort.commands = ['abort']
 
 def challenge(phenny, input):
+    stats.set_champion()
     if input.group(2) == '':
         pass
     elif game.GAME_IN_PROGRESS == 1:
@@ -292,6 +297,17 @@ def challenge(phenny, input):
         game.CHALLENGED = input.group(2)
         stats.check(game.CHALLENGER, game.CHALLENGED)
         phenny.say("NO_IAM_BOT accepts!")
+        game.PLAYERS = [game.CHALLENGED, game.CHALLENGER]
+        play_game(phenny)
+        game.reset()
+        stats.refresh_db()
+    elif input.group(2) == stats.champion:
+        game.CHALLENGE_MADE = 1
+        game.R_TIME = time.time()
+        game.CHALLENGER = input.nick
+        game.CHALLENGED = input.group(2)
+        stats.check(game.CHALLENGER, game.CHALLENGED)
+        phenny.say("The Champion always accepts!")
         game.PLAYERS = [game.CHALLENGED, game.CHALLENGER]
         play_game(phenny)
         game.reset()
