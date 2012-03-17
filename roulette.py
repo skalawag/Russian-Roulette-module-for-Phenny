@@ -301,7 +301,7 @@ def challenge(phenny, input):
         play_game(phenny)
         game.reset()
         stats.refresh_db()
-    elif input.group(2) == stats.champion:
+    elif input.group(2) == stats.CHAMPION:
         game.CHALLENGE_MADE = 1
         game.R_TIME = time.time()
         game.CHALLENGER = input.nick
