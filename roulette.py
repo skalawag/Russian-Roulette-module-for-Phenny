@@ -63,9 +63,6 @@ class stats():
             except: pass
         self.refresh_db()
 
-    def set_champion(self):
-        self.CHAMPION = self.get_champion()
-
     def get_champion(self):
         """ Find the best record."""
         names = self.record.keys()
@@ -88,6 +85,7 @@ class stats():
         try:
             winner = sorted(candidates, comp, lambda x: x[1])[0]
             res = "The current champion of Russian Roulette is %s, whose record is %d%%!" % (winner[0], winner[1])
+            self.CHAMPION = winner
             return res
         except: None
 
@@ -280,7 +278,6 @@ def abort(phenny,input):
 # abort.commands = ['abort']
 
 def challenge(phenny, input):
-    stats.set_champion()
     if input.group(2) == '':
         pass
     elif game.GAME_IN_PROGRESS == 1:
