@@ -230,11 +230,25 @@ def challenge(phenny, input):
         pass
     elif game.R_TIME and (time.time() - game.R_TIME < 60):
         phenny.say("%s, there is a standing challenge." % (input.nick))
+    elif input.group(2) == 'NO_IAM_BOT':
+        game.CHALLENGE_MADE = 1
+        game.R_TIME = time.time()
+        game.CHALLENGER = input.nick
+        game.CHALLENGED = 'NO_IAM_BOT'
+        stats.check(game.CHALLENGER, game.CHALLENGED) 
+        game.GAME_IN_PROGRESS = 1
+        phenny.say("NO_IAM_BOT accepts the challenge!")
+        phenny.say("Let the game begin!")
+        game.PLAYERS = [game.CHALLENGED, game.CHALLENGER]
+        
+        # GAME STARTS HERE
+        play_game(phenny)
+        game.reset()
     else:
         game.CHALLENGE_MADE = 1
         game.R_TIME = time.time()
-        game.CHALLENGER = input.nick.strip()
-        game.CHALLENGED = str(input.group(2).strip())
+        game.CHALLENGER = input.nick
+        game.CHALLENGED = str(input.group(2))
         stats.check(game.CHALLENGER, game.CHALLENGED) 
         phenny.say("%s challenged %s to Russian Roulette!" % (game.CHALLENGER, game.CHALLENGED))
         phenny.say("%s, do you accept?" % (game.CHALLENGED))
