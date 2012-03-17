@@ -8,10 +8,6 @@ Licensed under the Eiffel Forum License 2.
 http://inamidst.com/phenny/
 """
 
-"""
-* TODO: choice of weapons: double barrel shotgun?
-"""
-
 import random, time, shelve
 
 RELIEF = ["%s wipes the sweat from his brow.",
@@ -34,6 +30,7 @@ class game():
         self.CHALLENGE_MADE = 0
         self.CHALLENGER = None
         self.CHALLENGED = None
+        self.CATCH_ACCEPT = 0
 
     def reset(self):
         self.GAME_IN_PROGRESS = 0
@@ -43,6 +40,7 @@ class game():
         self.CHALLENGE_MADE = 0
         self.CHALLENGER = None
         self.CHALLENGED = None
+        self.CATCH_ACCEPT = 0
 
 class stats():
     def __init__(self):
@@ -53,6 +51,41 @@ class stats():
             self.db.setdefault('roulette',{})
             self.record = {}
         self.db.close()
+
+    def nuke_player(self, nick):
+        try:
+            self.record.pop(nick)
+        except: pass
+        for name in self.record.iterkeys():
+            try:
+                self.record[name].pop(nick)
+            except: pass
+        self.refresh_db()
+
+    def get_champion(self):
+        """ Find the best record."""
+        names = self.record.keys()
+        candidates = []
+        for name in names:
+            res = [name, 0, 0]
+            opps = self.record[name].keys()
+            for opp in opps:
+                res[1] += self.record[name][opp]
+                res[2] += self.record[opp][name]
+            try:
+                if res[1] + res[2] > 5:
+                    candidates.append([res[0], round(float(res[1])/float(res[1] + res[2]),4) * 100])
+                else: pass
+            except: pass
+        def comp(x,y):
+            if x > y: return -1
+            elif x < y: return 1
+            else: return 0
+        try:
+            winner = sorted(candidates, comp, lambda x: x[1])[0]
+            res = "The current champion of Russian Roulette is %s, whose record is %d%%!" % (winner[0], winner[1])
+            return res
+        except: pass
 
     def cull_zero_stats(self):
         names = self.record.keys()
@@ -99,8 +132,19 @@ class stats():
             wins += records[key]
             losses += self.record[key][who]
             res.append("%d:%d  %s" % (records[key], self.record[key][who], rec))
-        res.append("%d:%d  Overall" % (wins, losses))
+        res.append("%d:%d (%.2f%%) Overall" % (wins, losses, round(float(wins)/float(wins+losses), 4)*100))
         return res
+
+
+    # # FIXME: must remove occurrences in other players records.
+    # def reincarnate(self, nick):
+    #     self.record.pop(nick,"None")
+
+    def prune(phenny, input):
+        """ Prune a player's stats"""
+        pass
+
+
 
     def update_players(self, winner, loser, abort=0):
         # each player records only his own wins against each
@@ -151,6 +195,7 @@ def play_game(phenny):
         spin = random.choice([1, 2, 3])
         if spin == bullet:
             game.BANG = 1
+
         phenny.say("%s spins the cylinder..." % (game.PLAYERS[0]))
         time.sleep(3)
 
@@ -207,9 +252,16 @@ def play_game(phenny):
             # problem
             print "You shouldn't have gotten here. There is an error in the game loop."
             break
-        
-        stats.refresh_db()
 
+
+def reincarnate(phenny, input):
+    stats.reincarnate(input.nick)
+    phenny.say("%s, you have been reincarnated." % input.nick)
+# reincarnate.commands = ['reincarnate']
+
+def champion(phenny, input):
+    phenny.say(stats.get_champion())
+champion.commands = ['rchamp']
 
 def abort(phenny,input):
     # forfeit the game at any time
@@ -221,7 +273,7 @@ def abort(phenny,input):
         game.BANG = 2
     else:
         game.BANG = 3
-#abort.commands = ['abort']
+# abort.commands = ['abort']
 
 def challenge(phenny, input):
     if input.group(2) == '':
@@ -230,25 +282,25 @@ def challenge(phenny, input):
         pass
     elif game.R_TIME and (time.time() - game.R_TIME < 60):
         phenny.say("%s, there is a standing challenge." % (input.nick))
-    elif input.group(2) == 'NO_IAM_BOT':
+    elif input.nick == input.group(2):
+        phenny.say("%s, suicide is not a good idea." % input.nick)
+        phenny.say("If you dial 1-800-273-8255, a nice person will explain this to you.")
+    elif input.group(2) == "NO_IAM_BOT":
         game.CHALLENGE_MADE = 1
         game.R_TIME = time.time()
-        game.CHALLENGER = input.nick
-        game.CHALLENGED = 'NO_IAM_BOT'
-        stats.check(game.CHALLENGER, game.CHALLENGED) 
-        game.GAME_IN_PROGRESS = 1
-        phenny.say("NO_IAM_BOT accepts the challenge!")
-        phenny.say("Let the game begin!")
+        game.CHALLENGER = input.nick.strip()
+        game.CHALLENGED = input.group(2)
+        stats.check(game.CHALLENGER, game.CHALLENGED)
+        phenny.say("NO_IAM_BOT accepts!")
         game.PLAYERS = [game.CHALLENGED, game.CHALLENGER]
-        
-        # GAME STARTS HERE
         play_game(phenny)
         game.reset()
+        stats.refresh_db()
     else:
         game.CHALLENGE_MADE = 1
         game.R_TIME = time.time()
-        game.CHALLENGER = input.nick
-        game.CHALLENGED = str(input.group(2))
+        game.CHALLENGER = input.nick.strip()
+        game.CHALLENGED = str(input.group(2).strip())
         stats.check(game.CHALLENGER, game.CHALLENGED) 
         phenny.say("%s challenged %s to Russian Roulette!" % (game.CHALLENGER, game.CHALLENGED))
         phenny.say("%s, do you accept?" % (game.CHALLENGED))
@@ -259,24 +311,29 @@ def accept(phenny, input):
         phenny.say("%s, no one has challenged you to Russian Roulette. Get a life!" % (input.nick))
     elif game.CHALLENGE_MADE == 1 and input.nick != game.CHALLENGED:
         phenny.say("%s, let %s speak for himself!" % (input.nick, game.CHALLENGED))
+    elif game.CATCH_ACCEPT == 1:
+        pass
     else:
+        game.CATCH_ACCEPT = 1
         game.GAME_IN_PROGRESS = 1
         phenny.say("%s accepts the challenge!" % input.nick)
         phenny.say("Let the game begin!")
         game.PLAYERS = [game.CHALLENGED, game.CHALLENGER]
         
-        # GAME STARTS HERE
+        # GAME ==========
         play_game(phenny)
+
         game.reset()
+        stats.refresh_db()
 accept.commands = ['accept', 'yes', 'acc', 'hell-yeah', 'pff']
 
 def decline(phenny, input):
-    insults = ['%s, %s is yellow and will not play.',
+    insults = ['%s, %s is yella and will not play.',
            '%s, %s is a fraidy-cat, and will not play.',
            '%s, %s is going to run home and cry.',
            ]
     if game.CHALLENGE_MADE == 0:
-        phenny.say("%s, there has been no challenge to Russian Roulette. Get a life!" %s (input.nick))
+        phenny.say("%s, there has been no challenge to Russian Roulette. Get a life!" % (input.nick))
     elif game.CHALLENGE_MADE == 1 and input.nick != game.CHALLENGED:
         phenny.say("%s, let %s speak for himself!" % (input.nick, game.CHALLENGED))
     else:
@@ -286,22 +343,38 @@ def decline(phenny, input):
 decline.commands = ['decline', 'no', 'get-lost']
 
 def undo(phenny, input):        
-    if input.nick == game.CHALLENGER:
+    if input.group(2) == '':
+        pass
+    elif game.GAME_IN_PROGRESS == 1:
+        pass
+    elif game.CHALLENGE_MADE == 0:
+        pass
+    elif input.nick == game.CHALLENGER:
         game.reset() 
         phenny.say("%s has retracted the challenge." % (input.nick))
     else:
         if (time.time() - game.R_TIME) > 300: 
-            reset() 
+            game.reset() 
             phenny.say("The challenge has been expired.")
         else:
             phenny.say("The challenge has not expired, yet. Hold your horses.")
 undo.commands = ['undo']
 
+def rstat_him(phenny, input):
+    try:
+        res = stats.get_my_stats(input.group(2))
+        for item in res:
+            phenny.say(item)
+    except: pass
+rstat_him.commands = ['rstat']
+
 def rstat_me(phenny, input):
-    res = stats.get_my_stats(input.nick)
-    for item in res:
-        phenny.say(item)
-rstat_me.commands = ['rstatme', 'rstat-me','rstats-me']                           
+    try:
+        res = stats.get_my_stats(input.nick)
+        for item in res:
+            phenny.say(item)
+    except: pass
+rstat_me.commands = ['rstat-me','rstats-me', 'rstatme', 'rstatsme']                           
 
 def get_stats_for_all(phenny, input):
     res = stats.get_all_stats()
