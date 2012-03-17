@@ -85,7 +85,7 @@ class stats():
         try:
             winner = sorted(candidates, comp, lambda x: x[1])[0]
             res = "The current champion of Russian Roulette is %s, whose record is %d%%!" % (winner[0], winner[1])
-            self.CHAMPION = winner
+            self.CHAMPION = winner[0]
             return res
         except: None
 
