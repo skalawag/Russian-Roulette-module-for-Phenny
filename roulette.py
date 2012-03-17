@@ -221,10 +221,12 @@ def abort(phenny,input):
         game.BANG = 2
     else:
         game.BANG = 3
-abort.commands = ['abort']
+#abort.commands = ['abort']
 
 def challenge(phenny, input):
-    if game.GAME_IN_PROGRESS == 1:
+    if input.group(2) == '':
+        pass
+    elif game.GAME_IN_PROGRESS == 1:
         pass
     elif game.R_TIME and (time.time() - game.R_TIME < 60):
         phenny.say("%s, there is a standing challenge." % (input.nick))
@@ -254,8 +256,6 @@ def accept(phenny, input):
         game.reset()
 accept.commands = ['accept', 'yes', 'acc', 'hell-yeah', 'pff']
 
-
-
 def decline(phenny, input):
     insults = ['%s, %s is yellow and will not play.',
            '%s, %s is a fraidy-cat, and will not play.',
@@ -273,7 +273,7 @@ decline.commands = ['decline', 'no', 'get-lost']
 
 def undo(phenny, input):        
     if input.nick == game.CHALLENGER:
-        reset() 
+        game.reset() 
         phenny.say("%s has retracted the challenge." % (input.nick))
     else:
         if (time.time() - game.R_TIME) > 300: 
