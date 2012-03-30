@@ -131,26 +131,19 @@ class stats():
         res.append("%d:%d (%.2f%%) Overall" % (wins, losses, round(float(wins)/float(wins+losses), 4)*100))
         return res
 
-
-    # # FIXME: must remove occurrences in other players records.
-    # def reincarnate(self, nick):
-    #     self.record.pop(nick,"None")
-
     def prune(phenny, input):
         """ Prune a player's stats"""
         pass
 
-
-
     def update_players(self, winner, loser, abort=0):
-        # each player records only his own wins against each
+        # Each player records only his own wins against each
         # opponent.  This assumes that an entry exists for each
         # player and each opponent under that player.
-        if abort:
-            self.record[winner][loser] += 2
-        else:
+        try:
             self.record[winner][loser] += 1
             self.refresh_db()
+        except:
+            print "Problem updating players."
 
     def get_players_records(self, player1, player2):
         p1_v_p2 = self.record[player1][player2]
