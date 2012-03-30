@@ -45,6 +45,9 @@ class game():
 class stats():
     def __init__(self):
         self.CHAMPION = None
+        # The structure of the db is as follows.  {'roulette':
+        # {'player1': {'opp1-name': [wins,losses], 'opp2-name: [wins,
+        # losses], }, 'player2: {'opp1-name': [wins,losses],}...}}}
         self.db = shelve.open('roulette.db')
         try:
             self.record = self.db['roulette']
