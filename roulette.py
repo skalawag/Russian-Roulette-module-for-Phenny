@@ -53,15 +53,14 @@ class stats():
             self.record = {}
         self.db.close()
 
-    def nuke_player(self, nick):
-        try:
-            self.record.pop(nick)
-        except: pass
-        for name in self.record.iterkeys():
-            try:
-                self.record[name].pop(nick)
-            except: pass
-        self.refresh_db()
+    def refresh_db(self):
+        self.db = shelve.open('roulette.db')
+        self.db['roulette'] = self.record
+        self.db.close()
+
+    def get_ranking(self):
+        """ Get a total ranking of all players """
+        pass
 
     def get_champion(self):
         """ Find the best record."""
@@ -97,11 +96,6 @@ class stats():
                 if self.record[name][opp] == 0 and self.record[opp][name] == 0:
                     self.record[name].pop(opp)
                     self.record[opp].pop(name)
-
-    def refresh_db(self):
-        self.db = shelve.open('roulette.db')
-        self.db['roulette'] = self.record
-        self.db.close()
 
     def check(self, player1, player2):
         if player1 in self.record.keys():
