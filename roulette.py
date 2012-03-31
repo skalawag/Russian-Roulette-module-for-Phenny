@@ -65,31 +65,36 @@ class stats():
         """ Get a total ranking of all players """
         pass
 
+    def get_records(self):
+        """ Return a list of all players and their records. """
+        try: 
+            res = [] # a list of all players and their records
+            for name in self.record.keys():
+                record = [name, 0, 0]
+                for opp in self.record[name].keys():
+                    record[1] += opp[0] # wins
+                    record[2] += opp[1] # losses
+                    res.append(record)
+            return [(item[0], \
+                         round(float(item[1])/float(item[1] + item[2]),4) * 100) \
+                        for item in res]
+        except: 
+            print "Problem in get_records"
+
     def get_champion(self):
         """ Find the best record."""
-        names = self.record.keys()
-        candidates = []
-        for name in names:
-            res = [name, 0, 0]
-            opps = self.record[name].keys()
-            for opp in opps:
-                res[1] += self.record[name][opp]
-                res[2] += self.record[opp][name]
-            try:
-                if res[1] + res[2] > 5:
-                    candidates.append([res[0], round(float(res[1])/float(res[1] + res[2]),4) * 100])
-                else: pass
-            except: pass
         def comp(x,y):
             if x > y: return -1
             elif x < y: return 1
             else: return 0
         try:
-            winner = sorted(candidates, comp, lambda x: x[1])[0]
-            res = "The current champion of Russian Roulette is %s, whose record is %d%%!" % (winner[0], winner[1])
+            winner = sorted(self.get_records(), comp, lambda x: x[1])[0]
+            res = "The current champion of Russian Roulette is %s, whose record is %d%%!" % \
+                (winner[0], winner[1])
             self.CHAMPION = winner[0]
             return res
-        except: None
+        except: 
+            print "Problem in get_champion"
 
     def cull_zero_stats(self):
         names = self.record.keys()
