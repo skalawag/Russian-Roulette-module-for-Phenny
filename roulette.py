@@ -299,7 +299,7 @@ def total_wins(player):
         res = 0
         p = stats.record[player] 
         for key in p.keys():
-            res += key[0]
+            res += p[key][0]
         return res
     except: print "Problem in total_wins"
 
@@ -308,12 +308,15 @@ def total_losses(player):
         res = 0
         p = stats.record[player] 
         for key in p.keys():
-            res += key[1] 
+            res += p[key][1] 
         return res
     except: print "Problem in total_losses"
 
 def win_percentage(player):
-    return round(float(total_wins(player)) / total_losses(player) + total_wins(player), 6) * 100
+    try:
+        return round(float(total_wins(player)) / (total_losses(player) + \
+                                                      total_wins(player)), 6) * 100
+    except: pass
 
 # External
 def champion(phenny, input):
@@ -331,8 +334,10 @@ def rstat_me(phenny, input):
         wins = total_wins(input.nick)
         losses = total_losses(input.nick)
         perc = win_percentage(input.nick)
-        phenny.say('%s, your win-loss ration is $d:$d, or %d%%' % input.nick, wins, losses, perc)
-    except: pass
+        phenny.say('%s, you have won %s out of %s (%f%%)' \
+                       % (input.nick, wins, wins + losses, perc))
+    except: 
+        phenny.say("Problem in rstat_me")
 rstat_me.commands = ['rstat-me','rstats-me', 'rstatme', 'rstatsme']                           
 
 def get_ranking(phenny):
