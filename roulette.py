@@ -101,12 +101,11 @@ class stats():
         # opponent.  This assumes that an entry exists for each
         # player and each opponent under that player.
         try:
-            self.record[winner][loser] += 1
+            self.record[winner][loser][0] += 1
+            self.record[loser][winner][1] += 1
             self.refresh_db()
         except:
             print "Problem updating players."
-
-
 
     def check(self, player1, player2):
         if player1 in self.record.keys():
