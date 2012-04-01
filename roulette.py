@@ -89,6 +89,18 @@ class stats():
         except: 
             print "Problem in get_records"
 
+    def get_total_number_of_matches_played_for_each_player(self):
+        try:
+            res = []
+            for name in self.record.keys():
+                record = [name, 0]
+                for opp in self.record[name].keys():
+                    record[1] += self.record[name][opp][0] # adding wins against opp
+                    record[1] += self.record[name][opp][1] # adding losses against opp
+                res.append(record)
+            return res
+        else: print "Problem in stats.get_total_number_of_matches_played_for_each_player"
+
     def get_champion(self):
         """ Find the best record."""
         def comp(x,y):
@@ -293,17 +305,23 @@ def undo(phenny, input):
             phenny.say("The challenge has not expired, yet. Hold your horses.")
 undo.commands = ['undo']
 
+def total_matches(player):
+    total_matches = stats.get_total_number_of_matches_played_for_each_player()
+    return [item for item in total_matches if item[0] == player][1]
+
 def rstat_him(phenny, input):
     try:
+        total = total_matches(input.group(2))
         res = [item for item in stats.get_records() if item[0] == input.group(2)][0]
-        phenny.say("%s has won %d%% of his matches." % (res[0], res[1]))
+        phenny.say("%s has won %d%% of %d  matches." % (res[0], res[1], total))
     except: pass
 rstat_him.commands = ['rstat']
 
 def rstat_me(phenny, input):
     try:
+        total = total_matches(input.nick)
         res = [item for item in stats.get_records() if item[0] == input.nick][0]
-        phenny.say("%s, you have won %d%% of your matches." % (res[0],res[1]))
+        phenny.say("%s, you have won %d%% of your %d matches." % (res[0],res[1],total))
     except: pass
 rstat_me.commands = ['rstat-me','rstats-me', 'rstatme', 'rstatsme']                           
 
@@ -323,10 +341,11 @@ get_ranking.commands = ['rranking', 'rall']
 
 def get_my_percentage(phenny, input):
     try:
+        total = total_matches(input.nick)
         record = stats.get_records()
         for item in record:
             if input.nick == item[0]:
-                phenny.say("%s, you have won %d%% of your matches" % (input.nick, item[1]))
+                phenny.say("%s, you have won %d%% of %d matches" % (input.nick, item[1], total))
 get_my_percentage.commands = ['.rme']
 
 def get_diff(phenny, input):
