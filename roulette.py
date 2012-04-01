@@ -55,7 +55,12 @@ class stats():
             self.db.setdefault('roulette',{})
             self.record = {}
         self.db.close()
-
+    
+    def refresh_db(self):
+        self.db = shelve.open('roulette.db')
+        self.db['roulette'] = self.record
+        self.db.close()
+        
     def check(self, player1, player2):
         if player1 in self.record.keys():
             if player2 in self.record[player1].keys():
@@ -88,6 +93,11 @@ class stats():
                         for item in res]
         except: 
             print "Problem in get_records"
+            
+    def get_players_records(self, player1, player2):
+        p1vp2 = self.record[player1][player2][0]
+        p2vp1 = self.record[player2][player1][0]
+        return "%s: %d, %s: %d" % (player1, p1vp2, player2, p2vp1)
 
     def get_total_number_of_matches_played_for_each_player(self):
         try:
@@ -99,7 +109,8 @@ class stats():
                     record[1] += self.record[name][opp][1] # adding losses against opp
                 res.append(record)
             return res
-        else: print "Problem in stats.get_total_number_of_matches_played_for_each_player"
+        except: 
+            print "Problem in stats.get_total_number_of_matches_played_for_each_player"
 
     def get_champion(self):
         """ Find the best record."""
@@ -117,9 +128,6 @@ class stats():
             print "Problem in get_champion"
 
     def update_players(self, winner, loser, abort=0):
-        # Each player records only his own wins against each
-        # opponent.  This assumes that an entry exists for each
-        # player and each opponent under that player.
         try:
             self.record[winner][loser][0] += 1
             self.record[loser][winner][1] += 1
@@ -129,6 +137,10 @@ class stats():
 
 game = game()    
 stats = stats()
+
+def print_db(phenny,input):
+    phenny.say('%s' % (str( stats.record)))
+print_db.commands = ['rdb']
 
 def play_game(phenny):
     #setup
@@ -258,10 +270,10 @@ def accept(phenny, input):
         phenny.say("%s, let %s speak for himself!" % (input.nick, game.CHALLENGED))
     elif game.CATCH_ACCEPT == 1:
         pass
-    elif input.group(2) == 'BOT':
+    elif input.group(2) == 'blarbus':
         game.CATCH_ACCEPT = 1
         game.GAME_IN_PROGRESS = 1
-        phenny.say("BOT accepts the challenge!")
+        phenny.say("NO_IAM_BOT accepts the challenge!")
         phenny.say("Let the game begin!")
         game.PLAYERS = ['BOT', input.nick]
         
@@ -358,7 +370,8 @@ def get_my_percentage(phenny, input):
         for item in record:
             if input.nick == item[0]:
                 phenny.say("%s, you have won %d%% of %d matches" % (input.nick, item[1], total))
-get_my_percentage.commands = ['.rme']
+    except: print "Problem in global get_my_percentage."
+get_my_percentage.commands = ['rme']
 
 def get_diff(phenny, input):
     try: 
