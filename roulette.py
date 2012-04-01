@@ -80,7 +80,8 @@ class stats():
             self.record.setdefault(player2, {player1: [0,0]})
 
     def get_players_records(self, player1, player2):
-        pass
+        p1vp2 = self.record[player1][player2]
+        return p1vp2
         
     def get_records(self):
         """ Return a list of all players and their records. """
@@ -155,31 +156,8 @@ def play_game(phenny):
             time.sleep(1)
             phenny.say(random.choice(EXCLAMATIONS) % (game.PLAYERS[0]))
             phenny.say("Congratulations, %s, you are the winner." % (game.PLAYERS[1]))
-            phenny.say(stats.get_players_records(winner, loser))
-
-            game.GAME_IN_PROGRESS = 0
-            break
-
-        elif BANG == 2:
-            phenny.say("LOL! %s cannot bring himself to pull the trigger!" % (game.PLAYERS[0]))
-            # update the winner, loser and score
-            winner = game.PLAYERS[1]
-            loser = game.PLAYERS[0]
-            stats.update_players(winner, loser, abort=1)
-            
-            # make announcement
-            phenny.say("Congratulations, %s, you are the winner." % (game.PLAYERS[1]))
-            phenny.say("Since %s aborted, you are awarded 2 points." % (game.PLAYERS[0]))
-            phenny.say(stats.get_players_records(winner, loser))
-
-            game.GAME_IN_PROGRESS = 0
-            break
-
-        elif game.BANG == 3:
-            # make announcement
-            phenny.say("LOL! %s cannot bring himself to pull the trigger!" % (game.PLAYERS[0]))
-            phenny.say("But we'll give him a break this time.")
-
+            res = stats.get_players_records(game.PLAYERS[1], game.PLAYERS[0])
+            phenny.say('%d:%d  %s vs. %s' % (res[0], res[1], game.PLAYERS[1], game.PLAYERS[0]))
             game.GAME_IN_PROGRESS = 0
             break
 
@@ -318,12 +296,18 @@ def total_losses(player):
 def win_percentage(player):
     try:
         return round(float(total_wins(player)) / (total_losses(player) + \
-                                                      total_wins(player)), 6) * 100
+                                                      total_wins(player)), 4) * 100
     except: pass
 
 # External
 def champion(phenny, input):
-    try: phenny.say('not implemented')
+    try:
+        tar = ['dummy', 0.0]
+        for name in stats.record.keys():
+            if win_percentage(name) > tar[1]:
+                tar = [name, win_percentage(name)]
+        phenny.say('%s is the current champion, winning %f%% of his matches.' \
+                       % (tar[0],tar[1]))
     except: pass
 champion.commands = ['rchamp']
 
