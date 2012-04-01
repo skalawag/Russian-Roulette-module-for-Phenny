@@ -115,9 +115,6 @@ class stats():
         except:
             print "Problem updating players."
 
-    def get_diff(self, player1, player2):
-        """ Find the difference in player1 percentage and player2 """
-        pass
 
     # def cull_zero_stats(self):
     #     names = self.record.keys()
@@ -400,6 +397,21 @@ def get_my_percentage(phenny, input):
         for item in record:
             if input.nick == item[0]:
                 phenny.say("%s, you have won %d%% of your matches" % (input.nick, item[1]))
+get_my_percentage.commands = ['.rme']
+
+def get_diff(phenny, input):
+    try: 
+        records = stats.get_records()
+        p1 = [item for item in records if input.nick == item[0]][0]
+        p2 = [item for item in records if input.group(2) == item[0]][0]
+        if not p1 or not p2:
+            pass
+        elif p1[1] > p2[1]:
+            phenny.say("%s leads by %d%%" % (p1[0], p1[1] - p2[1]))
+        else:
+            phenny.say("%s leads by %d%%" % (p2[0], p2[1] - p1[1]))
+    except: pass
+get_diff.commands = ['rdiff']
 
 if __name__ == '__main__':
     print __doc__
