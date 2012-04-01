@@ -115,10 +115,6 @@ class stats():
         except:
             print "Problem updating players."
 
-    def get_ranking(self):
-        """ Get a total ranking of all players """
-        pass
-
     def get_my_percentage(self):
         """ Get my percentage of wins """
         pass
@@ -393,6 +389,14 @@ def get_stats_for_all(phenny, input):
     for item in res:
         phenny.say(item)
 get_stats_for_all.commands = ['roulette-stats', 'r-stats', 'rstats']
+
+def get_ranking(phenny):
+    try:
+        record = stats.get_records()
+        for item in record:
+            phenny.say "%d$%% %s" % (item[1], item[0])
+    except: print "Problem in get_ranking."
+get_ranking.commands = ['rranking', 'rall']
 
 if __name__ == '__main__':
     print __doc__
