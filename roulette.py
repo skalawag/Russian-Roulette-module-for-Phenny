@@ -79,6 +79,9 @@ class stats():
         else:
             self.record.setdefault(player2, {player1: [0,0]})
 
+    def get_players_records(self, player1, player2):
+        pass
+        
     def get_records(self):
         """ Return a list of all players and their records. """
         try: 
@@ -351,12 +354,25 @@ def get_ranking(phenny):
 get_ranking.commands = ['rranking', 'rall']
 
 def get_my_percentage(phenny, input):
-    try: phenny.say("not implemented")
+    try: 
+        res = win_percentage(input.nick)
+        phenny.say('%s, you have won %f%% of your matches' % (input.nick,res))
     except: print "Problem in global get_my_percentage."
 get_my_percentage.commands = ['rme']
 
 def get_diff(phenny, input):
-    phenny.say("not implemented")
+    try: 
+        players = input.group(2).split()
+        if len(players) != 2:
+            pass
+        p1 = win_percentage(players[0])
+        p2 = win_percentage(players[1])
+        if p1 > p2:
+            phenny.say('%s leads by %f%%' % (players[0],p1-p2))
+        else:
+            phenny.say('%s leads by %f%%' % (players[1],p2-p1))
+    except: pass
+        
 get_diff.commands = ['rdiff']
 
 if __name__ == '__main__':
