@@ -115,56 +115,6 @@ class stats():
         except:
             print "Problem updating players."
 
-
-    # def cull_zero_stats(self):
-    #     names = self.record.keys()
-    #     for name in names:
-    #         opps = self.record[name].keys()
-    #         for opp in opps:
-    #             if self.record[name][opp] == 0 and self.record[opp][name] == 0:
-    #                 self.record[name].pop(opp)
-    #                 self.record[opp].pop(name)
-
-    # def get_my_stats(self, who):
-    #     self.cull_zero_stats()
-    #     res = []
-    #     try:
-    #         records = self.record[who]
-    #     except:
-    #         return None
-    #     wins = 0
-    #     losses = 0
-    #     for key in records.keys():
-    #         rec = who + ' vs. ' + key
-    #         wins += records[key]
-    #         losses += self.record[key][who]
-    #         res.append("%d:%d  %s" % (records[key], self.record[key][who], rec))
-    #     res.append("%d:%d (%.2f%%) Overall" % (wins, losses, round(float(wins)/float(wins+losses), 4)*100))
-    #     return res
-
-    # def prune(phenny, input):
-    #     """ Prune a player's stats"""
-    #     pass
-
-    # def get_players_records(self, player1, player2):
-    #     p1_v_p2 = self.record[player1][player2]
-    #     p2_v_p1 = self.record[player2][player1]
-    #     return "%d:%d  %s vs %s" % (p1_v_p2, p2_v_p1, player1, player2)
-
-    # def get_all_stats(self):
-    #     # returns a list of annoucement strings suitable for
-    #     # phenny.say
-    #     self.cull_zero_stats()
-    #     all = self.record.keys()
-    #     res = []
-
-    #     # this is ugly because of my choice above.
-    #     for player in all:
-    #         for opponent in self.record[player].keys():
-    #             if self.get_players_records(opponent, player) not in res:
-    #                 res.append(self.get_players_records(player, opponent))
-    #     return res
-
 game = game()    
 stats = stats()
 
