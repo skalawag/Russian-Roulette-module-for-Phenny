@@ -56,6 +56,7 @@ class stats():
             self.record = {}
         self.db.close()
     
+    ## DB operations
     def refresh_db(self):
         self.db = shelve.open('roulette.db')
         self.db['roulette'] = self.record
@@ -88,18 +89,17 @@ class stats():
                     record[1] += opp[0] # wins
                     record[2] += opp[1] # losses
                     res.append(record)
-            return [(item[0], \
-                         round(float(item[1])/float(item[1] + item[2]),4) * 100) \
-                        for item in res]
+            return res
         except: 
             print "Problem in get_records"
-            
+    
+    # Score reporting functions
     def get_players_records(self, player1, player2):
         p1vp2 = self.record[player1][player2][0]
         p2vp1 = self.record[player2][player1][0]
         return "%s: %d, %s: %d" % (player1, p1vp2, player2, p2vp1)
 
-    def get_total_number_of_matches_played_for_each_player(self):
+    def get_total_num_matches_for_players(self):
         try:
             res = []
             for name in self.record.keys():
@@ -110,7 +110,7 @@ class stats():
                 res.append(record)
             return res
         except: 
-            print "Problem in stats.get_total_number_of_matches_played_for_each_player"
+            print "Problem in stats.get_total_num_matches_for_players"
 
     def get_champion(self):
         """ Find the best record."""
@@ -268,7 +268,7 @@ def accept(phenny, input):
         phenny.say("%s, no one has challenged you to Russian Roulette. Get a life!" % (input.nick))
     elif game.CHALLENGE_MADE == 1 and input.nick != game.CHALLENGED:
         phenny.say("%s, let %s speak for himself!" % (input.nick, game.CHALLENGED))
-    elif game.CATCH_ACCEPT == 1:
+    Elif game.CATCH_ACCEPT == 1:
         pass
     elif input.group(2) == 'blarbus':
         game.CATCH_ACCEPT = 1
@@ -330,7 +330,7 @@ def undo(phenny, input):
 undo.commands = ['undo']
 
 def total_matches(player):
-    total_matches = stats.get_total_number_of_matches_played_for_each_player()
+    total_matches = stats.get_total_num_matches_for_players()
     return [item for item in total_matches if item[0] == player][1]
 
 def rstat_him(phenny, input):
