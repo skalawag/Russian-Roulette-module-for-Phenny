@@ -327,7 +327,11 @@ def rstat_him(phenny, input):
 rstat_him.commands = ['rstat']
 
 def rstat_me(phenny, input):
-    try: phenny.say('not implemented')
+    try:
+        wins = total_wins(input.nick)
+        losses = total_losses(input.nick)
+        perc = win_percentage(input.nick)
+        phenny.say('%s, your win-loss ration is $d:$d, or %d%%' % input.nick, wins, losses, perc)
     except: pass
 rstat_me.commands = ['rstat-me','rstats-me', 'rstatme', 'rstatsme']                           
 
