@@ -96,14 +96,17 @@ class stats():
         except: 
             print "Problem in get_champion"
 
-    # def cull_zero_stats(self):
-    #     names = self.record.keys()
-    #     for name in names:
-    #         opps = self.record[name].keys()
-    #         for opp in opps:
-    #             if self.record[name][opp] == 0 and self.record[opp][name] == 0:
-    #                 self.record[name].pop(opp)
-    #                 self.record[opp].pop(name)
+    def update_players(self, winner, loser, abort=0):
+        # Each player records only his own wins against each
+        # opponent.  This assumes that an entry exists for each
+        # player and each opponent under that player.
+        try:
+            self.record[winner][loser] += 1
+            self.refresh_db()
+        except:
+            print "Problem updating players."
+
+
 
     def check(self, player1, player2):
         if player1 in self.record.keys():
@@ -121,6 +124,15 @@ class stats():
                 self.record[player2].setdefault(player1, [0,0])
         else:
             self.record.setdefault(player2, {player1: [0,0]})
+
+    # def cull_zero_stats(self):
+    #     names = self.record.keys()
+    #     for name in names:
+    #         opps = self.record[name].keys()
+    #         for opp in opps:
+    #             if self.record[name][opp] == 0 and self.record[opp][name] == 0:
+    #                 self.record[name].pop(opp)
+    #                 self.record[opp].pop(name)
 
     # def get_my_stats(self, who):
     #     self.cull_zero_stats()
@@ -142,16 +154,6 @@ class stats():
     # def prune(phenny, input):
     #     """ Prune a player's stats"""
     #     pass
-
-    def update_players(self, winner, loser, abort=0):
-        # Each player records only his own wins against each
-        # opponent.  This assumes that an entry exists for each
-        # player and each opponent under that player.
-        try:
-            self.record[winner][loser] += 1
-            self.refresh_db()
-        except:
-            print "Problem updating players."
 
     # def get_players_records(self, player1, player2):
     #     p1_v_p2 = self.record[player1][player2]
