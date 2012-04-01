@@ -93,40 +93,6 @@ class stats():
         except: 
             print "Problem in get_records"
     
-    # Score reporting functions
-    def get_players_records(self, player1, player2):
-        p1vp2 = self.record[player1][player2][0]
-        p2vp1 = self.record[player2][player1][0]
-        return "%s: %d, %s: %d" % (player1, p1vp2, player2, p2vp1)
-
-    def get_total_num_matches_for_players(self):
-        try:
-            res = []
-            for name in self.record.keys():
-                record = [name, 0]
-                for opp in self.record[name].keys():
-                    record[1] += self.record[name][opp][0] # adding wins against opp
-                    record[1] += self.record[name][opp][1] # adding losses against opp
-                res.append(record)
-            return res
-        except: 
-            print "Problem in stats.get_total_num_matches_for_players"
-
-    def get_champion(self):
-        """ Find the best record."""
-        def comp(x,y):
-            if x > y: return -1
-            elif x < y: return 1
-            else: return 0
-        try:
-            winner = sorted(self.get_records(), comp, lambda x: x[1])[0]
-            res = "The current champion of Russian Roulette is %s, whose record is %d%%!" % \
-                (winner[0], winner[1])
-            self.CHAMPION = winner[0]
-            return res
-        except: 
-            print "Problem in get_champion"
-
     def update_players(self, winner, loser, abort=0):
         try:
             self.record[winner][loser][0] += 1
@@ -138,10 +104,12 @@ class stats():
 game = game()    
 stats = stats()
 
+# Diagnostic
 def print_db(phenny,input):
     phenny.say('%s' % (str( stats.record)))
 print_db.commands = ['rdb']
 
+# Game Play
 def play_game(phenny):
     #setup
     random.shuffle(game.PLAYERS)
@@ -217,10 +185,6 @@ def play_game(phenny):
             print "You shouldn't have gotten here. There is an error in the game loop."
             break
 
-def champion(phenny, input):
-    phenny.say(stats.get_champion())
-champion.commands = ['rchamp']
-
 def challenge(phenny, input):
     if input.group(2) == '':
         pass
@@ -268,7 +232,7 @@ def accept(phenny, input):
         phenny.say("%s, no one has challenged you to Russian Roulette. Get a life!" % (input.nick))
     elif game.CHALLENGE_MADE == 1 and input.nick != game.CHALLENGED:
         phenny.say("%s, let %s speak for himself!" % (input.nick, game.CHALLENGED))
-    Elif game.CATCH_ACCEPT == 1:
+    elif game.CATCH_ACCEPT == 1:
         pass
     elif input.group(2) == 'blarbus':
         game.CATCH_ACCEPT = 1
@@ -329,62 +293,49 @@ def undo(phenny, input):
             phenny.say("The challenge has not expired, yet. Hold your horses.")
 undo.commands = ['undo']
 
-def total_matches(player):
-    total_matches = stats.get_total_num_matches_for_players()
-    return [item for item in total_matches if item[0] == player][1]
+## STATISTICS
+def total_wins(player):
+    try:
+        res = 0
+        p = stats.record[player] 
+        for key in p.keys():
+            res += key[0] 
+    except: print "Problem in total_wins"
+
+def total_losses(player):
+    pass
+
+def win_percentage(player):
+    pass
+
+# External
+def champion(phenny, input):
+    try: phenny.say('not implemented')
+    except: pass
+champion.commands = ['rchamp']
 
 def rstat_him(phenny, input):
-    try:
-        total = total_matches(input.group(2))
-        res = [item for item in stats.get_records() if item[0] == input.group(2)][0]
-        phenny.say("%s has won %d%% of %d  matches." % (res[0], res[1], total))
+    try: phenny.say('not implemented')
     except: pass
 rstat_him.commands = ['rstat']
 
 def rstat_me(phenny, input):
-    try:
-        total = total_matches(input.nick)
-        res = [item for item in stats.get_records() if item[0] == input.nick][0]
-        phenny.say("%s, you have won %d%% of your %d matches." % (res[0],res[1],total))
+    try: phenny.say('not implemented')
     except: pass
 rstat_me.commands = ['rstat-me','rstats-me', 'rstatme', 'rstatsme']                           
 
-def get_stats_for_all(phenny, input):
-    res = stats.get_all_stats()
-    for item in res:
-        phenny.say(item)
-get_stats_for_all.commands = ['roulette-stats', 'r-stats', 'rstats']
-
 def get_ranking(phenny):
-    try:
-        record = stats.get_records()
-        for item in record:
-            phenny.say("%d$%% %s" % (item[1], item[0]))
+    try: phenny.say('not implemented')
     except: print "Problem in get_ranking."
 get_ranking.commands = ['rranking', 'rall']
 
 def get_my_percentage(phenny, input):
-    try:
-        total = total_matches(input.nick)
-        record = stats.get_records()
-        for item in record:
-            if input.nick == item[0]:
-                phenny.say("%s, you have won %d%% of %d matches" % (input.nick, item[1], total))
+    try: phenny.say("not implemented")
     except: print "Problem in global get_my_percentage."
 get_my_percentage.commands = ['rme']
 
 def get_diff(phenny, input):
-    try: 
-        records = stats.get_records()
-        p1 = [item for item in records if input.nick == item[0]][0]
-        p2 = [item for item in records if input.group(2) == item[0]][0]
-        if not p1 or not p2:
-            pass
-        elif p1[1] > p2[1]:
-            phenny.say("%s leads by %d%%" % (p1[0], p1[1] - p2[1]))
-        else:
-            phenny.say("%s leads by %d%%" % (p2[0], p2[1] - p1[1]))
-    except: pass
+    phenny.say("not implemented")
 get_diff.commands = ['rdiff']
 
 if __name__ == '__main__':
