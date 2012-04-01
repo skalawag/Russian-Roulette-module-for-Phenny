@@ -115,10 +115,6 @@ class stats():
         except:
             print "Problem updating players."
 
-    def get_my_percentage(self):
-        """ Get my percentage of wins """
-        pass
-
     def get_diff(self, player1, player2):
         """ Find the difference in player1 percentage and player2 """
         pass
@@ -394,9 +390,16 @@ def get_ranking(phenny):
     try:
         record = stats.get_records()
         for item in record:
-            phenny.say "%d$%% %s" % (item[1], item[0])
+            phenny.say("%d$%% %s" % (item[1], item[0]))
     except: print "Problem in get_ranking."
 get_ranking.commands = ['rranking', 'rall']
+
+def get_my_percentage(phenny, input):
+    try:
+        record = stats.get_records()
+        for item in record:
+            if input.nick == item[0]:
+                phenny.say("%s, you have won %d%% of your matches" % (input.nick, item[1]))
 
 if __name__ == '__main__':
     print __doc__
