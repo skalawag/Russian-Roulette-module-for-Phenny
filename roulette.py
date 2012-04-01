@@ -302,9 +302,8 @@ rstat_him.commands = ['rstat']
 
 def rstat_me(phenny, input):
     try:
-        res = stats.get_my_stats(input.nick)
-        for item in res:
-            phenny.say(item)
+        res = [item for item in stats.get_records() if item[0] == input.nick][0]
+        phenny.say("%s, you have won %d%% of your matches." % (res[0],res[1]))
     except: pass
 rstat_me.commands = ['rstat-me','rstats-me', 'rstatme', 'rstatsme']                           
 
