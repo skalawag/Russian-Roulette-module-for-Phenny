@@ -325,7 +325,12 @@ def champion(phenny, input):
 champion.commands = ['rchamp']
 
 def rstat_him(phenny, input):
-    try: phenny.say('not implemented')
+    try: 
+        wins = total_wins(input.group(2))
+        losses = total_losses(input.group(2))
+        perc = win_percentage(input.group(2))
+        phenny.say('%s has won %s out of %s (%f%%)' \
+                       % (input.group(2), wins, wins + losses, perc))
     except: pass
 rstat_him.commands = ['rstat']
 
