@@ -44,7 +44,7 @@ class game():
 
 class stats():
     def __init__(self):
-        self.CHAMPION = None
+        self.CHAMPION = ['dummy',0.0]
         # The structure of the db is as follows.  {'roulette':
         # {'player1': {'opp1-name': [wins,losses], 'opp2-name: [wins,
         # losses], }, 'player2: {'opp1-name': [wins,losses],}...}}}
@@ -165,6 +165,7 @@ def play_game(phenny):
             # problem
             print "You shouldn't have gotten here. There is an error in the game loop."
             break
+    reset_champion()
 
 def challenge(phenny, input):
     if input.group(2) == '':
@@ -215,12 +216,12 @@ def accept(phenny, input):
         phenny.say("%s, let %s speak for himself!" % (input.nick, game.CHALLENGED))
     elif game.CATCH_ACCEPT == 1:
         pass
-    elif input.group(2) == 'blarbus':
+    elif input.group(2) == 'NO_IAM_BOT':
         game.CATCH_ACCEPT = 1
         game.GAME_IN_PROGRESS = 1
         phenny.say("NO_IAM_BOT accepts the challenge!")
         phenny.say("Let the game begin!")
-        game.PLAYERS = ['BOT', input.nick]
+        game.PLAYERS = ['NO_IAM_BOT', input.nick]
         
         # GAME ==========
         play_game(phenny)
@@ -300,14 +301,18 @@ def win_percentage(player):
     except: pass
 
 # External
+def reset_champion():
+    try:
+        for name in stats.record.keys():
+            if win_percentage(name) > stats.CHAMPION[1]:
+                stats.CHAMPION = [name, win_percentage(name)]
+    except: pass
+
 def champion(phenny, input):
     try:
-        tar = ['dummy', 0.0]
-        for name in stats.record.keys():
-            if win_percentage(name) > tar[1]:
-                tar = [name, win_percentage(name)]
+        reset_champion()
         phenny.say('%s is the current champion, winning %f%% of his matches.' \
-                       % (tar[0],tar[1]))
+                       % (stats.CHAMPION[0],STATS_CHAMPION[1]))
     except: pass
 champion.commands = ['rchamp']
 
