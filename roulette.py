@@ -96,31 +96,31 @@ class stats():
         except: 
             print "Problem in get_champion"
 
-    def cull_zero_stats(self):
-        names = self.record.keys()
-        for name in names:
-            opps = self.record[name].keys()
-            for opp in opps:
-                if self.record[name][opp] == 0 and self.record[opp][name] == 0:
-                    self.record[name].pop(opp)
-                    self.record[opp].pop(name)
+    # def cull_zero_stats(self):
+    #     names = self.record.keys()
+    #     for name in names:
+    #         opps = self.record[name].keys()
+    #         for opp in opps:
+    #             if self.record[name][opp] == 0 and self.record[opp][name] == 0:
+    #                 self.record[name].pop(opp)
+    #                 self.record[opp].pop(name)
 
     def check(self, player1, player2):
         if player1 in self.record.keys():
             if player2 in self.record[player1].keys():
                 pass
             else:
-                self.record[player1].setdefault(player2, 0)
+                self.record[player1].setdefault(player2, [0,0])
         else:
-            self.record.setdefault(player1, {player2: 0})
+            self.record.setdefault(player1, {player2: [0,0]})
 
         if player2 in self.record.keys():
             if player1 in self.record[player2].keys():
                 pass
             else:
-                self.record[player2].setdefault(player1, 0)
+                self.record[player2].setdefault(player1, [0,0])
         else:
-            self.record.setdefault(player2, {player1: 0})
+            self.record.setdefault(player2, {player1: [0,0]})
 
     def get_my_stats(self, who):
         self.cull_zero_stats()
