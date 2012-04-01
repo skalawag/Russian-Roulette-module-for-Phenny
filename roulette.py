@@ -299,14 +299,21 @@ def total_wins(player):
         res = 0
         p = stats.record[player] 
         for key in p.keys():
-            res += key[0] 
+            res += key[0]
+        return res
     except: print "Problem in total_wins"
 
 def total_losses(player):
-    pass
+    try:
+        res = 0
+        p = stats.record[player] 
+        for key in p.keys():
+            res += key[1] 
+        return res
+    except: print "Problem in total_losses"
 
 def win_percentage(player):
-    pass
+    return round(float(total_wins(player)) / total_losses(player) + total_wins(player), 6) * 100
 
 # External
 def champion(phenny, input):
