@@ -348,8 +348,18 @@ def rstat_me(phenny, input):
         phenny.say("Problem in rstat_me")
 rstat_me.commands = ['rstat-me','rstats-me', 'rstatme', 'rstatsme']                           
 
-def get_ranking(phenny):
-    try: phenny.say('not implemented')
+def get_ranking(phenny, input):
+    try: 
+        def compare(x,y):
+            if x < y: return 1
+            elif x > y: return -1
+            else: return 0
+        def key(x):
+            return x[1]
+        names = stats.record.keys()
+        res = sorted([(name, win_percentage(name)) for name in names], compare, key)
+        for item in res:
+            phenny.say('%f%%  %s' % (item[1], item[0]))
     except: print "Problem in get_ranking."
 get_ranking.commands = ['rranking', 'rall']
 
