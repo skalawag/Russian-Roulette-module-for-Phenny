@@ -56,14 +56,22 @@ class stats():
             self.record = {}
         self.db.close()
 
-    def refresh_db(self):
-        self.db = shelve.open('roulette.db')
-        self.db['roulette'] = self.record
-        self.db.close()
+    def check(self, player1, player2):
+        if player1 in self.record.keys():
+            if player2 in self.record[player1].keys():
+                pass
+            else:
+                self.record[player1].setdefault(player2, [0,0])
+        else:
+            self.record.setdefault(player1, {player2: [0,0]})
 
-    def get_ranking(self):
-        """ Get a total ranking of all players """
-        pass
+        if player2 in self.record.keys():
+            if player1 in self.record[player2].keys():
+                pass
+            else:
+                self.record[player2].setdefault(player1, [0,0])
+        else:
+            self.record.setdefault(player2, {player1: [0,0]})
 
     def get_records(self):
         """ Return a list of all players and their records. """
@@ -107,22 +115,17 @@ class stats():
         except:
             print "Problem updating players."
 
-    def check(self, player1, player2):
-        if player1 in self.record.keys():
-            if player2 in self.record[player1].keys():
-                pass
-            else:
-                self.record[player1].setdefault(player2, [0,0])
-        else:
-            self.record.setdefault(player1, {player2: [0,0]})
+    def get_ranking(self):
+        """ Get a total ranking of all players """
+        pass
 
-        if player2 in self.record.keys():
-            if player1 in self.record[player2].keys():
-                pass
-            else:
-                self.record[player2].setdefault(player1, [0,0])
-        else:
-            self.record.setdefault(player2, {player1: [0,0]})
+    def get_my_percentage(self):
+        """ Get my percentage of wins """
+        pass
+
+    def get_diff(self, player1, player2):
+        """ Find the difference in player1 percentage and player2 """
+        pass
 
     # def cull_zero_stats(self):
     #     names = self.record.keys()
