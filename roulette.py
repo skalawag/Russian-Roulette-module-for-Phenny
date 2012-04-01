@@ -366,7 +366,6 @@ def get_diff(phenny, input):
         else:
             phenny.say('%s leads by %f%%' % (players[1],p2-p1))
     except: pass
-        
 get_diff.commands = ['rdiff']
 
 if __name__ == '__main__':
