@@ -193,27 +193,9 @@ def play_game(phenny):
             print "You shouldn't have gotten here. There is an error in the game loop."
             break
 
-
-def reincarnate(phenny, input):
-    stats.reincarnate(input.nick)
-    phenny.say("%s, you have been reincarnated." % input.nick)
-# reincarnate.commands = ['reincarnate']
-
 def champion(phenny, input):
     phenny.say(stats.get_champion())
 champion.commands = ['rchamp']
-
-def abort(phenny,input):
-    # forfeit the game at any time
-    if game.GAME_IN_PROGRESS == 0:
-        pass
-    elif input.nick != game.PLAYERS[0]:
-        pass
-    elif random.choice([0,1]) == 1:
-        game.BANG = 2
-    else:
-        game.BANG = 3
-# abort.commands = ['abort']
 
 def challenge(phenny, input):
     if input.group(2) == '':
@@ -313,9 +295,8 @@ undo.commands = ['undo']
 
 def rstat_him(phenny, input):
     try:
-        res = stats.get_my_stats(input.group(2))
-        for item in res:
-            phenny.say(item)
+        res = [item for item in stats.get_records() if item[0] == input.group(2)][0]
+        phenny.say("%s has won %d%% of his matches." % (res[0], res[1]))
     except: pass
 rstat_him.commands = ['rstat']
 
