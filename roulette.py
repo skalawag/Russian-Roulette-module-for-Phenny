@@ -258,6 +258,18 @@ def accept(phenny, input):
         phenny.say("%s, let %s speak for himself!" % (input.nick, game.CHALLENGED))
     elif game.CATCH_ACCEPT == 1:
         pass
+    elif input.group(2) == 'BOT':
+        game.CATCH_ACCEPT = 1
+        game.GAME_IN_PROGRESS = 1
+        phenny.say("BOT accepts the challenge!")
+        phenny.say("Let the game begin!")
+        game.PLAYERS = ['BOT', input.nick]
+        
+        # GAME ==========
+        play_game(phenny)
+
+        game.reset()
+        stats.refresh_db()
     else:
         game.CATCH_ACCEPT = 1
         game.GAME_IN_PROGRESS = 1
