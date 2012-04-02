@@ -45,6 +45,7 @@ class game():
 class stats():
     def __init__(self):
         self.CHAMPION = ['dummy',0.0]
+        self.ALL_TIME_CHAMPION = ['dummy',0.0]
         # The structure of the db is as follows.  {'roulette':
         # {'player1': {'opp1-name': [wins,losses], 'opp2-name: [wins,
         # losses], }, 'player2: {'opp1-name': [wins,losses],}...}}}
@@ -317,6 +318,8 @@ def reset_champion():
                 best = [name, win_percentage(name)]
             else: pass
         stats.CHAMPION = best
+        if stats.CHAMPION[1] > stats.ALL_TIME_CHAMPION:
+            stats.ALL_TIME_CHAMPION = stats.CHAMPION
     except: pass
 
 def champion(phenny, input):
@@ -324,6 +327,8 @@ def champion(phenny, input):
     try:
         phenny.say('%s is the current champion, winning %.3f%% of his matches.' \
                        % (stats.CHAMPION[0],stats.CHAMPION[1]))
+        phenny.say('%s has the all-time high percentage of %.3f%%' \
+                       % (stats.ALL_TIME_CHAMPION[0], stats.ALL_TIME_CHAMPION[1]))
     except: print "Error in champion"
 champion.commands = ['rchamp']
 
