@@ -309,14 +309,14 @@ def reset_champion():
             if win_percentage(name) > stats.CHAMPION[1]:
                 stats.CHAMPION = [name, win_percentage(name)]
             else: pass
-    except: print "Error in reset_champion."
+    except: pass
 
 def champion(phenny, input):
     reset_champion()
     try:
         phenny.say('%s is the current champion, winning %.3f%% of his matches.' \
                        % (stats.CHAMPION[0],STATS_CHAMPION[1]))
-    except: pass
+    except: print "Error in champion"
 champion.commands = ['rchamp']
 
 def rstat_him(phenny, input):
