@@ -55,10 +55,10 @@ class stats():
         except:
             self.db.setdefault('roulette',{})
             self.record = {}
-        if not self.db['all_time']:
-            self.db.setdefault('all_time', self.ALL_TIME_CHAMPION)
-        else:
-            self.ALL_TIME_CHAMPION = self.db['all_time']
+        try: 
+            self.db['alltime']
+        except:
+            self.db.setdefault('alltime', self.ALL_TIME_CHAMPION)
         self.db.close()
     
     ## DB operations
