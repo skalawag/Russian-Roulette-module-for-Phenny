@@ -110,7 +110,7 @@ stats = stats()
 
 # Diagnostic
 def print_db(phenny,input):
-    if input.nick == 'scalawag':
+    if input.nick == 'skalawag':
         phenny.say('%s' % (str( stats.record)))
     else: pass
 print_db.commands = ['rdb']
