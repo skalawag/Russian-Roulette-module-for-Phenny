@@ -308,6 +308,7 @@ def reset_champion():
         for name in stats.record.keys():
             if win_percentage(name) > stats.CHAMPION[1]:
                 stats.CHAMPION = [name, win_percentage(name)]
+            else: pass
     except: pass
 
 def champion(phenny, input):
