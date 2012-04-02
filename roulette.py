@@ -331,13 +331,20 @@ def reset_champion():
         stats.refresh_db()
     except: pass
 
+
+def all_time_high(phenny, input):
+    reset_champion()
+    try:
+        phenny.say('%s has the all-time high percentage of %.3f%%' \
+                       % (stats.ALL_TIME_CHAMPION[0], stats.ALL_TIME_CHAMPION[1]))
+    except: pass
+all_time_high.commands = ['alltime']
+
 def champion(phenny, input):
     reset_champion()
     try:
         phenny.say('%s is the current champion, winning %.3f%% of his matches.' \
                        % (stats.CHAMPION[0],stats.CHAMPION[1]))
-        phenny.say('%s has the all-time high percentage of %.3f%%' \
-                       % (stats.ALL_TIME_CHAMPION[0], stats.ALL_TIME_CHAMPION[1]))
     except: print "Error in champion"
 champion.commands = ['rchamp']
 
@@ -375,7 +382,7 @@ def get_ranking(phenny, input):
         for item in res:
             phenny.say('%.3f%%  %s' % (item[1], item[0]))
     except: print "Problem in get_ranking."
-get_ranking.commands = ['rranking', 'rall']
+get_ranking.commands = ['rranking', 'rall', 'rstats']
 
 def get_my_percentage(phenny, input):
     try: 
