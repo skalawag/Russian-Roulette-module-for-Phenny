@@ -309,7 +309,7 @@ def reset_champion():
             if win_percentage(name) > stats.CHAMPION[1]:
                 stats.CHAMPION = [name, win_percentage(name)]
             else: pass
-    except: pass
+    except: print "Error in reset_champion."
 
 def champion(phenny, input):
     reset_champion()
