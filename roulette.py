@@ -313,7 +313,7 @@ def reset_champion():
 def champion(phenny, input):
     try:
         reset_champion()
-        phenny.say('%s is the current champion, winning %f%% of his matches.' \
+        phenny.say('%s is the current champion, winning %.3f%% of his matches.' \
                        % (stats.CHAMPION[0],STATS_CHAMPION[1]))
     except: pass
 champion.commands = ['rchamp']
@@ -323,7 +323,7 @@ def rstat_him(phenny, input):
         wins = total_wins(input.group(2))
         losses = total_losses(input.group(2))
         perc = win_percentage(input.group(2))
-        phenny.say('%s has won %s out of %s (%f%%)' \
+        phenny.say('%s has won %s out of %s (%.3f%%)' \
                        % (input.group(2), wins, wins + losses, perc))
     except: pass
 rstat_him.commands = ['rstat']
@@ -333,7 +333,7 @@ def rstat_me(phenny, input):
         wins = total_wins(input.nick)
         losses = total_losses(input.nick)
         perc = win_percentage(input.nick)
-        phenny.say('%s, you have won %s out of %s (%f%%)' \
+        phenny.say('%s, you have won %s out of %s (%.3f%%)' \
                        % (input.nick, wins, wins + losses, perc))
     except: 
         phenny.say("Problem in rstat_me")
@@ -350,14 +350,14 @@ def get_ranking(phenny, input):
         names = stats.record.keys()
         res = sorted([(name, win_percentage(name)) for name in names], compare, key)
         for item in res:
-            phenny.say('%f%%  %s' % (item[1], item[0]))
+            phenny.say('%.3f%%  %s' % (item[1], item[0]))
     except: print "Problem in get_ranking."
 get_ranking.commands = ['rranking', 'rall']
 
 def get_my_percentage(phenny, input):
     try: 
         res = win_percentage(input.nick)
-        phenny.say('%s, you have won %f%% of your matches' % (input.nick,res))
+        phenny.say('%s, you have won %.3f%% of your matches' % (input.nick,res))
     except: print "Problem in global get_my_percentage."
 get_my_percentage.commands = ['rme']
 
@@ -369,9 +369,9 @@ def get_diff(phenny, input):
         p1 = win_percentage(players[0])
         p2 = win_percentage(players[1])
         if p1 > p2:
-            phenny.say('%s leads by %f%%' % (players[0],p1-p2))
+            phenny.say('%s leads by %.3f%%' % (players[0],p1-p2))
         else:
-            phenny.say('%s leads by %f%%' % (players[1],p2-p1))
+            phenny.say('%s leads by %.3f%%' % (players[1],p2-p1))
     except: pass
 get_diff.commands = ['rdiff']
 
