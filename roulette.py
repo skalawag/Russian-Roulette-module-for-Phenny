@@ -342,7 +342,7 @@ def all_time_high(phenny, input):
         phenny.say('%s has the all-time high percentage of %.3f%%' \
                        % (stats.ALL_TIME_CHAMPION[0], stats.ALL_TIME_CHAMPION[1]))
     except: pass
-all_time_high.commands = ['alltime']
+all_time_high.commands = ['ralltime', 'rall-time', 'r-all-time']
 
 def champion(phenny, input):
     reset_champion()
