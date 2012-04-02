@@ -45,7 +45,7 @@ class game():
 class stats():
     def __init__(self):
         self.CHAMPION = ['dummy',0.0]
-        self.ALL_TIME_CHAMPION = ['dummy',0.0]
+        self.ALL_TIME_CHAMPION = ['skalawag', 89.889000]
         # The structure of the db is as follows.  {'roulette':
         # {'player1': {'opp1-name': [wins,losses], 'opp2-name: [wins,
         # losses], }, 'player2: {'opp1-name': [wins,losses],}...}}}
@@ -55,12 +55,20 @@ class stats():
         except:
             self.db.setdefault('roulette',{})
             self.record = {}
+        if not self.db['all_time']:
+            self.db.setdefault('all_time', self.ALL_TIME_CHAMPION)
+        else:
+            self.ALL_TIME_CHAMPION = self.db['all_time']
         self.db.close()
     
     ## DB operations
     def refresh_db(self):
         self.db = shelve.open('roulette.db')
         self.db['roulette'] = self.record
+        try:
+            self.db['all_time'] = self.ALL_TIME_CHAMPION
+        except:
+            self.db.setdefault('all_time', self.ALL_TIME_CHAMPION)
         self.db.close()
         
     def check(self, player1, player2):
@@ -320,6 +328,7 @@ def reset_champion():
         stats.CHAMPION = best
         if stats.CHAMPION[1] > stats.ALL_TIME_CHAMPION:
             stats.ALL_TIME_CHAMPION = stats.CHAMPION
+        stats.refresh_db()
     except: pass
 
 def champion(phenny, input):
