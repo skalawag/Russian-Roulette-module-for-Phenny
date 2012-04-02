@@ -46,19 +46,23 @@ class stats():
     def __init__(self):
         self.CHAMPION = ['dummy',0.0]
         self.ALL_TIME_CHAMPION = ['skalawag', 89.889000]
+        self.record = {}
+
         # The structure of the db is as follows.  {'roulette':
         # {'player1': {'opp1-name': [wins,losses], 'opp2-name: [wins,
         # losses], }, 'player2: {'opp1-name': [wins,losses],}...}}}
         self.db = shelve.open('roulette.db')
+
         try:
             self.record = self.db['roulette']
         except:
             self.db.setdefault('roulette',{})
-            self.record = {}
+
         try: 
             self.db['alltime']
         except:
             self.db.setdefault('alltime', self.ALL_TIME_CHAMPION)
+
         self.db.close()
     
     ## DB operations
