@@ -116,7 +116,7 @@ def print_db(phenny,input):
 print_db.commands = ['rdb']
 
 def print_champ(phenny, input):
-    if input.nick == 'skalawag'):
+    if input.nick == 'skalawag':
         phenny.say('%s' % (stats.CHAMPION))
     else: pass
 print_champ.commands = ['rprc']
