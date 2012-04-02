@@ -311,6 +311,7 @@ def reset_champion():
     except: pass
 
 def champion(phenny, input):
+    reset_champion()
     try:
         reset_champion()
         phenny.say('%s is the current champion, winning %.3f%% of his matches.' \
