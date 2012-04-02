@@ -298,8 +298,8 @@ def total_losses(player):
 
 def win_percentage(player):
     try:
-        return round(float(total_wins(player)) / (total_losses(player) + \
-                                                      total_wins(player)), 4) * 100
+        return (float(total_wins(player)) / (total_losses(player) + \
+                                                      total_wins(player))) * 100
     except: pass
 
 # External
@@ -313,7 +313,6 @@ def reset_champion():
 def champion(phenny, input):
     reset_champion()
     try:
-        reset_champion()
         phenny.say('%s is the current champion, winning %.3f%% of his matches.' \
                        % (stats.CHAMPION[0],STATS_CHAMPION[1]))
     except: pass
