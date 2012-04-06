@@ -56,12 +56,12 @@ class stats():
         try:
             self.record = self.db['roulette']
         except:
-            self.db.setdefault('roulette',{})
+            self.db['roulette'] = {}
 
         try: 
-            self.db['alltime']
+            self.ALL_TIME_CHAMPION = self.db['alltime']
         except:
-            self.db.setdefault('alltime', self.ALL_TIME_CHAMPION)
+            self.db['alltime'] = self.ALL_TIME_CHAMPION
 
         self.db.close()
     
@@ -69,10 +69,7 @@ class stats():
     def refresh_db(self):
         self.db = shelve.open('roulette.db')
         self.db['roulette'] = self.record
-        try:
-            self.db['all_time'] = self.ALL_TIME_CHAMPION
-        except:
-            self.db.setdefault('all_time', self.ALL_TIME_CHAMPION)
+        self.db['alltime'] = self.ALL_TIME_CHAMPION
         self.db.close()
         
     def check(self, player1, player2):
@@ -296,7 +293,7 @@ def undo(phenny, input):
             phenny.say("The challenge has not expired, yet. Hold your horses.")
 undo.commands = ['undo']
 
-## STATISTICS
+## STATISTICS HELPERS
 def total_wins(player):
     try:
         res = 0
@@ -321,7 +318,7 @@ def win_percentage(player):
                                                       total_wins(player))) * 100
     except: pass
 
-# External
+# COMMANDS
 def reset_champion():
     try:
         best = [None, 0]
@@ -330,11 +327,10 @@ def reset_champion():
                 best = [name, win_percentage(name)]
             else: pass
         stats.CHAMPION = best
-        if stats.CHAMPION[1] > stats.ALL_TIME_CHAMPION:
+        if stats.CHAMPION[1] > stats.ALL_TIME_CHAMPION and total_wins(stats.CHAMPION) > 6:
             stats.ALL_TIME_CHAMPION = stats.CHAMPION
         stats.refresh_db()
     except: pass
-
 
 def all_time_high(phenny, input):
     reset_champion()
@@ -342,7 +338,7 @@ def all_time_high(phenny, input):
         phenny.say('%s has the all-time high percentage of %.3f%%' \
                        % (stats.ALL_TIME_CHAMPION[0], stats.ALL_TIME_CHAMPION[1]))
     except: pass
-all_time_high.commands = ['ralltime', 'rall-time', 'r-all-time']
+all_time_high.commands = ['alltime', 'ralltime', 'rall-time', 'uberchamp']
 
 def champion(phenny, input):
     reset_champion()
