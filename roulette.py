@@ -156,7 +156,7 @@ def play_game(phenny):
         # announce result
         if game.BANG == 0:
             phenny.say("%s pulls the trigger!" % (game.PLAYERS[0]))
-            time.sleep(random.choice([1, 2, 3])) 
+            time.sleep(1) 
             phenny.say('CLICK')
             time.sleep(1)
             phenny.say(random.choice(RELIEF) % (game.PLAYERS[0]))
