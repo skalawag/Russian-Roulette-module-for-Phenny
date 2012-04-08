@@ -31,6 +31,8 @@ class game():
         self.CHALLENGER = None
         self.CHALLENGED = None
         self.CATCH_ACCEPT = 0
+        # if someone wins N in a row, give him a prize
+        self.LAST_WINNER = [None, 0]
 
     def reset(self):
         self.GAME_IN_PROGRESS = 0
@@ -115,6 +117,11 @@ class stats():
         except:
             print "Problem updating players."
 
+    def special_update(self, winner, loser):
+        try:
+            self.record[winner][loser][0] += 5
+        except: pass
+
 game = game()    
 stats = stats()
 
@@ -168,12 +175,20 @@ def play_game(phenny):
             winner = game.PLAYERS[1] # survivor
             loser = game.PLAYERS[0]
             stats.update_players(winner, loser) 
-
+            if game.LAST_WINNER == game.PLAYERS[1]:
+                game.LAST_WINNER[1] += 1
+            else:
+                game.LAST_WINNER = [game.PLAYERS[1], 1]
             # make announcements and cleanup
             phenny.say(random.choice(['BANG!', 'KA-POW!', 'BOOM!', 'BAM!', 'BLAMMO!', 'BOOM! BOOM!']))
             time.sleep(1)
             phenny.say(random.choice(EXCLAMATIONS) % (game.PLAYERS[0]))
-            phenny.say("Congratulations, %s, you are the winner." % (game.PLAYERS[1]))
+            if game.LAST_WINNER[1] < 3:
+                phenny.say("Congratulations, %s, you are the winner." % (game.PLAYERS[1]))
+            else:
+                phenny.say("Congratulations, %s, you are a Super Winner." % (game.PLAYERS[1]))
+                phenny.say("You win 10 extra points!")
+                stats.special_update(winner,loser)
             res = stats.get_players_records(game.PLAYERS[1], game.PLAYERS[0])
             phenny.say('%d:%d  %s vs. %s' % (res[0], res[1], game.PLAYERS[1], game.PLAYERS[0]))
             game.GAME_IN_PROGRESS = 0
