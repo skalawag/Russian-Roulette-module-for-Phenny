@@ -170,7 +170,7 @@ def play_game(phenny):
             stats.update_players(winner, loser) 
 
             # make announcements and cleanup
-            phenny.say(random.choice(['BANG!', 'KA-POW', 'BOOM!', 'BAM!']))
+            phenny.say(random.choice(['BANG!', 'KA-POW!', 'BOOM!', 'BAM!', 'BLAMMO!', 'BOOM! BOOM!']))
             time.sleep(1)
             phenny.say(random.choice(EXCLAMATIONS) % (game.PLAYERS[0]))
             phenny.say("Congratulations, %s, you are the winner." % (game.PLAYERS[1]))
