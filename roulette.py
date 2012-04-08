@@ -175,7 +175,7 @@ def play_game(phenny):
             winner = game.PLAYERS[1] # survivor
             loser = game.PLAYERS[0]
             stats.update_players(winner, loser) 
-            if game.LAST_WINNER == game.PLAYERS[1]:
+            if game.LAST_WINNER[0] == game.PLAYERS[1]:
                 game.LAST_WINNER[1] += 1
             else:
                 game.LAST_WINNER = [game.PLAYERS[1], 1]
