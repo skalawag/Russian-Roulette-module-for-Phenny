@@ -188,6 +188,7 @@ def play_game(phenny):
             else:
                 phenny.say("Congratulations, %s, you are a Super Winner." % (game.PLAYERS[1]))
                 phenny.say("You win 10 extra points!")
+                game.LAST_WINNER = [None, 0]
                 stats.special_update(winner,loser)
             res = stats.get_players_records(game.PLAYERS[1], game.PLAYERS[0])
             phenny.say('%d:%d  %s vs. %s' % (res[0], res[1], game.PLAYERS[1], game.PLAYERS[0]))
