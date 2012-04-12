@@ -199,7 +199,10 @@ def play_game(phenny):
             # problem
             print "You shouldn't have gotten here. There is an error in the game loop."
             break
+    champ = stats.CHAMPION 
     reset_champion()
+    if stats.CHAMPION != champ:
+        phenny.say("We have a new champion: %s!" % (stats.CHAMPION))
 
 def challenge(phenny, input):
     if input.group(2) == '':
