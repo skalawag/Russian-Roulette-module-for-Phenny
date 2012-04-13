@@ -201,7 +201,7 @@ def play_game(phenny):
             break
     champ = stats.CHAMPION[0]
     reset_champion()
-    if stats.CHAMPION != champ:
+    if stats.CHAMPION[0] != champ:
         phenny.say("We have a new champion: %s!" % (stats.CHAMPION[0]))
 
 def challenge(phenny, input):
