@@ -202,7 +202,7 @@ def play_game(phenny):
     champ = stats.CHAMPION 
     reset_champion()
     if stats.CHAMPION != champ:
-        phenny.say("We have a new champion: %s!" % (stats.CHAMPION))
+        phenny.say("We have a new champion: %s!" % (stats.CHAMPION[0]))
 
 def challenge(phenny, input):
     if input.group(2) == '':
