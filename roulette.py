@@ -119,8 +119,9 @@ class stats():
 
     def special_update(self, winner, loser):
         try:
-            self.record[winner][loser][0] += 10
-        except: pass
+            self.record[winner]['bonus'] += 10
+        except: 
+            self.record[winner].setdefault('bonus',10)
 
 game = game()    
 stats = stats()
