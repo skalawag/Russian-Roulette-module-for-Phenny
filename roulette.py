@@ -117,11 +117,11 @@ class stats():
         except:
             print "Problem updating players."
 
-    def special_update(self, winner, loser):
+    def special_update(self, winner, bonus):
         try:
-            self.record[winner]['bonus'] += 10
+            self.record[winner]['bonus'] += bonus
         except: 
-            self.record[winner].setdefault('bonus',10)
+            self.record[winner].setdefault('bonus', bonus)
 
 game = game()    
 stats = stats()
@@ -190,7 +190,7 @@ def play_game(phenny):
                 phenny.say("Congratulations, %s, you are a Super Winner." % (game.PLAYERS[1]))
                 phenny.say("You win 10 extra points!")
                 game.LAST_WINNER = [None, 0]
-                stats.special_update(winner,loser)
+                stats.special_update(winner, (total_wins(winner) + total_losses(winner))/10.0)
             res = stats.get_players_records(game.PLAYERS[1], game.PLAYERS[0])
             phenny.say('%d:%d  %s vs. %s' % (res[0], res[1], game.PLAYERS[1], game.PLAYERS[0]))
             game.GAME_IN_PROGRESS = 0
