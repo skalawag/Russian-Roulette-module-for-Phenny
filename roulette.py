@@ -47,7 +47,7 @@ class game():
 class stats():
     def __init__(self):
         self.CHAMPION = ['dummy',0.0]
-        self.ALL_TIME_CHAMPION = ['skalawag', 89.889000]
+        self.ALL_TIME_CHAMPION = [None, 0]
         self.record = {}
 
         # The structure of the db is as follows.  {'roulette':
