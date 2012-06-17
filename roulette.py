@@ -319,7 +319,10 @@ def total_wins(player):
         res = 0
         p = stats.record[player] 
         for key in p.keys():
-            res += p[key][0]
+            if type(p[key]) == type(1.0):
+                res += p[key]
+            else:
+                res += p[key][0]
         return res
     except: print "Problem in total_wins"
 
@@ -327,8 +330,12 @@ def total_losses(player):
     try:
         res = 0
         p = stats.record[player] 
+        print player, p
         for key in p.keys():
-            res += p[key][1] 
+            if type(p[key]) == type(1.0):
+                res += p[key]
+            else:
+                res += p[key][1] 
         return res
     except: print "Problem in total_losses"
 
@@ -396,11 +403,17 @@ def get_ranking(phenny, input):
             elif x > y: return -1
             else: return 0
         def key(x):
-            return x[1]
+            if x[1] == None:
+                return 0
+            else:
+                return x[1]
         names = stats.record.keys()
         res = sorted([(name, win_percentage(name)) for name in names], compare, key)
         for item in res:
-            phenny.say('%.3f%%  %s' % (item[1], item[0]))
+            if item[1] == None:
+                phenny.say('%.3f%%  %s' % (0.00, item[0]))
+            else:
+                phenny.say('%.3f%%  %s' % (item[1], item[0]))
     except: print "Problem in get_ranking."
 get_ranking.commands = ['rranking', 'rall', 'rstats']
 
