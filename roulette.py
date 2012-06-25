@@ -333,7 +333,7 @@ def total_losses(player):
         print player, p
         for key in p.keys():
             if type(p[key]) == type(1.0):
-                res += p[key]
+                pass # don't count bonus on losses
             else:
                 res += p[key][1] 
         return res
