@@ -104,7 +104,8 @@ class stats():
                 for opp in self.record[name].keys():
                     record[1] += opp[0] # wins
                     record[2] += opp[1] # losses
-                    res.append(record)
+                    if record[1] + record[2] > 0:
+                        res.append(record)
             return res
         except: 
             print "Problem in get_records"
