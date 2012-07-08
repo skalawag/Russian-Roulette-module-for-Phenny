@@ -410,6 +410,7 @@ def get_ranking(phenny, input):
                 return x[1]
         names = stats.record.keys()
         res = sorted([(name, win_percentage(name)) for name in names], compare, key)
+        res = [item for item in res if item[1] > 0.0]
         for item in res:
             if item[1] == None:
                 phenny.say('%.3f%%  %s' % (0.00, item[0]))
