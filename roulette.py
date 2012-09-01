@@ -44,6 +44,42 @@ class game():
         self.CHALLENGED = None
         self.CATCH_ACCEPT = 0
 
+
+#### Redo the scoring code ####
+class db():
+    def __init__(self):
+        self.storage = shelve.open('roulette.db')
+        try:
+            self.db = self.storage['roulette']
+        except:
+            # The first item here is a sorted list of names which will
+            # be used to make a table of player v player outcomes.
+            #
+            # Example: [[u'fyv', u'skalawag'], [[(0,0), (3, 10)],
+            # [(10, 3), (0, 0)]]] which is a list of player names and
+            # a list of rows of the table. a new playe is always added
+            # to the end so that the table is easy to extend (to
+            # extend a table, add a (0,0) entry to the end of each
+            # row, and a new row of (0,0)'s
+            self.storage['roulette'] = [] 
+        self.storage.close()
+
+        def extend_table(self):
+            "Adds a new player to the database"
+            pass
+        def get_score(self, p1, p2):
+            "Return score for row=p1, col=p2"
+            pass
+        def update_score(self, p1, p2):
+            """
+            Update the table for p1 v p2.
+ 
+            p1 is assumed to be the winner, and so his score is
+            incremented in two places against p2: row=p1, col=p2; and
+            row=p2, col=p1
+            """
+            pass
+
 class stats():
     def __init__(self):
         self.CHAMPION = ['dummy',0.0]
@@ -123,6 +159,10 @@ class stats():
             self.record[winner]['bonus'] += bonus
         except: 
             self.record[winner].setdefault('bonus', bonus)
+
+
+################################
+
 
 game = game()    
 stats = stats()
