@@ -96,86 +96,10 @@ class db():
                 elif item[0] == p2 and item[1] == p1:
                     item[2][1] += 1
 
-class stats():
-    def __init__(self):
-        self.CHAMPION = ['dummy',0.0]
-        self.ALL_TIME_CHAMPION = [None, 0]
-        self.record = {}
-
-        # The structure of the db is as follows.  {'roulette':
-        # {'player1': {'opp1-name': [wins,losses], 'opp2-name: [wins,
-        # losses], }, 'player2: {'opp1-name': [wins,losses],}...}}}
-        self.db = shelve.open('roulette.db')
-
-        try:
-            self.record = self.db['roulette']
-        except:
-            self.db['roulette'] = {}
-
-        try:
-            self.ALL_TIME_CHAMPION = self.db['alltime']
-        except:
-            self.db['alltime'] = self.ALL_TIME_CHAMPION
-
-        self.db.close()
-
-    ## DB operations
-    def refresh_db(self):
-        self.db = shelve.open('roulette.db')
-        self.db['roulette'] = self.record
-        self.db['alltime'] = self.ALL_TIME_CHAMPION
-        self.db.close()
-
-    def check(self, player1, player2):
-        if player1 in self.record.keys():
-            if player2 in self.record[player1].keys():
-                pass
-            else:
-                self.record[player1].setdefault(player2, [0,0])
-        else:
-            self.record.setdefault(player1, {player2: [0,0]})
-
-        if player2 in self.record.keys():
-            if player1 in self.record[player2].keys():
-                pass
-            else:
-                self.record[player2].setdefault(player1, [0,0])
-        else:
-            self.record.setdefault(player2, {player1: [0,0]})
-
-    def get_players_records(self, player1, player2):
-        p1vp2 = self.record[player1][player2]
-        return p1vp2
-
-    def get_records(self):
-        """ Return a list of all players and their records. """
-        try:
-            res = [] # a list of all players and their records
-            for name in self.record.keys():
-                record = [name, 0, 0]
-                for opp in self.record[name].keys():
-                    record[1] += opp[0] # wins
-                    record[2] += opp[1] # losses
-                    if record[1] + record[2] > 0:
-                        res.append(record)
-            return res
-        except:
-            print "Problem in get_records"
-
-    def update_players(self, winner, loser, abort=0):
-        try:
-            self.record[winner][loser][0] += 1
-            self.record[loser][winner][1] += 1
-            self.refresh_db()
-        except:
-            print "Problem updating players."
-
-    def special_update(self, winner, bonus):
-        try:
-            self.record[winner]['bonus'] += bonus
-        except:
-            self.record[winner].setdefault('bonus', bonus)
-
+        def refresh_db(self):
+            self.db = shelve.open('roulette.db')
+            self.db['roulette'] = self.db
+            self.db.close()
 
 ################################
 
