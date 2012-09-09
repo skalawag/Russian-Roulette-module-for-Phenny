@@ -119,8 +119,6 @@ def print_champ(phenny, input):
     else: pass
 print_champ.commands = ['rprc']
 
-######################################################
-
 # Game Play
 def play_game(phenny):
     #setup
@@ -140,7 +138,7 @@ def play_game(phenny):
         time.sleep(3)
 
         # announce result
-        if bang == 0:
+        if bang != 1:
 
             phenny.say("%s pulls the trigger!" % (game.PLAYERS[0]))
             time.sleep(1)
@@ -150,7 +148,6 @@ def play_game(phenny):
             game.PLAYERS = [game.PLAYERS[1], game.PLAYERS[0]]
 
         elif bang == 1:
-
             phenny.say("%s pulls the trigger!" % (game.PLAYERS[0]))
             # update winner, loser and score
             winner = game.PLAYERS[1] # survivor
@@ -190,7 +187,10 @@ def challenge(phenny, input):
         game.R_TIME = time.time()
         game.CHALLENGER = input.nick.strip()
         game.CHALLENGED = input.group(2)
+
+        # FIXME
         stats.check(game.CHALLENGER, game.CHALLENGED)
+
         phenny.say("NO_IAM_BOT accepts!")
         game.PLAYERS = [game.CHALLENGED, game.CHALLENGER]
         play_game(phenny)
@@ -216,6 +216,8 @@ def challenge(phenny, input):
         phenny.say("%s challenged %s to Russian Roulette!" % (game.CHALLENGER, game.CHALLENGED))
         phenny.say("%s, do you accept?" % (game.CHALLENGED))
 challenge.commands = ['roulette', 'r']
+
+##################################
 
 def accept(phenny, input):
     if game.CHALLENGE_MADE == 0:
