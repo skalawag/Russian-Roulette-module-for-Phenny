@@ -205,8 +205,6 @@ def challenge(phenny, input):
         phenny.say("%s, do you accept?" % (game.CHALLENGED))
 challenge.commands = ['roulette', 'r']
 
-##################################
-
 def accept(phenny, input):
     if game.CHALLENGE_MADE == 0:
         phenny.say("%s, no one has challenged you to Russian Roulette. Get a life!" % (input.nick))
@@ -257,6 +255,8 @@ def decline(phenny, input):
         game.reset()
 decline.commands = ['decline', 'no', 'get-lost']
 
+
+
 def undo(phenny, input):
     if input.group(2) == '':
         pass
@@ -274,6 +274,8 @@ def undo(phenny, input):
         else:
             phenny.say("The challenge has not expired, yet. Hold your horses.")
 undo.commands = ['undo']
+
+################################
 
 ## STATISTICS HELPERS
 def total_wins(player):
