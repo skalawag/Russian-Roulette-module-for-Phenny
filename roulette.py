@@ -53,8 +53,6 @@ class game():
         self.CHALLENGED = None
         self.CATCH_ACCEPT = 0
 
-
-#### Redo the scoring code ####
 class db():
     def __init__(self):
         self.storage = shelve.open('roulette.db')
@@ -100,9 +98,6 @@ class db():
             self.db = shelve.open('roulette.db')
             self.db['roulette'] = self.db
             self.db.close()
-
-################################
-
 
 game = game()
 stats = stats()
