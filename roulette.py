@@ -271,6 +271,10 @@ def undo(phenny, input):
             phenny.say("The challenge has not expired, yet. Hold your horses.")
 undo.commands = ['undo']
 
+
+###############################
+# FIXME
+
 ## STATISTICS HELPERS
 def total_wins(player):
     try:
@@ -302,6 +306,8 @@ def win_percentage(player):
         return (float(total_wins(player)) / (total_losses(player) + \
                                                       total_wins(player))) * 100
     except: pass
+
+###################################################
 
 # COMMANDS
 def remove_player(phenny, input):
