@@ -68,11 +68,13 @@ class db():
 
         def extend_table(self, player):
             """Adds a new player to the database
-
-            when a player is added to the row and column lists, he is
-            appended to the end.
             """
-            pass
+            # To add a player to the db, first add him to the front of
+            # all_players in self.db
+            self.db['all_players'] = [player] + self.db['all_players']
+            # next, add his score versus each player already in the db.
+            for item in self.db['all_players'][1:]:
+                self.db['scores'].append([player, item, (0,0)])
 
         def get_score(self, p1, p2):
             "Return score for row=p1, col=p2"
