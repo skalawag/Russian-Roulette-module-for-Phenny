@@ -66,7 +66,6 @@ class db():
         self.db = shelve.open('roulette.db')
         self.db['roulette'] = self.db
 
-
     def extend_table(self, player):
         """Adds a new player to the database
         """
@@ -125,6 +124,12 @@ def play_game(phenny):
     random.shuffle(game.PLAYERS)
     game.GAME_IN_PROGRESS = 1
 
+    # make sure both players are in db
+    if game.CHALLENGER not in db.db[0]:
+        db.extend_table(game.CHALLENGER)
+    if game.CHALLENGED not in db.db[0]:
+        db.extend_table(game.CHALLENGED)
+
     # Announce first player
     phenny.say("A coin toss will decide the first player....")
     time.sleep(2)
@@ -170,8 +175,6 @@ def play_game(phenny):
     if stats.CHAMPION[0] != champ:
         phenny.say("We have a new champion: %s!" % (stats.CHAMPION[0]))
 
-###########################################
-
 def challenge(phenny, input):
     if input.group(2) == '':
         pass
@@ -187,10 +190,6 @@ def challenge(phenny, input):
         game.R_TIME = time.time()
         game.CHALLENGER = input.nick.strip()
         game.CHALLENGED = input.group(2)
-
-        # FIXME
-        stats.check(game.CHALLENGER, game.CHALLENGED)
-
         phenny.say("NO_IAM_BOT accepts!")
         game.PLAYERS = [game.CHALLENGED, game.CHALLENGER]
         play_game(phenny)
