@@ -40,8 +40,6 @@ class game():
         self.CHALLENGER = None
         self.CHALLENGED = None
         self.CATCH_ACCEPT = 0
-        # if someone wins N in a row, give him a prize
-        self.LAST_WINNER = [None, 0]
 
     def reset(self):
         self.GAME_IN_PROGRESS = 0
@@ -159,26 +157,12 @@ def play_game(phenny):
             loser = game.PLAYERS[0]
 
             # FIXME
-            stats.update_players(winner, loser)
-
-            if game.LAST_WINNER[0] == game.PLAYERS[1]:
-                game.LAST_WINNER[1] += 1
-            else:
-                game.LAST_WINNER = [game.PLAYERS[1], 1]
+            db.update_score(winner, loser)
 
             # make announcements and cleanup
             phenny.say(random.choice(['BANG!', 'KA-POW!', 'BOOM!', 'BAM!', 'BLAMMO!', 'BOOM! BOOM!']))
             time.sleep(1)
             phenny.say(random.choice(EXCLAMATIONS) % (game.PLAYERS[0]))
-
-            if game.LAST_WINNER[1] < 3:
-                phenny.say("Congratulations, %s, you are the winner." % (game.PLAYERS[1]))
-            else:
-                phenny.say("Congratulations, %s, you are a Super Winner." % (game.PLAYERS[1]))
-                phenny.say("You win extra points!")
-                game.LAST_WINNER = [None, 0]
-                # FIXME:
-                stats.special_update(winner, (total_wins(winner) + total_losses(winner))/10.0)
 
             # FIXME
             res = stats.get_players_records(game.PLAYERS[1], game.PLAYERS[0])
