@@ -8,6 +8,15 @@ Licensed under the Eiffel Forum License 2.
 http://inamidst.com/phenny/
 """
 
+# TODO:
+#
+# 1. if a player is a heathen on the first (self) test of the day,
+# give him a small advantage against a sheep.
+#
+# 2. up the number of wins for a superwin to 4 (or 5?) --- remove the
+# incentive to game the game.
+
+
 import random, time, shelve
 
 RELIEF = ["%s wipes the sweat from his brow.",
@@ -61,19 +70,34 @@ class db():
             # to the end so that the table is easy to extend (to
             # extend a table, add a (0,0) entry to the end of each
             # row, and a new row of (0,0)'s
-            self.storage['roulette'] = [] 
+            self.storage['roulette'] = [[], # row-names
+                                        [], # column-names
+                                        []  # rows
+                                        ]
+            self.db = [[], [], []]
         self.storage.close()
 
-        def extend_table(self):
-            "Adds a new player to the database"
-            pass
+        def extend_table(self, player):
+            """Adds a new player to the database
+
+            when a player is added to the row and column lists, he is
+            appended to the end.
+            """
+            self.db[0].append(player)
+            self.db[1].append(player)
+            # extend each row in the table for the new player.
+            for item in self.db[2]:
+                item.append((0,0))
+            # append a new row of (0,0)'s for the new player
+            self.db.append[2].append([(0,0) for x in self.db[0]])
+
         def get_score(self, p1, p2):
             "Return score for row=p1, col=p2"
             pass
         def update_score(self, p1, p2):
             """
             Update the table for p1 v p2.
- 
+
             p1 is assumed to be the winner, and so his score is
             incremented in two places against p2: row=p1, col=p2; and
             row=p2, col=p1
@@ -96,20 +120,20 @@ class stats():
         except:
             self.db['roulette'] = {}
 
-        try: 
+        try:
             self.ALL_TIME_CHAMPION = self.db['alltime']
         except:
             self.db['alltime'] = self.ALL_TIME_CHAMPION
 
         self.db.close()
-    
+
     ## DB operations
     def refresh_db(self):
         self.db = shelve.open('roulette.db')
         self.db['roulette'] = self.record
         self.db['alltime'] = self.ALL_TIME_CHAMPION
         self.db.close()
-        
+
     def check(self, player1, player2):
         if player1 in self.record.keys():
             if player2 in self.record[player1].keys():
@@ -130,10 +154,10 @@ class stats():
     def get_players_records(self, player1, player2):
         p1vp2 = self.record[player1][player2]
         return p1vp2
-        
+
     def get_records(self):
         """ Return a list of all players and their records. """
-        try: 
+        try:
             res = [] # a list of all players and their records
             for name in self.record.keys():
                 record = [name, 0, 0]
@@ -143,9 +167,9 @@ class stats():
                     if record[1] + record[2] > 0:
                         res.append(record)
             return res
-        except: 
+        except:
             print "Problem in get_records"
-    
+
     def update_players(self, winner, loser, abort=0):
         try:
             self.record[winner][loser][0] += 1
@@ -157,14 +181,14 @@ class stats():
     def special_update(self, winner, bonus):
         try:
             self.record[winner]['bonus'] += bonus
-        except: 
+        except:
             self.record[winner].setdefault('bonus', bonus)
 
 
 ################################
 
 
-game = game()    
+game = game()
 stats = stats()
 
 # Diagnostic
@@ -205,7 +229,7 @@ def play_game(phenny):
         # announce result
         if game.BANG == 0:
             phenny.say("%s pulls the trigger!" % (game.PLAYERS[0]))
-            time.sleep(1) 
+            time.sleep(1)
             phenny.say('CLICK')
             time.sleep(1)
             phenny.say(random.choice(RELIEF) % (game.PLAYERS[0]))
@@ -216,7 +240,7 @@ def play_game(phenny):
             # update winner, loser and score
             winner = game.PLAYERS[1] # survivor
             loser = game.PLAYERS[0]
-            stats.update_players(winner, loser) 
+            stats.update_players(winner, loser)
             if game.LAST_WINNER[0] == game.PLAYERS[1]:
                 game.LAST_WINNER[1] += 1
             else:
@@ -283,7 +307,7 @@ def challenge(phenny, input):
         game.R_TIME = time.time()
         game.CHALLENGER = input.nick.strip()
         game.CHALLENGED = str(input.group(2).strip())
-        stats.check(game.CHALLENGER, game.CHALLENGED) 
+        stats.check(game.CHALLENGER, game.CHALLENGED)
         phenny.say("%s challenged %s to Russian Roulette!" % (game.CHALLENGER, game.CHALLENGED))
         phenny.say("%s, do you accept?" % (game.CHALLENGED))
 challenge.commands = ['roulette', 'r']
@@ -301,7 +325,7 @@ def accept(phenny, input):
         phenny.say("NO_IAM_BOT accepts the challenge!")
         phenny.say("Let the game begin!")
         game.PLAYERS = ['NO_IAM_BOT', input.nick]
-        
+
         # GAME ==========
         play_game(phenny)
 
@@ -313,7 +337,7 @@ def accept(phenny, input):
         phenny.say("%s accepts the challenge!" % input.nick)
         phenny.say("Let the game begin!")
         game.PLAYERS = [game.CHALLENGED, game.CHALLENGER]
-        
+
         # GAME ==========
         play_game(phenny)
 
@@ -336,7 +360,7 @@ def decline(phenny, input):
         game.reset()
 decline.commands = ['decline', 'no', 'get-lost']
 
-def undo(phenny, input):        
+def undo(phenny, input):
     if input.group(2) == '':
         pass
     elif game.GAME_IN_PROGRESS == 1:
@@ -344,11 +368,11 @@ def undo(phenny, input):
     elif game.CHALLENGE_MADE == 0:
         pass
     elif input.nick == game.CHALLENGER:
-        game.reset() 
+        game.reset()
         phenny.say("%s has retracted the challenge." % (input.nick))
     else:
-        if (time.time() - game.R_TIME) > 300: 
-            game.reset() 
+        if (time.time() - game.R_TIME) > 300:
+            game.reset()
             phenny.say("The challenge has been expired.")
         else:
             phenny.say("The challenge has not expired, yet. Hold your horses.")
@@ -358,7 +382,7 @@ undo.commands = ['undo']
 def total_wins(player):
     try:
         res = 0
-        p = stats.record[player] 
+        p = stats.record[player]
         for key in p.keys():
             if type(p[key]) == type(1.0):
                 res += p[key]
@@ -370,13 +394,13 @@ def total_wins(player):
 def total_losses(player):
     try:
         res = 0
-        p = stats.record[player] 
+        p = stats.record[player]
         print player, p
         for key in p.keys():
             if type(p[key]) == type(1.0):
                 pass # don't count bonus on losses
             else:
-                res += p[key][1] 
+                res += p[key][1]
         return res
     except: print "Problem in total_losses"
 
@@ -417,7 +441,7 @@ def champion(phenny, input):
 champion.commands = ['rchamp']
 
 def rstat_him(phenny, input):
-    try: 
+    try:
         wins = total_wins(input.group(2))
         losses = total_losses(input.group(2))
         perc = win_percentage(input.group(2))
@@ -433,12 +457,12 @@ def rstat_me(phenny, input):
         perc = win_percentage(input.nick)
         phenny.say('%s, you have won %s out of %s (%.3f%%)' \
                        % (input.nick, wins, wins + losses, perc))
-    except: 
+    except:
         phenny.say("Problem in rstat_me")
-rstat_me.commands = ['rstat-me','rstats-me', 'rstatme', 'rstatsme']                           
+rstat_me.commands = ['rstat-me','rstats-me', 'rstatme', 'rstatsme']
 
 def get_ranking(phenny, input):
-    try: 
+    try:
         def compare(x,y):
             if x < y: return 1
             elif x > y: return -1
@@ -460,14 +484,14 @@ def get_ranking(phenny, input):
 get_ranking.commands = ['rranking', 'rall', 'rstats']
 
 def get_my_percentage(phenny, input):
-    try: 
+    try:
         res = win_percentage(input.nick)
         phenny.say('%s, you have won %.3f%% of your matches' % (input.nick,res))
     except: print "Problem in global get_my_percentage."
 get_my_percentage.commands = ['rme']
 
 def get_diff(phenny, input):
-    try: 
+    try:
         players = input.group(2).split()
         if len(players) != 2:
             pass
