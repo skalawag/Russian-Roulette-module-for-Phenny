@@ -279,7 +279,7 @@ undo.commands = ['undo']
 def total_wins(player):
     try:
         res = 0
-        p = stats.record[player]
+        p = db.record[player]
         for key in p.keys():
             if type(p[key]) == type(1.0):
                 res += p[key]
@@ -291,7 +291,7 @@ def total_wins(player):
 def total_losses(player):
     try:
         res = 0
-        p = stats.record[player]
+        p = db.record[player]
         print player, p
         for key in p.keys():
             if type(p[key]) == type(1.0):
@@ -317,21 +317,21 @@ remove_player.commands = ['rremove']
 def reset_champion():
     try:
         best = [None, 0]
-        for name in stats.record.keys():
+        for name in db.record.keys():
             if win_percentage(name) > best[1]:
                 best = [name, win_percentage(name)]
             else: pass
-        stats.CHAMPION = best
-        if stats.CHAMPION[1] > stats.ALL_TIME_CHAMPION and total_wins(stats.CHAMPION) > 6:
-            stats.ALL_TIME_CHAMPION = stats.CHAMPION
-        stats.refresh_db()
+        db.CHAMPION = best
+        if db.CHAMPION[1] > db.ALL_TIME_CHAMPION and total_wins(db.CHAMPION) > 6:
+            db.ALL_TIME_CHAMPION = db.CHAMPION
+        db.refresh_db()
     except: pass
 
 def all_time_high(phenny, input):
     reset_champion()
     try:
         phenny.say('%s has the all-time high percentage of %.3f%%' \
-                       % (stats.ALL_TIME_CHAMPION[0], stats.ALL_TIME_CHAMPION[1]))
+                       % (db.ALL_TIME_CHAMPION[0], db.ALL_TIME_CHAMPION[1]))
     except: pass
 all_time_high.commands = ['alltime', 'ralltime', 'rall-time', 'uberchamp']
 
@@ -339,7 +339,7 @@ def champion(phenny, input):
     reset_champion()
     try:
         phenny.say('%s is the current champion, winning %.3f%% of his matches.' \
-                       % (stats.CHAMPION[0],stats.CHAMPION[1]))
+                       % (db.CHAMPION[0],db.CHAMPION[1]))
     except: print "Error in champion"
 champion.commands = ['rchamp']
 
@@ -375,7 +375,7 @@ def get_ranking(phenny, input):
                 return 0
             else:
                 return x[1]
-        names = stats.record.keys()
+        names = db.record.keys()
         res = sorted([(name, win_percentage(name)) for name in names], compare, key)
         res = [item for item in res if item[1] > 0.0]
         for item in res:
