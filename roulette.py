@@ -72,6 +72,7 @@ class db():
             # To add a player to the db, first add him to the front of
             # all_players in self.db
             self.db['all_players'] = [player] + self.db['all_players']
+
             # next, add his score versus each player already in the db.
             for item in self.db['all_players'][1:]:
                 self.db['scores'].append([player, item, (0,0)])
