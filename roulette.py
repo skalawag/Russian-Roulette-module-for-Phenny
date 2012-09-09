@@ -328,6 +328,13 @@ def win_percentage(player):
     except: pass
 
 # COMMANDS
+def remove_player(phenny, input):
+    if input.nick != 'skalawag':
+        pass
+    else db.remove_player(input.group(2))
+
+remove_player.commands = ['remove']
+
 def reset_champion():
     try:
         best = [None, 0]
