@@ -135,45 +135,44 @@ def play_game(phenny):
     time.sleep(2)
     phenny.say("%s, you win!" % (game.PLAYERS[0]))
 
-    while 1:
-        # `spin' cylindar
-        bang = random.choice([0,1])
+    # accidental death
+    if random.choice([1,2,3,4,5,6,7,8,9,10]) == 1:
+        pass # player accidentally kills himself.
+    else:
+        while 1:
+            # `spin' cylindar
+            bang = random.choice([0,1])
 
-        phenny.say("%s spins the cylinder..." % (game.PLAYERS[0]))
-        time.sleep(3)
+            phenny.say("%s spins the cylinder..." % (game.PLAYERS[0]))
+            time.sleep(3)
 
-        # announce result
-        if bang != 1:
+            # announce result
+            if bang != 1:
 
-            phenny.say("%s pulls the trigger!" % (game.PLAYERS[0]))
-            time.sleep(1)
-            phenny.say('CLICK')
-            time.sleep(1)
-            phenny.say(random.choice(RELIEF) % (game.PLAYERS[0]))
-            game.PLAYERS = [game.PLAYERS[1], game.PLAYERS[0]]
+                phenny.say("%s pulls the trigger!" % (game.PLAYERS[0]))
+                time.sleep(1)
+                phenny.say('CLICK')
+                time.sleep(1)
+                phenny.say(random.choice(RELIEF) % (game.PLAYERS[0]))
+                game.PLAYERS = [game.PLAYERS[1], game.PLAYERS[0]]
 
-        elif bang == 1:
-            phenny.say("%s pulls the trigger!" % (game.PLAYERS[0]))
-            # update winner, loser and score
-            winner = game.PLAYERS[1] # survivor
-            loser = game.PLAYERS[0]
-            db.update_score(winner, loser)
+            elif bang == 1:
+                phenny.say("%s pulls the trigger!" % (game.PLAYERS[0]))
+                # update winner, loser and score
+                winner = game.PLAYERS[1] # survivor
+                loser = game.PLAYERS[0]
+                db.update_score(winner, loser)
 
-            # make announcements and cleanup
-            phenny.say(random.choice(['BANG!', 'KA-POW!', 'BOOM!', 'BAM!', 'BLAMMO!', 'BOOM! BOOM!']))
-            time.sleep(1)
-            phenny.say(random.choice(EXCLAMATIONS) % (game.PLAYERS[0]))
+                # make announcements and cleanup
+                phenny.say(random.choice(['BANG!', 'KA-POW!', 'BOOM!', 'BAM!', 'BLAMMO!', 'BOOM! BOOM!']))
+                time.sleep(1)
+                phenny.say(random.choice(EXCLAMATIONS) % (game.PLAYERS[0]))
 
-            res = db.get_score(winner, loser)
-            phenny.say('%d:%d  %s vs. %s' % (res[2][0], res[2][1], res[0], res[1]))
+                res = db.get_score(winner, loser)
+                phenny.say('%d:%d  %s vs. %s' % (res[2][0], res[2][1], res[0], res[1]))
 
-            game.GAME_IN_PROGRESS = 0
-            break
-
-    # champ = db.CHAMPION[0]
-    # reset_champion()
-    # if db.CHAMPION[0] != champ:
-    #     phenny.say("We have a new champion: %s!" % (db.CHAMPION[0]))
+                game.GAME_IN_PROGRESS = 0
+                break
 
 def challenge(phenny, input):
     if input.group(2) == '':
