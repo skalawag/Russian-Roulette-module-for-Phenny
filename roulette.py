@@ -329,20 +329,13 @@ def reset_champion():
         db.refresh_db()
     except: pass
 
-def all_time_high(phenny, input):
-    reset_champion()
-    try:
-        phenny.say('%s has the all-time high percentage of %.3f%%' \
-                       % (db.ALL_TIME_CHAMPION[0], db.ALL_TIME_CHAMPION[1]))
-    except: pass
-all_time_high.commands = ['alltime', 'ralltime', 'rall-time', 'uberchamp']
-
 def champion(phenny, input):
     reset_champion()
     try:
         phenny.say('%s is the current champion, winning %.3f%% of his matches.' \
                        % (db.CHAMPION[0],db.CHAMPION[1]))
-    except: print "Error in champion"
+    except:
+        phenny.say("There doesn't seem to be a champion at the moment.")
 champion.commands = ['rchamp']
 
 def rstat_him(phenny, input):
