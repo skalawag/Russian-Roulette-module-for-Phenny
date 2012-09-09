@@ -225,7 +225,7 @@ def accept(phenny, input):
         play_game(phenny)
 
         game.reset()
-        stats.refresh_db()
+        db.refresh_db()
     else:
         game.CATCH_ACCEPT = 1
         game.GAME_IN_PROGRESS = 1
@@ -237,7 +237,7 @@ def accept(phenny, input):
         play_game(phenny)
 
         game.reset()
-        stats.refresh_db()
+        db.refresh_db()
 accept.commands = ['accept', 'yes', 'acc', 'hell-yeah', 'pff']
 
 #########################################
