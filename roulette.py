@@ -101,7 +101,6 @@ class db():
         self.db[1] = [item for item in self.db[1] if item[0] != p and item[1] != p]
         self.refresh_db()
 
-
 game = game()
 db = db()
 
@@ -279,7 +278,7 @@ def undo(phenny, input):
 undo.commands = ['undo']
 
 ###############################
-# FIXME: move these to a statistics class
+# FIXME: move these to a statistics or to the db class
 
 # ## STATISTICS HELPERS
 # def total_wins(player):
