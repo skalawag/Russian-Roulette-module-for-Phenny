@@ -155,8 +155,6 @@ def play_game(phenny):
             # update winner, loser and score
             winner = game.PLAYERS[1] # survivor
             loser = game.PLAYERS[0]
-
-            # FIXME
             db.update_score(winner, loser)
 
             # make announcements and cleanup
@@ -164,14 +162,12 @@ def play_game(phenny):
             time.sleep(1)
             phenny.say(random.choice(EXCLAMATIONS) % (game.PLAYERS[0]))
 
-            # FIXME
-            res = stats.get_players_records(game.PLAYERS[1], game.PLAYERS[0])
-            phenny.say('%d:%d  %s vs. %s' % (res[0], res[1], game.PLAYERS[1], game.PLAYERS[0]))
+            res = db.get_score(winner, loser)
+            phenny.say('%d:%d  %s vs. %s' % (res[2][0], res[2][1], res[0], res[1]))
 
             game.GAME_IN_PROGRESS = 0
             break
 
-    # FIXME:
     champ = stats.CHAMPION[0]
     reset_champion()
     if stats.CHAMPION[0] != champ:
