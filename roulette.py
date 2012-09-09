@@ -64,40 +64,46 @@ class db():
             self.db = {'all_players':[], 'scores':[]}
         self.storage.close()
 
-        def extend_table(self, player):
-            """Adds a new player to the database
-            """
-            # To add a player to the db, first add him to the front of
-            # all_players in self.db
-            self.db['all_players'] = [player] + self.db['all_players']
+    def refresh_db(self):
+        self.db = shelve.open('roulette.db')
+        self.db['roulette'] = self.db
 
-            # next, add his score versus each player already in the db.
-            for item in self.db['all_players'][1:]:
-                self.db['scores'].append([player, item, [0,0]])
 
-        def get_score(self, p1, p2):
-            "Return score for row=p1, col=p2"
-            for item in self.db['scores']:
-                if item[0] == p1 and item[1] == p2:
-                    return p1, p2, item[2]
-                elif item[0] == p2 and item[1] == p1:
-                    return p2, p1, item[2]
-            return "No score for these players"
+    def extend_table(self, player):
+        """Adds a new player to the database
+        """
+        # To add a player to the db, first add him to the front of
+        # all_players in self.db
+        self.db['all_players'] = [player] + self.db['all_players']
 
-        def update_score(self, p1, p2):
-            """
-            Update the table for p1 v p2, where p1 is the winner.
-            """
-            for item in self.db['scores']:
-                if item[0] == p1 and item[1] == p2:
-                    item[2][0] += 1
-                elif item[0] == p2 and item[1] == p1:
-                    item[2][1] += 1
+        # next, add his score versus each player already in the db.
+        for item in self.db['all_players'][1:]:
+            self.db['scores'].append([player, item, [0,0]])
 
-        def refresh_db(self):
-            self.db = shelve.open('roulette.db')
-            self.db['roulette'] = self.db
-            self.db.close()
+    def get_score(self, p1, p2):
+        "Return score for row=p1, col=p2"
+        for item in self.db['scores']:
+            if item[0] == p1 and item[1] == p2:
+                return p1, p2, item[2]
+            elif item[0] == p2 and item[1] == p1:
+                return p2, p1, item[2]
+        return "No score for these players"
+
+    def update_score(self, p1, p2):
+        """
+        Update the table for p1 v p2, where p1 is the winner.
+        """
+        for item in self.db['scores']:
+            if item[0] == p1 and item[1] == p2:
+                item[2][0] += 1
+            elif item[0] == p2 and item[1] == p1:
+                item[2][1] += 1
+
+    def remove_player(self, p):
+        self.db[0].remove(p)
+        self.db[1] = [item for item in self.db[1] if item[0] != p and item[1] != p]
+        self.refresh_db()
+
 
 game = game()
 db = db()
