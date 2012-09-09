@@ -195,18 +195,7 @@ def challenge(phenny, input):
         game.PLAYERS = [game.CHALLENGED, game.CHALLENGER]
         play_game(phenny)
         game.reset()
-        stats.refresh_db()
-    elif input.group(2) == stats.CHAMPION[0]:
-        game.CHALLENGE_MADE = 1
-        game.R_TIME = time.time()
-        game.CHALLENGER = input.nick
-        game.CHALLENGED = input.group(2)
-        stats.check(game.CHALLENGER, game.CHALLENGED)
-        phenny.say("The Champion always accepts!")
-        game.PLAYERS = [game.CHALLENGED, game.CHALLENGER]
-        play_game(phenny)
-        game.reset()
-        stats.refresh_db()
+        db.refresh_db()
     else:
         game.CHALLENGE_MADE = 1
         game.R_TIME = time.time()
