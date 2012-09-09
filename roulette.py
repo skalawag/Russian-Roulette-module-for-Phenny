@@ -108,13 +108,13 @@ db = db()
 # Diagnostic
 def print_db(phenny,input):
     if input.nick == 'skalawag':
-        phenny.say('%s' % (str( stats.record)))
+        phenny.say('%s' % (str( db.record)))
     else: pass
 print_db.commands = ['rdb']
 
 def print_champ(phenny, input):
     if input.nick == 'skalawag':
-        phenny.say('%s' % (stats.CHAMPION))
+        phenny.say('%s' % (db.CHAMPION))
     else: pass
 print_champ.commands = ['rprc']
 
@@ -170,10 +170,10 @@ def play_game(phenny):
             game.GAME_IN_PROGRESS = 0
             break
 
-    champ = stats.CHAMPION[0]
+    champ = db.CHAMPION[0]
     reset_champion()
-    if stats.CHAMPION[0] != champ:
-        phenny.say("We have a new champion: %s!" % (stats.CHAMPION[0]))
+    if db.CHAMPION[0] != champ:
+        phenny.say("We have a new champion: %s!" % (db.CHAMPION[0]))
 
 def challenge(phenny, input):
     if input.group(2) == '':
@@ -200,7 +200,7 @@ def challenge(phenny, input):
         game.R_TIME = time.time()
         game.CHALLENGER = input.nick.strip()
         game.CHALLENGED = str(input.group(2).strip())
-        stats.check(game.CHALLENGER, game.CHALLENGED)
+        db.check(game.CHALLENGER, game.CHALLENGED)
         phenny.say("%s challenged %s to Russian Roulette!" % (game.CHALLENGER, game.CHALLENGED))
         phenny.say("%s, do you accept?" % (game.CHALLENGED))
 challenge.commands = ['roulette', 'r']
