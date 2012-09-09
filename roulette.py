@@ -75,7 +75,7 @@ class db():
 
             # next, add his score versus each player already in the db.
             for item in self.db['all_players'][1:]:
-                self.db['scores'].append([player, item, (0,0)])
+                self.db['scores'].append([player, item, [0,0]])
 
         def get_score(self, p1, p2):
             "Return score for row=p1, col=p2"
@@ -88,17 +88,13 @@ class db():
 
         def update_score(self, p1, p2):
             """
-            Update the table for p1 v p2.
-
-            p1 is assumed to be the winner, and so his score is
-            incremented in two places against p2: row=p1, col=p2; and
-            row=p2, col=p1
-
-            FIXME: figure out how to get rid of this redundancy (will
-            require a fix to extend_table, as well). Or just live with
-            it....
+            Update the table for p1 v p2, where p1 is the winner.
             """
-            pass
+            for item in self.db['scores']:
+                if item[0] == p1 and item[1] == p2:
+                    item[2][0] += 1
+                elif item[0] == p2 and item[1] == p1:
+                    item[2][1] += 1
 
 class stats():
     def __init__(self):
