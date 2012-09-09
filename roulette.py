@@ -79,12 +79,12 @@ class db():
 
         def get_score(self, p1, p2):
             "Return score for row=p1, col=p2"
-            try:
-                row = self.db[0].index(p1)
-                column = self.db[0].index(p2)
-            except:
-                print "one of the players does not exist in database"
-            return self.db[1][row][column]
+            for item in self.db['scores']:
+                if item[0] == p1 and item[1] == p2:
+                    return p1, p2, item[2]
+                elif item[0] == p2 and item[1] == p1:
+                    return p2, p1, item[2]
+            return "No score for these players"
 
         def update_score(self, p1, p2):
             """
