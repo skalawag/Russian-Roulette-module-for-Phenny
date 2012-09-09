@@ -121,12 +121,12 @@ def print_champ(phenny, input):
     else: pass
 print_champ.commands = ['rprc']
 
+######################################################
+
 # Game Play
 def play_game(phenny):
     #setup
     random.shuffle(game.PLAYERS)
-    bullet = random.choice([1, 2, 3])
-    game.BANG = 0
     game.GAME_IN_PROGRESS = 1
 
     # Announce first player
@@ -136,15 +136,14 @@ def play_game(phenny):
 
     while 1:
         # `spin' cylindar
-        spin = random.choice([1, 2, 3])
-        if spin == bullet:
-            game.BANG = 1
+        bang = random.choice([0,1])
 
         phenny.say("%s spins the cylinder..." % (game.PLAYERS[0]))
         time.sleep(3)
 
         # announce result
-        if game.BANG == 0:
+        if bang == 0:
+
             phenny.say("%s pulls the trigger!" % (game.PLAYERS[0]))
             time.sleep(1)
             phenny.say('CLICK')
@@ -152,40 +151,49 @@ def play_game(phenny):
             phenny.say(random.choice(RELIEF) % (game.PLAYERS[0]))
             game.PLAYERS = [game.PLAYERS[1], game.PLAYERS[0]]
 
-        elif game.BANG == 1:
+        elif bang == 1:
+
             phenny.say("%s pulls the trigger!" % (game.PLAYERS[0]))
             # update winner, loser and score
             winner = game.PLAYERS[1] # survivor
             loser = game.PLAYERS[0]
+
+            # FIXME
             stats.update_players(winner, loser)
+
             if game.LAST_WINNER[0] == game.PLAYERS[1]:
                 game.LAST_WINNER[1] += 1
             else:
                 game.LAST_WINNER = [game.PLAYERS[1], 1]
+
             # make announcements and cleanup
             phenny.say(random.choice(['BANG!', 'KA-POW!', 'BOOM!', 'BAM!', 'BLAMMO!', 'BOOM! BOOM!']))
             time.sleep(1)
             phenny.say(random.choice(EXCLAMATIONS) % (game.PLAYERS[0]))
+
             if game.LAST_WINNER[1] < 3:
                 phenny.say("Congratulations, %s, you are the winner." % (game.PLAYERS[1]))
             else:
                 phenny.say("Congratulations, %s, you are a Super Winner." % (game.PLAYERS[1]))
-                phenny.say("You win 10 extra points!")
+                phenny.say("You win extra points!")
                 game.LAST_WINNER = [None, 0]
+                # FIXME:
                 stats.special_update(winner, (total_wins(winner) + total_losses(winner))/10.0)
+
+            # FIXME
             res = stats.get_players_records(game.PLAYERS[1], game.PLAYERS[0])
             phenny.say('%d:%d  %s vs. %s' % (res[0], res[1], game.PLAYERS[1], game.PLAYERS[0]))
+
             game.GAME_IN_PROGRESS = 0
             break
 
-        else:
-            # problem
-            print "You shouldn't have gotten here. There is an error in the game loop."
-            break
+    # FIXME:
     champ = stats.CHAMPION[0]
     reset_champion()
     if stats.CHAMPION[0] != champ:
         phenny.say("We have a new champion: %s!" % (stats.CHAMPION[0]))
+
+###########################################
 
 def challenge(phenny, input):
     if input.group(2) == '':
@@ -332,8 +340,7 @@ def remove_player(phenny, input):
     if input.nick != 'skalawag':
         pass
     else db.remove_player(input.group(2))
-
-remove_player.commands = ['remove']
+remove_player.commands = ['rremove']
 
 def reset_champion():
     try:
