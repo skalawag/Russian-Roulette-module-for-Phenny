@@ -136,8 +136,16 @@ def play_game(phenny):
     phenny.say("%s, you win!" % (game.PLAYERS[0]))
 
     # accidental death
-    if random.choice([1,2,3,4,5,6,7,8,9,10]) == 1:
-        pass # player accidentally kills himself.
+    if random.choice([x for x in range(30)]) == 1:
+        phenny.say(random.choice(['BANG!', 'KA-POW!', 'BOOM!', 'BAM!', 'BLAMMO!', 'BOOM! BOOM!']))
+        phenny.say("OH MAN! Did you see that!?")
+        phenny.say("%s accidentally blew his brains out!" % (game.players[0]))
+        winner = game.PLAYERS[1] # survivor
+        loser = game.PLAYERS[0]
+        db.update_score(winner, loser)
+        res = db.get_score(winner, loser)
+        phenny.say('%d:%d  %s vs. %s' % (res[2][0], res[2][1], res[0], res[1]))
+        game.GAME_IN_PROGRESS = 0
     else:
         while 1:
             # `spin' cylindar
@@ -270,9 +278,8 @@ def undo(phenny, input):
             phenny.say("The challenge has not expired, yet. Hold your horses.")
 undo.commands = ['undo']
 
-
 ###############################
-# FIXME
+# FIXME: move these to a statistics class
 
 # ## STATISTICS HELPERS
 # def total_wins(player):
