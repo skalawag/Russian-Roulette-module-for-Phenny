@@ -240,6 +240,8 @@ def accept(phenny, input):
         stats.refresh_db()
 accept.commands = ['accept', 'yes', 'acc', 'hell-yeah', 'pff']
 
+#########################################
+
 def decline(phenny, input):
     insults = ['%s, %s is yella and will not play.',
            '%s, %s is a fraidy-cat, and will not play.',
