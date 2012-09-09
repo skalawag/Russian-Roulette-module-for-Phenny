@@ -170,10 +170,10 @@ def play_game(phenny):
             game.GAME_IN_PROGRESS = 0
             break
 
-    champ = db.CHAMPION[0]
-    reset_champion()
-    if db.CHAMPION[0] != champ:
-        phenny.say("We have a new champion: %s!" % (db.CHAMPION[0]))
+    # champ = db.CHAMPION[0]
+    # reset_champion()
+    # if db.CHAMPION[0] != champ:
+    #     phenny.say("We have a new champion: %s!" % (db.CHAMPION[0]))
 
 def challenge(phenny, input):
     if input.group(2) == '':
