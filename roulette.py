@@ -238,8 +238,6 @@ def accept(phenny, input):
         db.refresh_db()
 accept.commands = ['accept', 'yes', 'acc', 'hell-yeah', 'pff']
 
-#########################################
-
 def decline(phenny, input):
     insults = ['%s, %s is yella and will not play.',
            '%s, %s is a fraidy-cat, and will not play.',
@@ -254,8 +252,6 @@ def decline(phenny, input):
         phenny.say(insult % (game.CHALLENGER, input.nick))
         game.reset()
 decline.commands = ['decline', 'no', 'get-lost']
-
-
 
 def undo(phenny, input):
     if input.group(2) == '':
@@ -274,8 +270,6 @@ def undo(phenny, input):
         else:
             phenny.say("The challenge has not expired, yet. Hold your horses.")
 undo.commands = ['undo']
-
-################################
 
 ## STATISTICS HELPERS
 def total_wins(player):
