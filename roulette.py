@@ -61,20 +61,9 @@ class db():
         try:
             self.db = self.storage['roulette']
         except:
-            # The first item here is a sorted list of names which will
-            # be used to make a table of player v player outcomes.
-            #
-            # Example: [[u'fyv', u'skalawag'], [[(0,0), (3, 10)],
-            # [(10, 3), (0, 0)]]] which is a list of player names and
-            # a list of rows of the table. a new playe is always added
-            # to the end so that the table is easy to extend (to
-            # extend a table, add a (0,0) entry to the end of each
-            # row, and a new row of (0,0)'s
-            self.storage['roulette'] = [[], # row-names
-                                        [], # column-names
-                                        []  # rows
-                                        ]
-            self.db = [[], [], []]
+            # scores = [[p1, p2, score], [p1, p3, score], ...]
+            self.storage['roulette'] = {'all_players':[], 'scores':[]}
+            self.db = {'all_players':[], 'scores':[]}
         self.storage.close()
 
         def extend_table(self, player):
@@ -83,17 +72,17 @@ class db():
             when a player is added to the row and column lists, he is
             appended to the end.
             """
-            self.db[0].append(player)
-            self.db[1].append(player)
-            # extend each row in the table for the new player.
-            for item in self.db[2]:
-                item.append((0,0))
-            # append a new row of (0,0)'s for the new player
-            self.db.append[2].append([(0,0) for x in self.db[0]])
+            pass
 
         def get_score(self, p1, p2):
             "Return score for row=p1, col=p2"
-            pass
+            try:
+                row = self.db[0].index(p1)
+                column = self.db[0].index(p2)
+            except:
+                print "one of the players does not exist in database"
+            return self.db[1][row][column]
+
         def update_score(self, p1, p2):
             """
             Update the table for p1 v p2.
@@ -101,6 +90,10 @@ class db():
             p1 is assumed to be the winner, and so his score is
             incremented in two places against p2: row=p1, col=p2; and
             row=p2, col=p1
+
+            FIXME: figure out how to get rid of this redundancy (will
+            require a fix to extend_table, as well). Or just live with
+            it....
             """
             pass
 
