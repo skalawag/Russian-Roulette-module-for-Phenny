@@ -100,7 +100,7 @@ class db():
             self.db.close()
 
 game = game()
-stats = stats()
+db = db()
 
 # Diagnostic
 def print_db(phenny,input):
