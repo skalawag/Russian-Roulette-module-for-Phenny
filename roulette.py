@@ -66,7 +66,7 @@ class db():
         self.db = shelve.open('roulette.db')
         self.db['roulette'] = self.db
 
-    def extend_table(self, player):
+    def add_player(self, player):
         """Adds a new player to the database
         """
         # To add a player to the db, first add him to the front of
@@ -125,9 +125,9 @@ def play_game(phenny):
 
     # make sure both players are in db
     if game.CHALLENGER not in db.db[0]:
-        db.extend_table(game.CHALLENGER)
+        db.add_player(game.CHALLENGER)
     if game.CHALLENGED not in db.db[0]:
-        db.extend_table(game.CHALLENGED)
+        db.add_player(game.CHALLENGED)
 
     # Announce first player
     phenny.say("A coin toss will decide the first player....")
