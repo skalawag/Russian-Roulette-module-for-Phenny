@@ -101,8 +101,46 @@ class db():
         self.db[1] = [item for item in self.db[1] if item[0] != p and item[1] != p]
         self.refresh_db()
 
+    def get_wins(self, player):
+        wins = 0
+        for item in self.db['scores']:
+            if item[0] == player:
+                wins += item[2][0]
+            elif item[1] == player:
+                wins += item[2][1]
+        return wins
+
+    def get_losses(self, player):
+        losses = 0
+        for item in self.db['scores']:
+            if item[0] == player:
+                losses += item[2][1]
+            elif item[1] == player:
+                losses += item[2][0]
+
+class stats():
+    def __init__(self):
+        self.CHAMPION = self.get_ranking[0]
+
+    def get_player_record(self, player):
+        wins = db.get_wins(player)
+        losses = db.get_losses(player)
+        return player, wins, losses, (float(wins(player)) / float((losses(player) + wins(player)))) * 100
+
+    def get_ranking(self):
+        def key(x):
+            return x[3]
+        def comp(x,y):
+            if x < y:
+                return -1
+            elif x == y:
+                return 0
+            else: return 1
+        return sorted([self.get_player_record(player) for player in db.db['all_players']], comp, key)
+
 game = game()
 db = db()
+stats = stats()
 
 # Diagnostic
 # def print_db(phenny,input):
