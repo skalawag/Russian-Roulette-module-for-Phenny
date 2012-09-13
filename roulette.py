@@ -74,8 +74,8 @@ class db():
         self.db['all_players'] = [player] + self.db['all_players']
 
         # next, add his score versus each player already in the db.
-        for item in self.db['all_players'][1:]:
-            self.db['scores'].append([player, item, [0,0]])
+        for opp in self.db['all_players'][1:]:
+            self.db['scores'].append([player, opp, [0,0]])
 
     def get_score(self, p1, p2):
         "Return score for row=p1, col=p2"
