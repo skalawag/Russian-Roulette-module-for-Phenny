@@ -307,7 +307,8 @@ display_ranking.commands = ['rstats']
 def remove_player(phenny, input):
     if input.nick != 'skalawag':
         pass
-    else db.remove_player(input.group(2))
+    else:
+        db.remove_player(input.group(2))
 remove_player.commands = ['rremove']
 
 if __name__ == '__main__':
