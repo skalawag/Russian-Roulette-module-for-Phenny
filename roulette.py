@@ -131,11 +131,9 @@ class stats():
         def key(x):
             return x[3]
         def comp(x,y):
-            if x < y:
-                return -1
-            elif x == y:
-                return 0
-            else: return 1
+            if x < y: return 1
+            elif x == y: return 0
+            else: return -1
         return sorted([self.get_player_record(player) for player in db.db['all_players']], comp, key)
 
 game = game()
@@ -172,7 +170,7 @@ def play_game(phenny):
     time.sleep(2)
     phenny.say("%s, you win!" % (game.PLAYERS[0]))
 
-    # accidental death
+    # possible accidental death
     if random.choice([x for x in range(30)]) == 1:
         phenny.say(random.choice(['BANG!', 'KA-POW!', 'BOOM!', 'BAM!', 'BLAMMO!', 'BOOM! BOOM!']))
         phenny.say("OH MAN! Did you see that!?")
