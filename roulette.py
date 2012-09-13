@@ -187,7 +187,7 @@ def play_game(phenny):
         rounds = random.randint(1,6)
         for x in range(rounds):
             phenny.say("%s spins the cylinder..." % (game.PLAYERS[0]))
-            time.sleep(3)
+            time.sleep(2)
             if x < rounds:
                 phenny.say("%s pulls the trigger!" % (game.PLAYERS[0]))
                 time.sleep(1)
