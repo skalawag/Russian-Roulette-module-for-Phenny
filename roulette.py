@@ -143,25 +143,9 @@ class stats():
         """
         pass
 
-
-
-
 game = game()
 db = db()
 stats = stats()
-
-# Diagnostic
-# def print_db(phenny,input):
-#     if input.nick == 'skalawag':
-#         phenny.say('%s' % (str( db.record)))
-#     else: pass
-# print_db.commands = ['rdb']
-
-# def print_champ(phenny, input):
-#     if input.nick == 'skalawag':
-#         phenny.say('%s' % (db.CHAMPION))
-#     else: pass
-# print_champ.commands = ['rprc']
 
 # Game Play
 def play_game(phenny):
@@ -326,92 +310,6 @@ def remove_player(phenny, input):
         pass
     else db.remove_player(input.group(2))
 remove_player.commands = ['rremove']
-
-# def reset_champion():
-#     try:
-#         best = [None, 0]
-#         for name in db.record.keys():
-#             if win_percentage(name) > best[1]:
-#                 best = [name, win_percentage(name)]
-#             else: pass
-#         db.CHAMPION = best
-#         if db.CHAMPION[1] > db.ALL_TIME_CHAMPION and total_wins(db.CHAMPION) > 6:
-#             db.ALL_TIME_CHAMPION = db.CHAMPION
-#         db.save_db()
-#     except: pass
-
-# def champion(phenny, input):
-#     reset_champion()
-#     try:
-#         phenny.say('%s is the current champion, winning %.3f%% of his matches.' \
-#                        % (db.CHAMPION[0],db.CHAMPION[1]))
-#     except:
-#         phenny.say("There doesn't seem to be a champion at the moment.")
-# champion.commands = ['rchamp']
-
-# def rstat_him(phenny, input):
-#     try:
-#         wins = total_wins(input.group(2))
-#         losses = total_losses(input.group(2))
-#         perc = win_percentage(input.group(2))
-#         phenny.say('%s has won %s out of %s (%.3f%%)' \
-#                        % (input.group(2), wins, wins + losses, perc))
-#     except: pass
-# rstat_him.commands = ['rstat']
-
-# def rstat_me(phenny, input):
-#     try:
-#         wins = total_wins(input.nick)
-#         losses = total_losses(input.nick)
-#         perc = win_percentage(input.nick)
-#         phenny.say('%s, you have won %s out of %s (%.3f%%)' \
-#                        % (input.nick, wins, wins + losses, perc))
-#     except:
-#         phenny.say("Problem in rstat_me")
-# rstat_me.commands = ['rstat-me','rstats-me', 'rstatme', 'rstatsme']
-
-# def get_ranking(phenny, input):
-#     try:
-#         def compare(x,y):
-#             if x < y: return 1
-#             elif x > y: return -1
-#             else: return 0
-#         def key(x):
-#             if x[1] == None:
-#                 return 0
-#             else:
-#                 return x[1]
-#         names = db.record.keys()
-#         res = sorted([(name, win_percentage(name)) for name in names], compare, key)
-#         res = [item for item in res if item[1] > 0.0]
-#         for item in res:
-#             if item[1] == None:
-#                 phenny.say('%.3f%%  %s' % (0.00, item[0]))
-#             else:
-#                 phenny.say('%.3f%%  %s' % (item[1], item[0]))
-#     except: print "Problem in get_ranking."
-# get_ranking.commands = ['rranking', 'rall', 'rstats']
-
-# def get_my_percentage(phenny, input):
-#     try:
-#         res = win_percentage(input.nick)
-#         phenny.say('%s, you have won %.3f%% of your matches' % (input.nick,res))
-#     except: print "Problem in global get_my_percentage."
-# get_my_percentage.commands = ['rme']
-
-# def get_diff(phenny, input):
-#     try:
-#         players = input.group(2).split()
-#         if len(players) != 2:
-#             pass
-#         p1 = win_percentage(players[0])
-#         p2 = win_percentage(players[1])
-#         if p1 > p2:
-#             phenny.say('%s leads by %.3f%%' % (players[0],p1-p2))
-#         else:
-#             phenny.say('%s leads by %.3f%%' % (players[1],p2-p1))
-#     except: pass
-# get_diff.commands = ['rdiff']
 
 if __name__ == '__main__':
     print __doc__
