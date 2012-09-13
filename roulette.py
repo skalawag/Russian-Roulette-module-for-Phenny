@@ -62,7 +62,7 @@ class db():
             self.db = {'all_players':[], 'scores':[]}
         self.storage.close()
 
-    def refresh_db(self):
+    def save_db(self):
         self.db = shelve.open('roulette.db')
         self.db['roulette'] = self.db
 
@@ -99,7 +99,7 @@ class db():
     def remove_player(self, p):
         self.db[0].remove(p)
         self.db[1] = [item for item in self.db[1] if item[0] != p and item[1] != p]
-        self.refresh_db()
+        self.save_db()
 
     def get_wins(self, player):
         wins = 0
@@ -238,7 +238,7 @@ def challenge(phenny, input):
         game.PLAYERS = [game.CHALLENGED, game.CHALLENGER]
         play_game(phenny)
         game.reset()
-        db.refresh_db()
+        db.save_db()
     else:
         game.CHALLENGE_MADE = 1
         game.R_TIME = time.time()
@@ -267,7 +267,7 @@ def accept(phenny, input):
         play_game(phenny)
 
         game.reset()
-        db.refresh_db()
+        db.save_db()
     else:
         game.CATCH_ACCEPT = 1
         game.GAME_IN_PROGRESS = 1
@@ -279,7 +279,7 @@ def accept(phenny, input):
         play_game(phenny)
 
         game.reset()
-        db.refresh_db()
+        db.save_db()
 accept.commands = ['accept', 'yes', 'acc', 'hell-yeah', 'pff']
 
 def decline(phenny, input):
@@ -369,7 +369,7 @@ remove_player.commands = ['rremove']
 #         db.CHAMPION = best
 #         if db.CHAMPION[1] > db.ALL_TIME_CHAMPION and total_wins(db.CHAMPION) > 6:
 #             db.ALL_TIME_CHAMPION = db.CHAMPION
-#         db.refresh_db()
+#         db.save_db()
 #     except: pass
 
 # def champion(phenny, input):
