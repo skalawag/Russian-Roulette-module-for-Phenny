@@ -137,6 +137,15 @@ class stats():
             else: return -1
         return sorted([self.get_player_record(player) for player in db.db['all_players']], comp, key)
 
+    def super_dead(self):
+        """
+        the player who loses 3 or 4 in a row gets superdead -- goes to 0
+        """
+        pass
+
+
+
+
 game = game()
 db = db()
 stats = stats()
@@ -305,44 +314,13 @@ def undo(phenny, input):
             phenny.say("The challenge has not expired, yet. Hold your horses.")
 undo.commands = ['undo']
 
-###############################
-# FIXME: move these to a statistics or to the db class
-
-# ## STATISTICS HELPERS
-# def total_wins(player):
-#     try:
-#         res = 0
-#         p = db.record[player]
-#         for key in p.keys():
-#             if type(p[key]) == type(1.0):
-#                 res += p[key]
-#             else:
-#                 res += p[key][0]
-#         return res
-#     except: print "Problem in total_wins"
-
-# def total_losses(player):
-#     try:
-#         res = 0
-#         p = db.record[player]
-#         print player, p
-#         for key in p.keys():
-#             if type(p[key]) == type(1.0):
-#                 pass # don't count bonus on losses
-#             else:
-#                 res += p[key][1]
-#         return res
-#     except: print "Problem in total_losses"
-
-# def win_percentage(player):
-#     try:
-#         return (float(total_wins(player)) / (total_losses(player) + \
-#                                                       total_wins(player))) * 100
-#     except: pass
-
-###################################################
-
 # COMMANDS
+def display_ranking(phenny):
+    ranking = stats.get_ranking()
+    for item in ranking:
+        phenny.say("%s: %f" % (ranking[0], ranking[3]))
+display_ranking.commands = ['rstats']
+
 def remove_player(phenny, input):
     if input.nick != 'skalawag':
         pass
