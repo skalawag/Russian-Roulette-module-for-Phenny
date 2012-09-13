@@ -201,7 +201,7 @@ def play_game(phenny):
                 res = db.get_score(winner, loser)
                 phenny.say('%d:%d  %s vs. %s' % (res[2][0], res[2][1], res[0], res[1]))
                 game.GAME_IN_PROGRESS = 0
-
+# Commands
 def challenge(phenny, input):
     if input.group(2) == '':
         pass
@@ -298,7 +298,6 @@ def undo(phenny, input):
             phenny.say("The challenge has not expired, yet. Hold your horses.")
 undo.commands = ['undo']
 
-# COMMANDS
 def display_ranking(phenny):
     ranking = stats.get_ranking()
     for item in ranking:
