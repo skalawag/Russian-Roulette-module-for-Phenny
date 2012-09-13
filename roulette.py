@@ -76,6 +76,7 @@ class db():
         # next, add his score versus each player already in the db.
         for opp in self.db['all_players'][1:]:
             self.db['scores'].append([player, opp, [0,0]])
+        self.save_db()
 
     def get_score(self, p1, p2):
         "Return score for row=p1, col=p2"
