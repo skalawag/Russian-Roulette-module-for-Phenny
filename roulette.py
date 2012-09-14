@@ -92,8 +92,8 @@ class db():
                 item[2][1] += 1
 
     def remove_player(self, p):
-        self.db[0].remove(p)
-        self.db[1] = [item for item in self.db[1] if item[0] != p and item[1] != p]
+        self.db['all_players'].remove(p)
+        self.db['scores'] = [item for item in self.db['scores'] if item[0] != p and item[1] != p]
         self.save_db()
 
     def get_wins(self, player):
