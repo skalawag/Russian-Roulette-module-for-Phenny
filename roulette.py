@@ -144,7 +144,10 @@ class stats():
             if x < y: return 1
             elif x == y: return 0
             else: return -1
-        return sorted([self.get_player_record(player) for player in db.db['all_players']], comp, key)
+        try:
+            return sorted([self.get_player_record(player) for player in db.db['all_players']], comp, key)
+        except:
+            return None
 
     def super_dead(self):
         """
@@ -309,8 +312,11 @@ undo.commands = ['undo']
 
 def display_ranking(phenny,input):
     ranking = stats.get_ranking()
-    for item in ranking:
-        phenny.say("%s: %f" % (ranking[0], ranking[3]))
+    if ranking is not None:
+        for item in ranking:
+            phenny.say("%s: %f" % (ranking[0], ranking[3]))
+    else:
+        phenny.say("There is no record.")
 display_ranking.commands = ['rstats']
 
 def remove_player(phenny, input):
