@@ -59,8 +59,11 @@ class db():
         except:
             # scores = [[p1, p2, score], [p1, p3, score], ...]
             self.storage['roulette'] = {'all_players':[], 'scores':[]}
-            self.db['roulette'] = {'all_players':[], 'scores':[]}
+            self.db = {'all_players':[], 'scores':[]}
         self.storage.close()
+
+    def display_self(self):
+        print self.db
 
     def save_db(self):
         f = shelve.open('roulette.db')
@@ -118,6 +121,7 @@ class db():
                 losses += item[2][1]
             elif item[1] == player:
                 losses += item[2][0]
+        return losses
 
 class stats():
     def __init__(self):
@@ -127,15 +131,19 @@ class stats():
 
     def get_player_record(self, player):
         wins = db.get_wins(player)
-        if wins == None:
-            wins = 0
+        print player, "wins:", wins
+        # if wins == None:
+        #     wins = 0
         losses = db.get_losses(player)
-        if losses == None:
-            losses = 0
-        if losses == 0 and wins == 0:
-            print "passing: division by zero"
-            return None
-        return player, wins, losses, (float(wins) / float(losses + wins)) * 100
+        print player, "losses:", losses
+        # if losses == None:
+        #     losses = 0
+        # if losses == 0 and wins == 0:
+        #     print "passing: division by zero"
+        #     return None
+        res = [player, wins, losses, (float(wins) / float(losses + wins)) * 100]
+        print "res:",res
+        return res
 
     def get_ranking(self):
         def key(x):
@@ -145,7 +153,9 @@ class stats():
             elif x == y: return 0
             else: return -1
         try:
-            return sorted([self.get_player_record(player) for player in db.db['all_players']], comp, key)
+            unfiltered = sorted([self.get_player_record(player) for player in db.db['all_players']], comp, key)
+            print "unfiltered:", unfiltered
+            return [x for x in unfiltered if x != None]
         except:
             return None
 
@@ -180,7 +190,7 @@ def play_game(phenny):
     if random.choice([x for x in range(30)]) == 1:
         phenny.say(random.choice(['BANG!', 'KA-POW!', 'BOOM!', 'BAM!', 'BLAMMO!', 'BOOM! BOOM!']))
         phenny.say("OH MAN! Did you see that!?")
-        phenny.say("%s accidentally blew his brains out!" % (game.players[0]))
+        phenny.say("%s accidentally blew his brains out!" % (game.PLAYERS[0]))
         winner = game.PLAYERS[1] # survivor
         loser = game.PLAYERS[0]
         db.update_score(winner, loser)
@@ -192,7 +202,7 @@ def play_game(phenny):
         for x in range(rounds):
             phenny.say("%s spins the cylinder..." % (game.PLAYERS[0]))
             time.sleep(2)
-            if x < rounds:
+            if x < rounds - 1:
                 phenny.say("%s pulls the trigger!" % (game.PLAYERS[0]))
                 time.sleep(1)
                 phenny.say('CLICK')
@@ -206,6 +216,7 @@ def play_game(phenny):
                 winner = game.PLAYERS[1] # survivor
                 loser = game.PLAYERS[0]
                 db.update_score(winner, loser)
+                db.display_self()
                 # make announcements and cleanup
                 phenny.say(random.choice(['BANG!', 'KA-POW!', 'BOOM!', 'BAM!', 'BLAMMO!', 'BOOM! BOOM!']))
                 time.sleep(1)
@@ -314,7 +325,7 @@ def display_ranking(phenny,input):
     ranking = stats.get_ranking()
     if ranking is not None:
         for item in ranking:
-            phenny.say("%s: %f" % (ranking[0], ranking[3]))
+            phenny.say("%s: %2.f%%" % (item[0], item[3]))
     else:
         phenny.say("There is no record.")
 display_ranking.commands = ['rstats']
