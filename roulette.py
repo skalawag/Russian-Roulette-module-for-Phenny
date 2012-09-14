@@ -59,7 +59,7 @@ class db():
         except:
             # scores = [[p1, p2, score], [p1, p3, score], ...]
             self.storage['roulette'] = {'all_players':[], 'scores':[]}
-            self.db = {'all_players':[], 'scores':[]}
+            self.db['roulette'] = {'all_players':[], 'scores':[]}
         self.storage.close()
 
     def save_db(self):
