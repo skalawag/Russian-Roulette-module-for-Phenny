@@ -131,18 +131,8 @@ class stats():
 
     def get_player_record(self, player):
         wins = db.get_wins(player)
-        print player, "wins:", wins
-        # if wins == None:
-        #     wins = 0
         losses = db.get_losses(player)
-        print player, "losses:", losses
-        # if losses == None:
-        #     losses = 0
-        # if losses == 0 and wins == 0:
-        #     print "passing: division by zero"
-        #     return None
         res = [player, wins, losses, (float(wins) / float(losses + wins)) * 100]
-        print "res:",res
         return res
 
     def get_ranking(self):
@@ -154,7 +144,6 @@ class stats():
             else: return -1
         try:
             unfiltered = sorted([self.get_player_record(player) for player in db.db['all_players']], comp, key)
-            print "unfiltered:", unfiltered
             return [x for x in unfiltered if x != None]
         except:
             return None
