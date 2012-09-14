@@ -8,15 +8,6 @@ Licensed under the Eiffel Forum License 2.
 http://inamidst.com/phenny/
 """
 
-# TODO:
-#
-# 1. if a player is a heathen on the first (self) test of the day,
-# give him a small advantage against a sheep.
-#
-# 2. up the number of wins for a superwin to 4 (or 5?) --- remove the
-# incentive to game the game.
-
-
 import random, time, shelve
 
 RELIEF = ["%s wipes the sweat from his brow.",
