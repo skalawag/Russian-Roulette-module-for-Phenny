@@ -156,9 +156,9 @@ def play_game(phenny):
     game.GAME_IN_PROGRESS = 1
 
     # make sure both players are in db
-    if game.CHALLENGER not in db.db['all_players'][0]:
+    if game.CHALLENGER not in db.db['all_players']:
         db.add_player(game.CHALLENGER)
-    if game.CHALLENGED not in db.db['all_players'][0]:
+    if game.CHALLENGED not in db.db['all_players']:
         db.add_player(game.CHALLENGED)
 
     # Announce first player
