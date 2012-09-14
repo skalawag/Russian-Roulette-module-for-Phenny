@@ -63,8 +63,8 @@ class db():
         self.storage.close()
 
     def save_db(self):
-        self.db = shelve.open('roulette.db')
-        self.db['roulette'] = self.db
+        f = shelve.open('roulette.db')
+        f['roulette'] = self.db
 
     def add_player(self, player):
         """Adds a new player to the database
@@ -127,8 +127,15 @@ class stats():
 
     def get_player_record(self, player):
         wins = db.get_wins(player)
+        if wins == None:
+            wins = 0
         losses = db.get_losses(player)
-        return player, wins, losses, (float(wins(player)) / float((losses(player) + wins(player)))) * 100
+        if losses == None:
+            losses = 0
+        if losses == 0 and wins == 0:
+            print "passing: division by zero"
+            return None
+        return player, wins, losses, (float(wins) / float(losses + wins)) * 100
 
     def get_ranking(self):
         def key(x):
@@ -229,7 +236,7 @@ def challenge(phenny, input):
         game.R_TIME = time.time()
         game.CHALLENGER = input.nick.strip()
         game.CHALLENGED = str(input.group(2).strip())
-        db.check(game.CHALLENGER, game.CHALLENGED)
+        #db.check(game.CHALLENGER, game.CHALLENGED)
         phenny.say("%s challenged %s to Russian Roulette!" % (game.CHALLENGER, game.CHALLENGED))
         phenny.say("%s, do you accept?" % (game.CHALLENGED))
 challenge.commands = ['roulette', 'r']
@@ -300,7 +307,7 @@ def undo(phenny, input):
             phenny.say("The challenge has not expired, yet. Hold your horses.")
 undo.commands = ['undo']
 
-def display_ranking(phenny):
+def display_ranking(phenny,input):
     ranking = stats.get_ranking()
     for item in ranking:
         phenny.say("%s: %f" % (ranking[0], ranking[3]))
