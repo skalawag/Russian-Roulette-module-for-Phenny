@@ -115,10 +115,6 @@ class db():
         return losses
 
 class stats():
-    def __init__(self):
-        try:
-            self.CHAMPION = self.get_ranking()[0]
-        except: pass
 
     def get_player_record(self, player):
         wins = db.get_wins(player)
