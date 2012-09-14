@@ -301,7 +301,7 @@ def display_ranking(phenny,input):
     ranking = stats.get_ranking()
     if ranking is not None:
         for item in ranking:
-            phenny.say("%s: %2.f%%" % (item[0], item[3]))
+            phenny.say("%s: %.2f%%" % (item[0], item[3]))
     else:
         phenny.say("There is no record.")
 display_ranking.commands = ['rstats']
