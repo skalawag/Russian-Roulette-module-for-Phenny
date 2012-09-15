@@ -31,6 +31,7 @@ class game():
         self.CHALLENGER = None
         self.CHALLENGED = None
         self.CATCH_ACCEPT = 0
+        self.GOD = []
 
     def reset(self):
         self.GAME_IN_PROGRESS = 0
@@ -162,8 +163,48 @@ def play_game(phenny):
     time.sleep(2)
     phenny.say("%s, you win!" % (game.PLAYERS[0]))
 
+    # check if we make a god
+    if random.randint(1,365) == 1:
+        game.GOD.append(game.CHALLENGER)
+        game.GOD.append(20)
+
     # possible accidental death
-    if random.choice([x for x in range(30)]) == 1:
+    if game.GOD:
+        rounds = random.randint(1,6)
+        if game.PLAYERS[0] == game.GOD[0] and rounds % 2 == 0:
+            pass
+        elif game.PLAYERS[1] == game.GOD[0] and rounds % 2 != 0:
+            rounds += 1
+        game.GOD[1] -= 1
+        if game.GOD[1] < 1:
+            game.GOD = []
+            # play game
+        for x in range(rounds):
+            phenny.say("%s spins the cylinder..." % (game.PLAYERS[0]))
+            time.sleep(2)
+            if x < rounds - 1:
+                phenny.say("%s pulls the trigger!" % (game.PLAYERS[0]))
+                time.sleep(1)
+                phenny.say('CLICK')
+                time.sleep(1)
+                phenny.say(random.choice(RELIEF) % (game.PLAYERS[0]))
+                game.PLAYERS = [game.PLAYERS[1], game.PLAYERS[0]]
+
+            else:
+                phenny.say("%s pulls the trigger!" % (game.PLAYERS[0]))
+                # update winner, loser and score
+                winner = game.PLAYERS[1] # survivor
+                loser = game.PLAYERS[0]
+                db.update_score(winner, loser)
+                db.display_self()
+                # make announcements and cleanup
+                phenny.say(random.choice(['BANG!', 'KA-POW!', 'BOOM!', 'BAM!', 'BLAMMO!', 'BOOM! BOOM!']))
+                time.sleep(1)
+                phenny.say(random.choice(EXCLAMATIONS) % (game.PLAYERS[0]))
+                res = db.get_score(winner, loser)
+                phenny.say('%d:%d  %s vs. %s' % (res[2][0], res[2][1], res[0], res[1]))
+                game.GAME_IN_PROGRESS = 0
+    elif random.choice([x for x in range(30)]) == 1:
         phenny.say(random.choice(['BANG!', 'KA-POW!', 'BOOM!', 'BAM!', 'BLAMMO!', 'BOOM! BOOM!']))
         phenny.say("OH MAN! Did you see that!?")
         phenny.say("%s accidentally blew his brains out!" % (game.PLAYERS[0]))
