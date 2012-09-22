@@ -94,7 +94,10 @@ class db():
     def get_player_record(self, player):
         wins = db.get_wins(player)
         losses = db.get_losses(player)
-        return [player, wins, losses, (float(wins) / float(losses + wins)) * 100]
+        if wins == 0 and losses == 0:
+            return None
+        else:
+            return [player, wins, losses, self.get_percentage(player)]
 
     def get_ranking(self):
         def key(x):
@@ -119,9 +122,9 @@ def play_game(phenny):
     game.GAME_IN_PROGRESS = 1
 
     # make sure both players are in db
-    if game.CHALLENGER not in db.db['all_players']:
+    if game.CHALLENGER not in db.db.keys():
         db.add_player(game.CHALLENGER)
-    if game.CHALLENGED not in db.db['all_players']:
+    if game.CHALLENGED not in db.db.keys():
         db.add_player(game.CHALLENGED)
 
     # Announce first player
@@ -131,11 +134,13 @@ def play_game(phenny):
 
     # check if we make a god
     if random.randint(1,365) == 1:
+        game.GOD = []
         game.GOD.append(game.CHALLENGER)
         game.GOD.append(20)
 
     # possible accidental death
     if game.GOD:
+        print "We have a God!"
         rounds = random.randint(1,6)
         if game.PLAYERS[0] == game.GOD[0] and rounds % 2 == 0:
             pass
@@ -269,7 +274,7 @@ def accept(phenny, input):
 
         game.reset()
         db.save_db()
-accept.commands = ['accept', 'yes', 'acc', 'hell-yeah', 'pff']
+accept.commands = ['accept', 'yes', 'acc', 'hell-yeah', 'pff', 'bring-it', 'die!']
 
 def decline(phenny, input):
     insults = ['%s, %s is yella and will not play.',
@@ -284,7 +289,7 @@ def decline(phenny, input):
         insult = random.choice(insults)
         phenny.say(insult % (game.CHALLENGER, input.nick))
         game.reset()
-decline.commands = ['decline', 'no', 'get-lost']
+decline.commands = ['decline', 'no', 'get-lost', 'buzz-off']
 
 def undo(phenny, input):
     if input.group(2) == '':
@@ -315,7 +320,10 @@ display_ranking.commands = ['rstats']
 
 def remove_player(phenny, input):
     if input.nick != 'skalawag':
-        pass
+        phenny.say('Only skalawag can do that.')
+    elif input.group(2) == 'all':
+        db.db = {}
+        db.update_db()
     else:
         db.remove_player(input.group(2))
 remove_player.commands = ['rremove']
