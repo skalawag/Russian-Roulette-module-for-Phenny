@@ -49,9 +49,9 @@ class db():
         try:
             self.db = self.storage['roulette']
         except:
-            # scores = [[p1, p2, score], [p1, p3, score], ...]
-            self.storage['roulette'] = {'all_players':[], 'scores':[]}
-            self.db = {'all_players':[], 'scores':[]}
+            # {'player':{'wins':i, 'losses':j, last-defended:date, ....}, ...}
+            self.storage['roulette'] = {}
+            self.db = {}
         self.storage.close()
 
     def display_self(self):
