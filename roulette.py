@@ -64,14 +64,14 @@ class db():
     def add_player(self, player):
         """Adds a new player to the database
         """
-        self.db.setdefault(player,{'wins':0, 'losses':0, 'last_defended':time.time()}
+        self.db.setdefault(player,{'wins':0, 'losses':0, 'last_defended':time.time()})
         self.save_db()
 
     def get_percentage(self, player):
         """
         Get player's win percentage
         """
-        return round(float(self.get_wins(player)) / float(self.get_wins(player) + self.get_losses(player)) * 100, 2)
+        return round(float(self.get_wins(player)) / float(self.get_wins(player) + self.get_losses(player)) * 100, 4)
 
     def update_score(self, p1, p2):
         """
@@ -107,15 +107,13 @@ class db():
             elif x == y: return 0
             else: return -1
         try:
-            unfiltered = sorted([self.get_player_record(player) for player in db.db['all_players']], comp, key)
+            unfiltered = sorted([self.get_player_record(player) for player in db.db.keys()], comp, key)
             return [x for x in unfiltered if x != None]
         except: pass
 
     def check_timer(self, player):
-        if time.time() - db.db[game.CHALLENGER] > 60 * 60 * 24:
+        if time.time() - db.db[player]['last_defended'] > 60 * 60 * 24:
              db.db[player]['wins'] -= db.db[player]['wins'] / 5
-
-
 
 game = game()
 db = db()
@@ -176,13 +174,11 @@ def play_game(phenny):
                 winner = game.PLAYERS[1] # survivor
                 loser = game.PLAYERS[0]
                 db.update_score(winner, loser)
-                db.display_self()
                 # make announcements and cleanup
                 phenny.say(random.choice(['BANG!', 'KA-POW!', 'BOOM!', 'BAM!', 'BLAMMO!', 'BOOM! BOOM!']))
                 time.sleep(1)
                 phenny.say(random.choice(EXCLAMATIONS) % (game.PLAYERS[0]))
-                res = db.get_score(winner, loser)
-                phenny.say('%d:%d  %s vs. %s' % (res[2][0], res[2][1], res[0], res[1]))
+                phenny.say("%s's new percentage is: %.2f%%" % (winner, db.get_percentage(winner)))
                 game.GAME_IN_PROGRESS = 0
     elif random.choice([x for x in range(30)]) == 1:
         phenny.say(random.choice(['BANG!', 'KA-POW!', 'BOOM!', 'BAM!', 'BLAMMO!', 'BOOM! BOOM!']))
@@ -191,8 +187,7 @@ def play_game(phenny):
         winner = game.PLAYERS[1] # survivor
         loser = game.PLAYERS[0]
         db.update_score(winner, loser)
-        res = db.get_score(winner, loser)
-        phenny.say('%d:%d  %s vs. %s' % (res[2][0], res[2][1], res[0], res[1]))
+        phenny.say("%s's new percentage is: %.2f%%" % (winner, db.get_percentage(winner)))
         game.GAME_IN_PROGRESS = 0
     else:
         rounds = random.randint(1,6)
@@ -218,8 +213,7 @@ def play_game(phenny):
                 phenny.say(random.choice(['BANG!', 'KA-POW!', 'BOOM!', 'BAM!', 'BLAMMO!', 'BOOM! BOOM!']))
                 time.sleep(1)
                 phenny.say(random.choice(EXCLAMATIONS) % (game.PLAYERS[0]))
-                res = db.get_score(winner, loser)
-                phenny.say('%d:%d  %s vs. %s' % (res[2][0], res[2][1], res[0], res[1]))
+                phenny.say("%s's new percentage is: %.2f%%" % (winner, db.get_percentage(winner)))
                 game.GAME_IN_PROGRESS = 0
 # Commands
 def challenge(phenny, input):
