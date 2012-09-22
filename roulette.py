@@ -49,7 +49,7 @@ class db():
         try:
             self.db = self.storage['roulette']
         except:
-            # {'player':{'wins':i, 'losses':j, last-defended:date, ....}, ...}
+            # {'player':{'wins':i, 'losses':j, last_defended:date, ....}, ...}
             self.storage['roulette'] = {}
             self.db = {}
         self.storage.close()
@@ -64,7 +64,7 @@ class db():
     def add_player(self, player):
         """Adds a new player to the database
         """
-        self.db.setdefault(player,{'wins':0, 'losses':0, 'last-defended':time.time()}
+        self.db.setdefault(player,{'wins':0, 'losses':0, 'last_defended':time.time()}
         self.save_db()
 
     def get_percentage(self, player):
@@ -127,7 +127,11 @@ def play_game(phenny):
     if game.CHALLENGED not in db.db.keys():
         db.add_player(game.CHALLENGED)
 
-    # Announce first player
+    # update timer
+    db.db['game.CHALLENGER']['last_defended'] = time.time()
+    db.db['game.CHALLENGED']['last_defended'] = time.time()
+
+        # Announce first player
     phenny.say("A coin toss will decide the first player....")
     time.sleep(2)
     phenny.say("%s, you win!" % (game.PLAYERS[0]))
