@@ -96,8 +96,7 @@ class stats():
     def get_player_record(self, player):
         wins = db.get_wins(player)
         losses = db.get_losses(player)
-        res = [player, wins, losses, (float(wins) / float(losses + wins)) * 100]
-        return res
+        return [player, wins, losses, (float(wins) / float(losses + wins)) * 100]
 
     def get_ranking(self):
         def key(x):
@@ -112,11 +111,6 @@ class stats():
         except:
             return None
 
-    def super_dead(self):
-        """
-        the player who loses 3 or 4 in a row gets superdead -- goes to 0
-        """
-        pass
 
 game = game()
 db = db()
