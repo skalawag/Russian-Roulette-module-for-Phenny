@@ -91,8 +91,6 @@ class db():
     def get_losses(self, player):
         return self.db[player]['losses']
 
-class stats():
-
     def get_player_record(self, player):
         wins = db.get_wins(player)
         losses = db.get_losses(player)
@@ -109,12 +107,10 @@ class stats():
             unfiltered = sorted([self.get_player_record(player) for player in db.db['all_players']], comp, key)
             return [x for x in unfiltered if x != None]
         except:
-            return None
 
 
 game = game()
 db = db()
-stats = stats()
 
 # Game Play
 def play_game(phenny):
@@ -309,7 +305,7 @@ def undo(phenny, input):
 undo.commands = ['undo']
 
 def display_ranking(phenny,input):
-    ranking = stats.get_ranking()
+    ranking = db.get_ranking()
     if ranking is not None:
         for item in ranking:
             phenny.say("%s: %.2f%%" % (item[0], item[3]))
