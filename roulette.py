@@ -109,7 +109,12 @@ class db():
         try:
             unfiltered = sorted([self.get_player_record(player) for player in db.db['all_players']], comp, key)
             return [x for x in unfiltered if x != None]
-        except:
+        except: pass
+
+    def check_timer(self, player):
+        if time.time() - db.db[game.CHALLENGER] > 60 * 60 * 24:
+             db.db[player]['wins'] -= db.db[player]['wins'] / 5
+
 
 
 game = game()
@@ -128,8 +133,8 @@ def play_game(phenny):
         db.add_player(game.CHALLENGED)
 
     # update timer
-    db.db['game.CHALLENGER']['last_defended'] = time.time()
-    db.db['game.CHALLENGED']['last_defended'] = time.time()
+    db.db[game.CHALLENGER]['last_defended'] = time.time()
+    db.db[game.CHALLENGED]['last_defended'] = time.time()
 
         # Announce first player
     phenny.say("A coin toss will decide the first player....")
@@ -314,6 +319,9 @@ def undo(phenny, input):
 undo.commands = ['undo']
 
 def display_ranking(phenny,input):
+    for player in db.db.keys():
+       db.check_timer(player)
+    db.save_db()
     ranking = db.get_ranking()
     if ranking is not None:
         for item in ranking:
