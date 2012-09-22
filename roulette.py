@@ -67,47 +67,29 @@ class db():
         self.db.setdefault(player,{'wins':0, 'losses':0, 'last-defended':time.time()}
         self.save_db()
 
-    def get_score(self, p1, p2):
-        "Return score for row=p1, col=p2"
-        for item in self.db['scores']:
-            if item[0] == p1 and item[1] == p2:
-                return p1, p2, item[2]
-            elif item[0] == p2 and item[1] == p1:
-                return p2, p1, item[2]
-        return "No score for these players"
+    def get_percentage(self, player):
+        """
+        Get player's win percentage
+        """
+        return round(float(self.get_wins(player)) / float(self.get_wins(player) + self.get_losses(player)) * 100, 2)
 
     def update_score(self, p1, p2):
         """
         Update the table for p1 v p2, where p1 is the winner.
         """
-        for item in self.db['scores']:
-            if item[0] == p1 and item[1] == p2:
-                item[2][0] += 1
-            elif item[0] == p2 and item[1] == p1:
-                item[2][1] += 1
+        self.db[p1]['wins'] += 1
+        self.db[p2]['losses'] += 1
+        self.save_db()
 
-    def remove_player(self, p):
-        self.db['all_players'].remove(p)
-        self.db['scores'] = [item for item in self.db['scores'] if item[0] != p and item[1] != p]
+    def remove_player(self, player):
+        self.db.pop(player)
         self.save_db()
 
     def get_wins(self, player):
-        wins = 0
-        for item in self.db['scores']:
-            if item[0] == player:
-                wins += item[2][0]
-            elif item[1] == player:
-                wins += item[2][1]
-        return wins
+        return self.db[player]['wins']
 
     def get_losses(self, player):
-        losses = 0
-        for item in self.db['scores']:
-            if item[0] == player:
-                losses += item[2][1]
-            elif item[1] == player:
-                losses += item[2][0]
-        return losses
+        return self.db[player]['losses']
 
 class stats():
 
