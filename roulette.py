@@ -43,6 +43,37 @@ class game():
         self.CHALLENGED = None
         self.CATCH_ACCEPT = 0
 
+    def setup(self):
+        random.shuffle(self.PLAYERS)
+        self.GAME_IN_PROGRESS = 1
+
+        # make sure both players are in db
+        if game.CHALLENGER not in db.db.keys():
+            db.add_player(self.CHALLENGER)
+        if game.CHALLENGED not in db.db.keys():
+            db.add_player(self.CHALLENGED)
+
+        # update timer
+        db.update_timer(self.CHALLENGER)
+        db.update_timer(self.CHALLENGED)
+
+    def announce_and_cleanup(self, accident=None):
+        if not accident:
+            phenny.say(random.choice(['BANG!', 'KA-POW!', 'BOOM!', 'BAM!', 'BLAMMO!', 'BOOM! BOOM!']))
+            time.sleep(1)
+            phenny.say(random.choice(EXCLAMATIONS) % (game.PLAYERS[0]))
+            phenny.say("%s's new percentage is: %.2f%%" % (winner, db.get_percentage(winner)))
+            game.GAME_IN_PROGRESS = 0
+        else:
+            phenny.say(random.choice(['BANG!', 'KA-POW!', 'BOOM!', 'BAM!', 'BLAMMO!', 'BOOM! BOOM!']))
+            phenny.say("OH MAN! Did you see that!?")
+            phenny.say("%s accidentally blew his brains out!" % (game.PLAYERS[0]))
+            winner = game.PLAYERS[1] # survivor
+            loser = game.PLAYERS[0]
+            db.update_score(winner, loser)
+            phenny.say("%s's new percentage is: %.2f%%" % (winner, db.get_percentage(winner)))
+            game.GAME_IN_PROGRESS = 0
+
 class db():
     def __init__(self):
         self.storage = shelve.open('roulette.db')
@@ -115,26 +146,18 @@ class db():
         if time.time() - db.db[player]['last_defended'] > 60 * 60 * 24:
              db.db[player]['wins'] -= db.db[player]['wins'] / 5
 
+    def update_timer(self, player):
+        self.db[player]['last_defended'] = time.time()
+
 game = game()
 db = db()
 
 # Game Play
 def play_game(phenny):
     #setup
-    random.shuffle(game.PLAYERS)
-    game.GAME_IN_PROGRESS = 1
+    game.setup()
 
-    # make sure both players are in db
-    if game.CHALLENGER not in db.db.keys():
-        db.add_player(game.CHALLENGER)
-    if game.CHALLENGED not in db.db.keys():
-        db.add_player(game.CHALLENGED)
-
-    # update timer
-    db.db[game.CHALLENGER]['last_defended'] = time.time()
-    db.db[game.CHALLENGED]['last_defended'] = time.time()
-
-        # Announce first player
+    # Announce first player
     phenny.say("A coin toss will decide the first player....")
     time.sleep(2)
     phenny.say("%s, you win!" % (game.PLAYERS[0]))
@@ -143,7 +166,7 @@ def play_game(phenny):
     if random.randint(1,365) == 1:
         game.GOD = []
         game.GOD.append(game.CHALLENGER)
-        game.GOD.append(20)
+        game.GOD.append(10)
 
     # possible accidental death
     if game.GOD:
@@ -173,20 +196,9 @@ def play_game(phenny):
                 loser = game.PLAYERS[0]
                 db.update_score(winner, loser)
                 # make announcements and cleanup
-                time.sleep(1)
-                phenny.say(random.choice(['BANG!', 'KA-POW!', 'BOOM!', 'BAM!', 'BLAMMO!', 'BOOM! BOOM!']))
-                phenny.say(random.choice(EXCLAMATIONS) % (game.PLAYERS[0]))
-                phenny.say("%s's new percentage is: %.2f%%" % (winner, db.get_percentage(winner)))
-                game.GAME_IN_PROGRESS = 0
+                game.announce_and_cleanup()
     elif random.choice([x for x in range(30)]) == 1:
-        phenny.say(random.choice(['BANG!', 'KA-POW!', 'BOOM!', 'BAM!', 'BLAMMO!', 'BOOM! BOOM!']))
-        phenny.say("OH MAN! Did you see that!?")
-        phenny.say("%s accidentally blew his brains out!" % (game.PLAYERS[0]))
-        winner = game.PLAYERS[1] # survivor
-        loser = game.PLAYERS[0]
-        db.update_score(winner, loser)
-        phenny.say("%s's new percentage is: %.2f%%" % (winner, db.get_percentage(winner)))
-        game.GAME_IN_PROGRESS = 0
+        game.announce_and_cleanup(accident=1)
     else:
         rounds = random.randint(1,6)
         for x in range(rounds):
@@ -207,11 +219,9 @@ def play_game(phenny):
                 loser = game.PLAYERS[0]
                 db.update_score(winner, loser)
                 # make announcements and cleanup
-                phenny.say(random.choice(['BANG!', 'KA-POW!', 'BOOM!', 'BAM!', 'BLAMMO!', 'BOOM! BOOM!']))
-                time.sleep(1)
-                phenny.say(random.choice(EXCLAMATIONS) % (game.PLAYERS[0]))
-                phenny.say("%s's new percentage is: %.2f%%" % (winner, db.get_percentage(winner)))
-                game.GAME_IN_PROGRESS = 0
+                game.announce_and_cleanup()
+
+####################################
 # Commands
 def challenge(phenny, input):
     if input.group(2) == '':
