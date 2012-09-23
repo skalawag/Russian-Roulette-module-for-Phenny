@@ -58,26 +58,21 @@ class game():
         db.update_timer(self.CHALLENGED)
 
     def announce_and_cleanup(self, accident=None):
+        winner = self.PLAYERS[1] # survivor
+        loser = self.PLAYERS[0]
+        db.update_score(winner, loser)
         if not accident:
+            phenny.say("%s pulls the trigger!" % (self.PLAYERS[0]))
             phenny.say(random.choice(['BANG!', 'KA-POW!', 'BOOM!', 'BAM!', 'BLAMMO!', 'BOOM! BOOM!']))
             time.sleep(1)
             phenny.say(random.choice(EXCLAMATIONS) % (game.PLAYERS[0]))
             phenny.say("%s's new percentage is: %.2f%%" % (winner, db.get_percentage(winner)))
-            game.GAME_IN_PROGRESS = 0
         else:
-            phenny.say("%s pulls the trigger!" % (self.PLAYERS[0]))
-            # update winner, loser and score
-            winner = self.PLAYERS[1] # survivor
-            loser = self.PLAYERS[0]
-            db.update_score(winner, loser)
             phenny.say(random.choice(['BANG!', 'KA-POW!', 'BOOM!', 'BAM!', 'BLAMMO!', 'BOOM! BOOM!']))
             phenny.say("OH MAN! Did you see that!?")
             phenny.say("%s accidentally blew his brains out!" % (self.PLAYERS[0]))
-            winner = self.PLAYERS[1] # survivor
-            loser = self.PLAYERS[0]
-            db.update_score(winner, loser)
             phenny.say("%s's new percentage is: %.2f%%" % (winner, db.get_percentage(winner)))
-            self.GAME_IN_PROGRESS = 0
+        self.GAME_IN_PROGRESS = 0
 
     def god_check(self):
         if random.randint(1,365) == 1:
@@ -173,8 +168,6 @@ class db():
     def update_timer(self, player):
         self.db[player]['last_defended'] = time.time()
 
-
-
 game = game()
 db = db()
 
@@ -242,7 +235,6 @@ def challenge(phenny, input):
         game.R_TIME = time.time()
         game.CHALLENGER = input.nick.strip()
         game.CHALLENGED = str(input.group(2).strip())
-        #db.check(game.CHALLENGER, game.CHALLENGED)
         phenny.say("%s challenged %s to Russian Roulette!" % (game.CHALLENGER, game.CHALLENGED))
         phenny.say("%s, do you accept?" % (game.CHALLENGED))
 challenge.commands = ['roulette', 'r']
@@ -260,10 +252,8 @@ def accept(phenny, input):
         phenny.say("NO_IAM_BOT accepts the challenge!")
         phenny.say("Let the game begin!")
         game.PLAYERS = ['NO_IAM_BOT', input.nick]
-
         # GAME ==========
         play_game(phenny)
-
         game.reset()
         db.save_db()
     else:
@@ -272,10 +262,8 @@ def accept(phenny, input):
         phenny.say("%s accepts the challenge!" % input.nick)
         phenny.say("Let the game begin!")
         game.PLAYERS = [game.CHALLENGED, game.CHALLENGER]
-
         # GAME ==========
         play_game(phenny)
-
         game.reset()
         db.save_db()
 accept.commands = ['accept', 'yes', 'acc', 'hell-yeah', 'pff', 'bring-it', 'die!']
