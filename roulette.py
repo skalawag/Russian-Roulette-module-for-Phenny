@@ -164,10 +164,8 @@ def play_game(phenny):
                 phenny.say("%s pulls the trigger!" % (game.PLAYERS[0]))
                 time.sleep(1)
                 phenny.say('CLICK')
-                time.sleep(1)
                 phenny.say(random.choice(RELIEF) % (game.PLAYERS[0]))
                 game.PLAYERS = [game.PLAYERS[1], game.PLAYERS[0]]
-
             else:
                 phenny.say("%s pulls the trigger!" % (game.PLAYERS[0]))
                 # update winner, loser and score
@@ -175,8 +173,8 @@ def play_game(phenny):
                 loser = game.PLAYERS[0]
                 db.update_score(winner, loser)
                 # make announcements and cleanup
-                phenny.say(random.choice(['BANG!', 'KA-POW!', 'BOOM!', 'BAM!', 'BLAMMO!', 'BOOM! BOOM!']))
                 time.sleep(1)
+                phenny.say(random.choice(['BANG!', 'KA-POW!', 'BOOM!', 'BAM!', 'BLAMMO!', 'BOOM! BOOM!']))
                 phenny.say(random.choice(EXCLAMATIONS) % (game.PLAYERS[0]))
                 phenny.say("%s's new percentage is: %.2f%%" % (winner, db.get_percentage(winner)))
                 game.GAME_IN_PROGRESS = 0
