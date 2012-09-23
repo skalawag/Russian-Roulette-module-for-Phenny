@@ -180,6 +180,7 @@ def play_game(phenny):
 
     if game.GOD:
         print "We have a God!"
+        # fix it so god wins
         rounds = random.randint(1,6)
         if game.PLAYERS[0] == game.GOD[0] and rounds % 2 == 0:
             pass
@@ -188,7 +189,7 @@ def play_game(phenny):
         game.GOD[1] -= 1
         if game.GOD[1] < 1:
             game.GOD = []
-            # play game
+        # play game
         for x in range(rounds):
             phenny.say("%s spins the cylinder..." % (game.PLAYERS[0]))
             time.sleep(2)
