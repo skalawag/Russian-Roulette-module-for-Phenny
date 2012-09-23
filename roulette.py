@@ -65,20 +65,38 @@ class game():
             phenny.say("%s's new percentage is: %.2f%%" % (winner, db.get_percentage(winner)))
             game.GAME_IN_PROGRESS = 0
         else:
+            phenny.say("%s pulls the trigger!" % (self.PLAYERS[0]))
+            # update winner, loser and score
+            winner = self.PLAYERS[1] # survivor
+            loser = self.PLAYERS[0]
+            db.update_score(winner, loser)
             phenny.say(random.choice(['BANG!', 'KA-POW!', 'BOOM!', 'BAM!', 'BLAMMO!', 'BOOM! BOOM!']))
             phenny.say("OH MAN! Did you see that!?")
-            phenny.say("%s accidentally blew his brains out!" % (game.PLAYERS[0]))
-            winner = game.PLAYERS[1] # survivor
-            loser = game.PLAYERS[0]
+            phenny.say("%s accidentally blew his brains out!" % (self.PLAYERS[0]))
+            winner = self.PLAYERS[1] # survivor
+            loser = self.PLAYERS[0]
             db.update_score(winner, loser)
             phenny.say("%s's new percentage is: %.2f%%" % (winner, db.get_percentage(winner)))
-            game.GAME_IN_PROGRESS = 0
+            self.GAME_IN_PROGRESS = 0
 
     def god_check(self):
         if random.randint(1,365) == 1:
             self.GOD = []
             self.GOD.append(self.CHALLENGER)
             self.GOD.append(10)
+
+    def click(self):
+        phenny.say("%s pulls the trigger!" % (self.PLAYERS[0]))
+        time.sleep(1)
+        phenny.say('CLICK')
+        phenny.say(random.choice(RELIEF) % (self.PLAYERS[0]))
+        self.PLAYERS = [self.PLAYERS[1], self.PLAYERS[0]]
+
+    def announce_start(self):
+        # Announce first player
+        phenny.say("A coin toss will decide the first player....")
+        time.sleep(2)
+        phenny.say("%s, you win!" % (game.PLAYERS[0]))
 
 class db():
     def __init__(self):
@@ -164,16 +182,9 @@ db = db()
 def play_game(phenny):
     #setup
     game.setup()
-
-    # Announce first player
-    phenny.say("A coin toss will decide the first player....")
-    time.sleep(2)
-    phenny.say("%s, you win!" % (game.PLAYERS[0]))
-
-    # check if we make a god
+    game.announce_starter()
     game.god_check()
 
-    # possible accidental death
     if game.GOD:
         print "We have a God!"
         rounds = random.randint(1,6)
@@ -189,18 +200,8 @@ def play_game(phenny):
             phenny.say("%s spins the cylinder..." % (game.PLAYERS[0]))
             time.sleep(2)
             if x < rounds - 1:
-                phenny.say("%s pulls the trigger!" % (game.PLAYERS[0]))
-                time.sleep(1)
-                phenny.say('CLICK')
-                phenny.say(random.choice(RELIEF) % (game.PLAYERS[0]))
-                game.PLAYERS = [game.PLAYERS[1], game.PLAYERS[0]]
+                game.click()
             else:
-                phenny.say("%s pulls the trigger!" % (game.PLAYERS[0]))
-                # update winner, loser and score
-                winner = game.PLAYERS[1] # survivor
-                loser = game.PLAYERS[0]
-                db.update_score(winner, loser)
-                # make announcements and cleanup
                 game.announce_and_cleanup()
     elif random.choice([x for x in range(30)]) == 1:
         game.announce_and_cleanup(accident=1)
@@ -210,20 +211,8 @@ def play_game(phenny):
             phenny.say("%s spins the cylinder..." % (game.PLAYERS[0]))
             time.sleep(2)
             if x < rounds - 1:
-                phenny.say("%s pulls the trigger!" % (game.PLAYERS[0]))
-                time.sleep(1)
-                phenny.say('CLICK')
-                time.sleep(1)
-                phenny.say(random.choice(RELIEF) % (game.PLAYERS[0]))
-                game.PLAYERS = [game.PLAYERS[1], game.PLAYERS[0]]
-
+                game.click()
             else:
-                phenny.say("%s pulls the trigger!" % (game.PLAYERS[0]))
-                # update winner, loser and score
-                winner = game.PLAYERS[1] # survivor
-                loser = game.PLAYERS[0]
-                db.update_score(winner, loser)
-                # make announcements and cleanup
                 game.announce_and_cleanup()
 
 ####################################
