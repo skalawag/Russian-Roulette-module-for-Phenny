@@ -208,7 +208,6 @@ def play_game(phenny):
                 winner = game.PLAYERS[1] # survivor
                 loser = game.PLAYERS[0]
                 db.update_score(winner, loser)
-                db.display_self()
                 # make announcements and cleanup
                 phenny.say(random.choice(['BANG!', 'KA-POW!', 'BOOM!', 'BAM!', 'BLAMMO!', 'BOOM! BOOM!']))
                 time.sleep(1)
