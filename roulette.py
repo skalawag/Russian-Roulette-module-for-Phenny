@@ -74,6 +74,12 @@ class game():
             phenny.say("%s's new percentage is: %.2f%%" % (winner, db.get_percentage(winner)))
             game.GAME_IN_PROGRESS = 0
 
+    def god_check(self):
+        if random.randint(1,365) == 1:
+            self.GOD = []
+            self.GOD.append(self.CHALLENGER)
+            self.GOD.append(10)
+
 class db():
     def __init__(self):
         self.storage = shelve.open('roulette.db')
@@ -149,6 +155,8 @@ class db():
     def update_timer(self, player):
         self.db[player]['last_defended'] = time.time()
 
+
+
 game = game()
 db = db()
 
@@ -163,10 +171,7 @@ def play_game(phenny):
     phenny.say("%s, you win!" % (game.PLAYERS[0]))
 
     # check if we make a god
-    if random.randint(1,365) == 1:
-        game.GOD = []
-        game.GOD.append(game.CHALLENGER)
-        game.GOD.append(10)
+    game.god_check()
 
     # possible accidental death
     if game.GOD:
