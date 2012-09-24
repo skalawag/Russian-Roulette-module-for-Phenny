@@ -57,7 +57,7 @@ class game():
         db.update_timer(self.CHALLENGER)
         db.update_timer(self.CHALLENGED)
 
-    def announce_and_cleanup(self, accident=None):
+    def announce_and_cleanup(self, phenny, accident=None):
         winner = self.PLAYERS[1] # survivor
         loser = self.PLAYERS[0]
         db.update_score(winner, loser)
@@ -80,14 +80,14 @@ class game():
             self.GOD.append(self.CHALLENGER)
             self.GOD.append(10)
 
-    def click(self):
+    def click(self, phenny):
         phenny.say("%s pulls the trigger!" % (self.PLAYERS[0]))
         time.sleep(1)
         phenny.say('CLICK')
         phenny.say(random.choice(RELIEF) % (self.PLAYERS[0]))
         self.PLAYERS = [self.PLAYERS[1], self.PLAYERS[0]]
 
-    def announce_start(self):
+    def announce_start(self, phenny):
         # Announce first player
         phenny.say("A coin toss will decide the first player....")
         time.sleep(2)
@@ -175,7 +175,7 @@ db = db()
 def play_game(phenny):
     #setup
     game.setup()
-    game.announce_start()
+    game.announce_start(phenny)
     game.god_check()
 
     if game.GOD:
@@ -194,20 +194,20 @@ def play_game(phenny):
             phenny.say("%s spins the cylinder..." % (game.PLAYERS[0]))
             time.sleep(2)
             if x < rounds - 1:
-                game.click()
+                game.click(phenny)
             else:
-                game.announce_and_cleanup()
+                game.announce_and_cleanup(phenny)
     elif random.choice([x for x in range(30)]) == 1:
-        game.announce_and_cleanup(accident=1)
+        game.announce_and_cleanup(phenny, accident=1)
     else:
         rounds = random.randint(1,6)
         for x in range(rounds):
             phenny.say("%s spins the cylinder..." % (game.PLAYERS[0]))
             time.sleep(2)
             if x < rounds - 1:
-                game.click()
+                game.click(phenny)
             else:
-                game.announce_and_cleanup()
+                game.announce_and_cleanup(phenny)
 
 ####################################
 # Commands
