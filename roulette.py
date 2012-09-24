@@ -142,8 +142,8 @@ class db():
         return self.db[player]['losses']
 
     def get_player_record(self, player):
-        wins = db.get_wins(player)
-        losses = db.get_losses(player)
+        wins = self.get_wins(player)
+        losses = self.get_losses(player)
         if wins == 0 and losses == 0:
             return None
         else:
@@ -157,13 +157,13 @@ class db():
             elif x == y: return 0
             else: return -1
         try:
-            unfiltered = sorted([self.get_player_record(player) for player in db.db.keys()], comp, key)
+            unfiltered = sorted([self.get_player_record(player) for player in self.db.keys()], comp, key)
             return [x for x in unfiltered if x != None]
         except: pass
 
     def check_timer(self, player):
         if time.time() - db.db[player]['last_defended'] > 60 * 60 * 24:
-             db.db[player]['wins'] = int(db.db[player]['wins'] * .20)
+             self.db[player]['wins'] = int(self.db[player]['wins'] * .20)
 
     def update_timer(self, player):
         self.db[player]['last_defended'] = time.time()
