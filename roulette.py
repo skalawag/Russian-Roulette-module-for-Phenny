@@ -307,6 +307,7 @@ def display_ranking(phenny,input):
        db.check_timer(player)
     db.save_db()
     ranking = db.get_ranking()
+    print ranking
     if ranking is not None:
         for item in ranking:
             phenny.say("%s: %.2f%%" % (item[0], item[3]))
