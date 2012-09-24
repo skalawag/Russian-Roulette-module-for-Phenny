@@ -163,7 +163,7 @@ class db():
 
     def check_timer(self, player):
         if time.time() - db.db[player]['last_defended'] > 60 * 60 * 24:
-             db.db[player]['wins'] -= db.db[player]['wins'] / 5
+             db.db[player]['wins'] = int(db.db[player]['wins'] * .20)
 
     def update_timer(self, player):
         self.db[player]['last_defended'] = time.time()
