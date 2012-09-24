@@ -175,7 +175,7 @@ db = db()
 def play_game(phenny):
     #setup
     game.setup()
-    game.announce_starter()
+    game.announce_start()
     game.god_check()
 
     if game.GOD:
