@@ -121,7 +121,7 @@ class db():
         """
         Get player's win percentage
         """
-s        return round(float(self.get_wins(player)) / float(self.get_wins(player) + self.get_losses(player)) * 100, 4)
+        return round(float(self.get_wins(player)) / float(self.get_wins(player) + self.get_losses(player)) * 100, 4)
 
     def update_score(self, p1, p2):
         """
