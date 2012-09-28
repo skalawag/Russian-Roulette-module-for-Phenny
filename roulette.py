@@ -164,6 +164,7 @@ class db():
     def check_timer(self, player):
         if time.time() - self.db[player]['last_defended'] > 60 * 60 * 24:
              self.db[player]['wins'] = int(self.db[player]['wins'] * .20)
+        self.save_db()
 
     def update_timer(self, player):
         self.db[player]['last_defended'] = time.time()
@@ -174,6 +175,7 @@ db = db()
 # Game Play
 def play_game(phenny):
     #setup
+    game.display_self()
     game.setup()
     game.announce_start(phenny)
     game.god_check()
