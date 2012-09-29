@@ -110,6 +110,7 @@ class db():
     def save_db(self):
         f = shelve.open('roulette.db')
         f['roulette'] = self.db
+        f.close()
 
     def add_player(self, player):
         """Adds a new player to the database
