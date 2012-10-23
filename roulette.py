@@ -145,7 +145,7 @@ class db():
     def get_player_record(self, player):
         wins = self.get_wins(player)
         losses = self.get_losses(player)
-        if wins == 0:
+        if wins == 0 and losses == 0:
             return None
         else:
             return [player, wins, losses, self.get_percentage(player)]
