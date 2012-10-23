@@ -159,7 +159,7 @@ class db():
             else: return -1
         try:
             unfiltered = sorted([self.get_player_record(player) for player in self.db.keys()], comp, key)
-            return [x for x in unfiltered if x != None]
+            return [x for x in unfiltered if x != None and x[1] > 0]
         except: pass
 
     def check_timer(self, player):
