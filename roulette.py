@@ -151,6 +151,9 @@ class db():
             return [player, wins, losses, self.get_percentage(player)]
 
     def get_ranking(self):
+        for player in self.db.keys():
+            if self.get_player_record(player)[1] == 0:
+                self.remove(player)
         def key(x):
             return x[3]
         def comp(x,y):
@@ -159,7 +162,7 @@ class db():
             else: return -1
         try:
             unfiltered = sorted([self.get_player_record(player) for player in self.db.keys()], comp, key)
-            return [x for x in unfiltered if x != None and x[1] > 0]
+            return [x for x in unfiltered if x != None]
         except: pass
 
     def check_timer(self, player):
