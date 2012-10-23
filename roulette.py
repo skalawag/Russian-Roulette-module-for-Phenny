@@ -153,7 +153,7 @@ class db():
     def get_ranking(self):
         for player in self.db.keys():
             if self.get_player_record(player)[1] == 0:
-                self.remove(player)
+                self.remove_player(player)
         def key(x):
             return x[3]
         def comp(x,y):
