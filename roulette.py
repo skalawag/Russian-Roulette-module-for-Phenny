@@ -324,7 +324,7 @@ def display_ranking(phenny,input):
         phenny.say("There is no record.")
 display_ranking.commands = ['rstats']
 
-def print_db():
+def print_db(phenny, input):
     db.display_self()
 print_db.commands = ['rprintdb']
 
