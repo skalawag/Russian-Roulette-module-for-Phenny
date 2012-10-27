@@ -324,6 +324,10 @@ def display_ranking(phenny,input):
         phenny.say("There is no record.")
 display_ranking.commands = ['rstats']
 
+def print_db():
+    db.display_self()
+print_db.commands = ['rprintdb']
+
 def remove_player(phenny, input):
     if input.nick != 'skalawag':
         phenny.say('Only skalawag can do that.')
