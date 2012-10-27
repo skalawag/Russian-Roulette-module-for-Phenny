@@ -145,17 +145,9 @@ class db():
     def get_player_record(self, player):
         wins = self.get_wins(player)
         losses = self.get_losses(player)
-        if wins == 0 and losses == 0:
-            return [None]
-        else:
-            return [player, wins, losses, self.get_percentage(player)]
+        return [player, wins, losses, self.get_percentage(player)]
 
     def get_ranking(self):
-        for player in self.db.keys():
-            try:
-                if self.get_player_record(player)[1] == 0:
-                    self.remove_player(player)
-            except: self.remove_player(player)
         def key(x):
             return x[3]
         def comp(x,y):
@@ -163,9 +155,7 @@ class db():
             elif x == y: return 0
             else: return -1
         try:
-            unfiltered = sorted([self.get_player_record(player) for player in self.db.keys()], comp, key)
-            return [x for x in unfiltered if x != None]
-        except: pass
+            return sorted([self.get_player_record(player) for player in self.db.keys()], comp, key)
 
     def check_timer(self, player):
         if time.time() - self.db[player]['last_defended'] > 60 * 60 * 24:
@@ -316,7 +306,6 @@ def display_ranking(phenny,input):
        db.check_timer(player)
     db.save_db()
     ranking = db.get_ranking()
-    print ranking
     if ranking is not None:
         for item in ranking:
             phenny.say("%s: %.2f%%" % (item[0], item[3]))
