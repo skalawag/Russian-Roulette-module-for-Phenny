@@ -154,13 +154,12 @@ class db():
             if x < y: return 1
             elif x == y: return 0
             else: return -1
-        try:
-            return sorted([self.get_player_record(player) for player in self.db.keys()], comp, key)
+        return sorted([self.get_player_record(player) for player in self.db.keys()], comp, key)
 
     def check_timer(self, player):
         if time.time() - self.db[player]['last_defended'] > 60 * 60 * 24:
-             self.db[player]['wins'] = int(self.db[player]['wins'] * .80)
-             self.db[player]['last_defended'] = time.time()
+            self.db[player]['wins'] = int(self.db[player]['wins'] * .80)
+            self.db[player]['last_defended'] = time.time()
         self.save_db()
 
     def update_timer(self, player):
