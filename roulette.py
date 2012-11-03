@@ -31,7 +31,6 @@ class game():
         self.CHALLENGER = None
         self.CHALLENGED = None
         self.CATCH_ACCEPT = 0
-        self.GOD = []
 
     def reset(self):
         self.GAME_IN_PROGRESS = 0
@@ -73,12 +72,6 @@ class game():
             phenny.say("%s accidentally blew his brains out!" % (self.PLAYERS[0]))
             phenny.say("%s's new percentage is: %.2f%%" % (winner, db.get_percentage(winner)))
         self.GAME_IN_PROGRESS = 0
-
-    def god_check(self):
-        if random.randint(1,365) == 1:
-            self.GOD = []
-            self.GOD.append(self.CHALLENGER)
-            self.GOD.append(10)
 
     def click(self, phenny):
         phenny.say("%s pulls the trigger!" % (self.PLAYERS[0]))
@@ -174,28 +167,8 @@ def play_game(phenny):
     db.display_self()
     game.setup()
     game.announce_start(phenny)
-    game.god_check()
 
-    if game.GOD:
-        print "We have a God!"
-        # fix it so god wins
-        rounds = random.randint(1,6)
-        if game.PLAYERS[0] == game.GOD[0] and rounds % 2 == 0:
-            pass
-        elif game.PLAYERS[1] == game.GOD[0] and rounds % 2 != 0:
-            rounds += 1
-        game.GOD[1] -= 1
-        if game.GOD[1] < 1:
-            game.GOD = []
-        # play game
-        for x in range(rounds):
-            phenny.say("%s spins the cylinder..." % (game.PLAYERS[0]))
-            time.sleep(2)
-            if x < rounds - 1:
-                game.click(phenny)
-            else:
-                game.announce_and_cleanup(phenny)
-    elif random.choice([x for x in range(30)]) == 1:
+    if random.choice([x for x in range(30)]) == 1:
         game.announce_and_cleanup(phenny, accident=1)
     else:
         rounds = random.randint(1,6)
