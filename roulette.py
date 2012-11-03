@@ -167,7 +167,6 @@ def play_game(phenny):
     db.display_self()
     game.setup()
     game.announce_start(phenny)
-
     if random.choice([x for x in range(30)]) == 1:
         game.announce_and_cleanup(phenny, accident=1)
     else:
