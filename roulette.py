@@ -182,7 +182,7 @@ def play_game(phenny):
 ####################################
 # Commands
 def challenge(phenny, input):
-    if input.group(2) == '':
+    if not input.group(2):
         pass
     elif game.GAME_IN_PROGRESS == 1:
         pass
