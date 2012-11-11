@@ -317,6 +317,7 @@ accept_all.commands = ['bring_it_on', 'bring_it', 'kill_me']
 def rescind_accept_all(phenny, input):
     if input.nick in game.accepting_all:
         game.accepting_all.remove(input.nick)
+        phenny.say("%s is no longer accepting challenges!" % input.nick)
 rescind_accept_all.commands = ['rscind']
 
 if __name__ == '__main__':
