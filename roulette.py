@@ -207,6 +207,7 @@ def challenge(phenny, input):
         game.R_TIME = time.time()
         game.CHALLENGER = input.nick.strip()
         game.CHALLENGED = str(input.group(2).strip())
+        game.PLAYERS = [game.CHALLENGED, game.CHALLENGER]
         phenny.say("%s accepts all challenges!" % (input.group(2)))
         play_game(phenny)
         game.reset()
