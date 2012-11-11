@@ -298,5 +298,9 @@ def remove_player(phenny, input):
         db.remove_player(input.group(2))
 remove_player.commands = ['rremove']
 
+def accept_all(phenny, input):
+    pass
+accept_all.commands = ['bring_it_on', 'bring_it', 'kill_me']
+
 if __name__ == '__main__':
     print __doc__
