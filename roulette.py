@@ -202,6 +202,15 @@ def challenge(phenny, input):
         play_game(phenny)
         game.reset()
         db.save_db()
+    elif input.group(2) in game.accepting_all:
+        game.CHALLENGE_MADE = 1
+        game.R_TIME = time.time()
+        game.CHALLENGER = input.nick.strip()
+        game.CHALLENGED = str(input.group(2).strip())
+        phenny.say("%s accepts all challenges!" % (input.group(2)))
+        play_game(phenny)
+        game.reset()
+        db.save_db()
     else:
         game.CHALLENGE_MADE = 1
         game.R_TIME = time.time()
