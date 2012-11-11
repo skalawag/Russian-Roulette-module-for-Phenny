@@ -331,5 +331,25 @@ open_challenges.commands = ['ropen\?']
 def snipe(phenny, input):
     pass
 
+def roulette_help(phenny, input):
+    c1 = "'roulette', 'r' [player-name]: Challenge a player."
+    c2 = "'undo': Undo a challenge.",
+    c3 = "'accept', 'yes', 'acc', 'hell-yeah', 'pff', 'bring-it', 'die!': Accept a challenge."
+    c4 = "'decline', 'no', 'get-lost', 'buzz-off': Decline a challenge."
+    c5 = "'rstats': List current roulette stats for all players."
+    c6 = "'bringiton', 'bringit', 'bringit!', 'kill_me': Accept all incoming challenges."
+    c7 = "'rescind': Rescind your open call for challenges."
+    c8 = "'ropen\?': Who is accepting all incoming challenges?"
+    phenny.say("Roulette commands:")
+    phenny.say("%s" % c1)
+    phenny.say("%s" % c2)
+    phenny.say("%s" % c3)
+    phenny.say("%s" % c4)
+    phenny.say("%s" % c5)
+    phenny.say("%s" % c6)
+    phenny.say("%s" % c7)
+    phenny.say("%s" % c8)
+roulette_help.commands = ['rhelp']
+
 if __name__ == '__main__':
     print __doc__
