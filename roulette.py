@@ -325,7 +325,7 @@ def open_challenges(phenny, input):
         phenny.say("Accepting all challenges:")
         for name in game.accepting_all:
             phenny.say("%s" % name)
-open_challenges.commands = ['ropen?']
+open_challenges.commands = ['ropen\?']
 
 def snipe(phenny, input):
     pass
