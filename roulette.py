@@ -31,6 +31,7 @@ class game():
         self.CHALLENGER = None
         self.CHALLENGED = None
         self.CATCH_ACCEPT = 0
+        self.accepting_all = []
 
     def reset(self):
         self.GAME_IN_PROGRESS = 0
@@ -299,8 +300,13 @@ def remove_player(phenny, input):
 remove_player.commands = ['rremove']
 
 def accept_all(phenny, input):
-    pass
+    game.accepting_all.append(input.nick)
 accept_all.commands = ['bring_it_on', 'bring_it', 'kill_me']
+
+def rescind_accept_all(phenny, input):
+    if input.nick in game.accepting_all:
+        game.accepting_all.remove(input.nick)
+rescind_accept_all.commands = ['rscind']
 
 if __name__ == '__main__':
     print __doc__
