@@ -334,7 +334,7 @@ def snipe(phenny, input):
 def roulette_help(phenny, input):
     c1 = "'roulette', 'r' [player-name]: Challenge a player."
     c2 = "'undo': Undo a challenge.",
-    c3 = "'accept', 'yes', 'acc', 'hell-yeah', 'pff', 'bring-it', 'die!': Accept a challenge."
+    c3 = "'yes', 'acc', 'hell-yeah', 'pff', 'die!': Accept a challenge."
     c4 = "'decline', 'no', 'get-lost', 'buzz-off': Decline a challenge."
     c5 = "'rstats': List current roulette stats for all players."
     c6 = "'bringiton', 'bringit', 'bringit!', 'kill_me': Accept all incoming challenges."
