@@ -311,6 +311,7 @@ remove_player.commands = ['rremove']
 
 def accept_all(phenny, input):
     game.accepting_all.append(input.nick)
+    phenny.say("%s is accepting ALL CHALLENGES!!!" % input.nick)
 accept_all.commands = ['bring_it_on', 'bring_it', 'kill_me']
 
 def rescind_accept_all(phenny, input):
