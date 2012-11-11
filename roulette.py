@@ -340,7 +340,7 @@ def roulette_help(phenny, input):
     c6 = "'bringiton', 'bringit', 'bringit!', 'kill_me': Accept all incoming challenges."
     c7 = "'rescind': Rescind your open call for challenges."
     c8 = "'ropen?': Who is accepting all incoming challenges?"
-    phenny.say("Roulette commands:")
+    phenny.say("Roulette commands (prefix a command with a '.', e.g., '.r':")
     phenny.say("%s" % c1)
     phenny.say("%s" % c2)
     phenny.say("%s" % c3)
