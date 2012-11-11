@@ -320,12 +320,15 @@ def rescind_accept_all(phenny, input):
         phenny.say("%s is no longer accepting challenges!" % input.nick)
 rescind_accept_all.commands = ['rescind']
 
-def open_challenges(phenn, input):
+def open_challenges(phenny, input):
     if game.accepting_all:
         phenny.say("Accepting all challenges:")
         for name in game.accepting_all:
             phenny.say(name)
 open_challenges.commands = ['ropen?']
+
+def snipe(phenny, input):
+    pass
 
 if __name__ == '__main__':
     print __doc__
