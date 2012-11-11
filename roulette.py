@@ -321,9 +321,9 @@ def rescind_accept_all(phenny, input):
 rescind_accept_all.commands = ['rescind']
 
 def open_challenges(phenny, input):
+    phenny.say("Accepting all challenges:")
+    phenny.say("%s" % "NO_IAM_BOT")
     if game.accepting_all:
-        phenny.say("Accepting all challenges:")
-        phenny.say("%s" % "NO_IAM_BOT")
         for name in game.accepting_all:
             phenny.say("%s" % name)
 open_challenges.commands = ['ropen\?']
