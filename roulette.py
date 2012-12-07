@@ -127,8 +127,11 @@ class db():
         self.save_db()
 
     def remove_player(self, player):
-        self.db.pop(player)
-        self.save_db()
+        try:
+            self.db.pop(player)
+            self.save_db()
+        except:
+            pass
 
     def get_wins(self, player):
         return self.db[player]['wins']
